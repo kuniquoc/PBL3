@@ -1,1 +1,150 @@
 
+Xây dựng website hỗ trợ khách du lịch Đà Nẵng
+
+
+Overview
+Website Hỗ trợ Du lịch Đà Nẵng là một nền tảng trực tuyến nhằm cung cấp thông tin và dịch vụ hữu ích cho du khách khi họ tới thăm thành phố Đà Nẵng, một trong những điểm đến du lịch hàng đầu tại Việt Nam. Website này cung cấp thông tin về các điểm du lịch nổi tiếng, các hoạt động văn hóa và giải trí, các nhà hàng và quán bar, khách sạn và resort, cũng như các thông tin hữu ích về văn hóa, lịch sử và phong tục tập quán của địa phương.
+
+Tính năng chính:
+1. Danh sách Địa điểm:
+   - Hiển thị danh sách các địa điểm du lịch phổ biến tại Đà Nẵng, bao gồm bãi biển, điểm tham quan, và các khu vui chơi giải trí.
+   - Cung cấp thông tin chi tiết về mỗi địa điểm, bao gồm mô tả, hình ảnh, địa chỉ và giờ mở cửa.
+2. Lập kế hoạch Du lịch:
+   - Cho phép người dùng lập kế hoạch cho chuyến du lịch của họ bằng cách tạo danh sách các điểm đến yêu thích và lên lịch trình tham quan.
+3. Tư vấn và Hỗ trợ:
+   - Cung cấp thông tin về các dịch vụ du lịch, như thuê phòng trọ, khách sạn, dịch vụ hướng dẫn viên, hỗ trợ khẩn cấp,...
+   
+Mục tiêu:
+- Tạo ra một cổng thông tin toàn diện và dễ truy cập cho du khách muốn khám phá Đà Nẵng.
+- Hỗ trợ du khách trong việc lập kế hoạch và tổ chức chuyến đi của họ một cách thuận tiện và hiệu quả.
+- Nâng cao trải nghiệm du lịch của người dùng bằng cách cung cấp thông tin chính xác, đáng tin cậy và đa dạng về các hoạt động và dịch vụ du lịch tại Đà Nẵng.
+Project team
+
+Functional Requirements
+Chức năng cốt lõi:
+
+a. Quản lý Người dùng:
+
+Hệ thống phải cho phép người dùng đăng nhập và đăng ký tài khoản mới.
+Người dùng có thể cập nhật thông tin cá nhân của mình (tên, email, mật khẩu).
+b. Quản lý Bài viết:
+
+Người dùng có thể tạo thêm, xem, bình luận, đánh giá và thêm bài viết vào mục yêu thích. 
+Mỗi bài viết phải có tiêu đề, mô tả, ngày đăng bài.
+Hệ thống phải hiển thị danh sách các bài viết có thumbnail, tiêu đề, nội dung sơ lược về địa điểm du lịch
+
+Chức năng phụ:
+
+a. Phân quyền:
+
+Hệ thống phải có hệ thống phân quyền để quản trị viên có thể quản lý người dùng và bài viết, trong khi người dùng thông thường chỉ có thể xem, bình luận và đánh giá.
+Các vai trò cụ thể như quản trị viên, người dùng và khách hàng phải được xác định và phân quyền tương ứng.
+
+b. Đề xuất bài viết:
+
+Hệ thống đề xuất các bài viết về từng địa điểm du lịch (theo ngày đăng (New) hoặc theo số lượng truy cập (Trending) )
+
+c. Đề xuất các dịch vụ du lịch khác:
+
+Đề xuất các dịch vụ liên quan ở gần địa điểm du lịch trong bài viết như: phòng trọ, khách sạn, nhà hàng, địa điểm vui chơi, ….
+
+
+Non-functional Requirements 
+(tạm thời bỏ qua: chạy là được :v)
+Technical Requirements
+    
+1.Nền tảng Công nghệ:
+
+Sử dụng ngôn ngữ lập trình JavaScript và Framework ReactJS cho phần giao diện người dùng (Frontend).
+Sử dụng ASP.NET Core cho phần logic xử lý máy chủ (Backend).
+Sử dụng cơ sở dữ liệu SQL Server để lưu trữ thông tin về địa điểm du lịch, khách sạn, nhà hàng và các hoạt động giải trí tại Đà Nẵng.
+
+2. Thiết kế Giao diện Người dùng:
+
+Thiết kế giao diện người dùng phải linh hoạt, thân thiện với người dùng và tương thích trên các thiết bị di động và máy tính bảng.
+Phải cung cấp trải nghiệm người dùng mượt mà và thân thiện với việc sử dụng các yếu tố tương tác như hình ảnh và video (nếu có thể thì thêm bản đồ).
+
+3. Hiệu suất và Tối ưu hóa:
+
+  Tối ưu hóa mã nguồn và tài nguyên để tối đa hóa hiệu suất tải trang và thời gian đáp ứng của trang web.
+Đảm bảo rằng trang web có thể xử lý một lượng lớn người dùng cùng một lúc mà không gặp vấn đề về hiệu suất.
+Data Requirements
+1.Cấu trúc Dữ liệu:
+
+   - Địa điểm Du lịch:
+
+Tên địa điểm (Name): chuỗi ký tự, không được để trống, tối đa 255 ký tự.
+Mô tả (Description): văn bản dài, cho phép trống.
+Địa chỉ (Address): chuỗi ký tự, không được để trống.
+Hình ảnh (Image): đường dẫn tới tệp hình ảnh, không bắt buộc.
+
+   - Khách sạn (Hotels):
+
+Tên khách sạn (Name): chuỗi ký tự, không được để trống, tối đa 255 ký tự.
+Địa chỉ (Address): chuỗi ký tự, không được để trống.
+Số lượng phòng (Number of Rooms): số nguyên, không âm.
+Giá phòng trung bình (Average Room Price): số, không âm.
+
+   - Nhà hàng (Restaurants):
+
+Tên nhà hàng (Name): chuỗi ký tự, không được để trống, tối đa 255 ký tự.
+Địa chỉ (Address): chuỗi ký tự, không được để trống.
+Thực đơn (Menu): văn bản dài, cho phép trống.
+Giá trung bình mỗi người (Average Price per Person): số, không âm.
+
+…v.v (tuỳ vào từng đối tượng)
+
+2. Quy tắc và Ràng buộc Dữ liệu:
+
+   - Mỗi địa điểm du lịch và dịch vụ du lịch khác (phòng trọ, khách sạn, nhà hàng,…)  phải có một tên và địa chỉ duy nhất.
+   - Hình ảnh của mỗi địa điểm du lịch hoặc khách sạn không bắt buộc nhưng được khuyến khích.
+
+3. Yêu cầu Bảo mật Dữ liệu:
+
+   - Thông tin cá nhân của người dùng như tên, email phải được bảo mật và không được chia sẻ với bất kỳ bên thứ ba nào.
+   - Mật khẩu của người dùng phải được mã hóa trước khi lưu trữ vào cơ sở dữ liệu.
+Processing Requirements
+1.Xử lý Tìm kiếm:
+
+Hệ thống phải có khả năng thực hiện tìm kiếm nhanh chóng và chính xác trên các địa điểm du lịch, khách sạn và nhà hàng tại Đà Nẵng.
+Tìm kiếm phải hỗ trợ các yếu tố như tên địa điểm, loại hình (ví dụ: khách sạn, nhà hàng), khoảng cách từ vị trí hiện tại, và đánh giá.
+
+2.Xử lý Gợi ý và Tùy chỉnh:
+
+Hệ thống phải cung cấp các gợi ý và tùy chỉnh dựa trên lịch sử tìm kiếm và ưa thích của người dùng. (Cái này nếu làm kịp thì làm, chưa cần quan tâm giai đoạn đầu)
+Các đề xuất phải được tạo ra một cách nhanh chóng và phản ánh đúng nhu cầu và sở thích của người dùng.
+
+
+Interface Requirements
+1.Giao diện Người dùng:
+
+Giao diện người dùng phải có thiết kế đẹp mắt, dễ sử dụng và thân thiện với người dùng.
+Các yếu tố giao diện như nút, biểu mẫu, thanh điều hướng và các phần tử tương tác phải được bố trí một cách hợp lý để tối ưu trải nghiệm người dùng.
+Giao diện phải tương thích trên các thiết bị di động, máy tính bảng và máy tính để bàn và tự động điều chỉnh kích thước và bố trí để phù hợp với màn hình của từng thiết bị.
+
+2. Tính Năng Tìm Kiếm:
+
+Hệ thống phải có một ô tìm kiếm rõ ràng và dễ dàng nhận diện trên trang chính để người dùng có thể tìm kiếm thông tin nhanh chóng.
+Kết quả tìm kiếm phải được hiển thị một cách rõ ràng và dễ đọc, với các tùy chọn lọc và sắp xếp để người dùng có thể tinh chỉnh kết quả theo nhu cầu của họ.
+
+3. Giao diện Đăng Nhập và Đăng Ký:
+
+Giao diện đăng nhập và đăng ký phải cung cấp các biểu mẫu dễ sử dụng và hướng dẫn rõ ràng để người dùng có thể nhập thông tin của họ một cách chính xác.
+Cần cung cấp các thông báo lỗi rõ ràng và hữu ích nếu có bất kỳ lỗi nào xảy ra trong quá trình đăng nhập hoặc đăng ký.
+
+4. Giao diện Chi Tiết:
+
+Giao diện chi tiết của mỗi địa điểm du lịch, khách sạn hoặc nhà hàng phải hiển thị thông tin chi tiết và hình ảnh một cách rõ ràng và hấp dẫn.
+Cần cung cấp các tính năng tương tác như đánh giá, đánh dấu yêu thích, chia sẻ và đặt lịch trực tuyến nếu có.
+
+5. Giao diện Liên Hệ và Hỗ Trợ: (xem thử có cần không, demo thì thấy k cần lắm)
+
+Giao diện liên hệ và hỗ trợ phải cung cấp thông tin liên lạc rõ ràng và dễ tiếp cận để người dùng có thể liên hệ với nhà cung cấp dịch vụ hoặc hỗ trợ khách hàng một cách dễ dàng.
+Cần cung cấp các biểu mẫu liên hệ để người dùng có thể gửi câu hỏi hoặc phản hồi một cách thuận tiện. 
+
+6. Giao diện quản lý của Admin: (Chỉnh sửa địa điểm, xóa đánh giá vi phạm, cấm tài khoản vi phạm, …)
+
+
+
+
+
