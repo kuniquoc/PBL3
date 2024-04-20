@@ -17,67 +17,167 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = DaNangTourism
 build_property.RootNamespace = DaNangTourism
-build_property.ProjectDir = D:\Tài Liệu\PBL3\Code\DaNangTourism\DaNangTourism\
+build_property.ProjectDir = D:\PBL3\DaNangTourism\DaNangTourism\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\Tài Liệu\PBL3\Code\DaNangTourism\DaNangTourism
+build_property.MSBuildProjectDirectory = D:\PBL3\DaNangTourism\DaNangTourism
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Areas/Identity/Pages/_ViewStart.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Accounts/Create.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Accounts/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Accounts/Delete.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Accounts/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudHNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Accounts/Details.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Accounts/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudHNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Accounts/Edit.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Accounts/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudHNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Accounts/Index.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Accounts/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Home/Index.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Destination/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzdGluYXRpb25cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Destination/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzdGluYXRpb25cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Destination/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzdGluYXRpb25cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Destination/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzdGluYXRpb25cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Destination/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVzdGluYXRpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Home/Privacy.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Shared/Error.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ProcessingReports/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvY2Vzc2luZ1JlcG9ydHNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ProcessingReports/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvY2Vzc2luZ1JlcG9ydHNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ProcessingReports/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvY2Vzc2luZ1JlcG9ydHNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ProcessingReports/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvY2Vzc2luZ1JlcG9ydHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ProcessingReports/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvY2Vzc2luZ1JlcG9ydHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Reviews/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3c1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Reviews/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3c1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Reviews/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3c1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Reviews/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3c1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Reviews/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3c1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ScheduleDestinations/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVEZXN0aW5hdGlvbnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ScheduleDestinations/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVEZXN0aW5hdGlvbnNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ScheduleDestinations/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVEZXN0aW5hdGlvbnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ScheduleDestinations/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVEZXN0aW5hdGlvbnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/ScheduleDestinations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVEZXN0aW5hdGlvbnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Schedules/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Schedules/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Schedules/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Schedules/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Schedules/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Shared/_LoginPartial.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/_ViewImports.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/_ViewStart.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Tài Liệu/PBL3/Code/DaNangTourism/DaNangTourism/Views/Shared/_Layout.cshtml]
+[D:/PBL3/DaNangTourism/DaNangTourism/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-33dl58mrdx

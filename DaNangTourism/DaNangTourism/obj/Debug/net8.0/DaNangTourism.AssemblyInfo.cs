@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DaNangTourism")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+537ba338439a3c5d60f44b20b1652ab3980a9fa8")]
 [assembly: System.Reflection.AssemblyProductAttribute("DaNangTourism")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DaNangTourism")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
