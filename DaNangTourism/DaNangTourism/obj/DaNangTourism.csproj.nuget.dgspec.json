@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj": {}
+    "D:\\pbl3clone\\DaNangTourism\\DaNangTourism\\DaNangTourism.csproj": {}
   },
   "projects": {
-    "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj": {
+    "D:\\pbl3clone\\DaNangTourism\\DaNangTourism\\DaNangTourism.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj",
+        "projectUniqueName": "D:\\pbl3clone\\DaNangTourism\\DaNangTourism\\DaNangTourism.csproj",
         "projectName": "DaNangTourism",
-        "projectPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj",
+        "projectPath": "D:\\pbl3clone\\DaNangTourism\\DaNangTourism\\DaNangTourism.csproj",
         "packagesPath": "C:\\Users\\lxbqu\\.nuget\\packages\\",
-        "outputPath": "D:\\PBL3\\DaNangTourism\\obj\\",
+        "outputPath": "D:\\pbl3clone\\DaNangTourism\\DaNangTourism\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lxbqu\\AppData\\Roaming\\NuGet\\NuGet.Config",
