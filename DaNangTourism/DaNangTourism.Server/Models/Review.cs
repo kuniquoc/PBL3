@@ -3,14 +3,14 @@
     public class Review
     {
         private int _id;
-        private string _content;
+        private string? _content;
         private int _star;
         public int Id
         {
             get { return _id; }
             set { _id = value; }
         }
-        public string Content
+        public string? Content
         {
             get { return _content; }
             set { _content = value; }

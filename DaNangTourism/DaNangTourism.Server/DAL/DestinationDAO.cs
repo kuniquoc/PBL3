@@ -5,7 +5,7 @@ namespace DaNangTourism.Server.DAL
 {
     public class DestinationDAO
     {
-        public Dictionary<int, Destination> GetAllDestination()
+        public Dictionary<int, Destination> GetAllDestinations()
         {
             DAO dao = new DAO();
             Dictionary<int, Destination> destinations = new Dictionary<int, Destination>();
@@ -13,16 +13,7 @@ namespace DaNangTourism.Server.DAL
             MySqlDataReader reader = dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
-                Destination destination = new Destination();
-                destination.Id = reader.GetInt32("destination_id");
-                destination.Name = reader.GetString("destination_name");
-                destination.Address = reader.GetString("destination_address");
-                destination.OpenTime = TimeOnly.Parse(reader.GetString("open_time"));
-                destination.CloseTime = TimeOnly.Parse(reader.GetString("close_time"));
-                destination.OpenDay = Enum.Parse<DayOfWeek>(reader.GetString("destination_address"));
-                destination.HtmlText = reader.GetString("destination_address");
-                destination.ImgURL = reader.GetString("destination_address").Split(';');
-                destination.Rating = reader.GetFloat("rating");
+                Destination destination = new Destination(reader);
                 destinations.Add(destination.Id, destination);
             }
             return destinations;
@@ -36,20 +27,26 @@ namespace DaNangTourism.Server.DAL
             MySqlDataReader reader = dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
-                Destination destination = new Destination();
-                destination.Id = reader.GetInt32("destination_id");
-                destination.Name = reader.GetString("destination_name");
-                destination.Address = reader.GetString("destination_address");
-                destination.OpenTime = TimeOnly.Parse(reader.GetString("open_time"));
-                destination.CloseTime = TimeOnly.Parse(reader.GetString("close_time"));
-                destination.OpenDay = Enum.Parse<DayOfWeek>(reader.GetString("destination_address"));
-                destination.HtmlText = reader.GetString("destination_address");
-                destination.ImgURL = reader.GetString("destination_address").Split(';');
-                destination.Rating = reader.GetFloat("rating");
+                Destination destination = new Destination(reader);
                 destinations.Add(destination);
             }
             return destinations;
         }
+
+        public Destination GetDestinationsById(int id)
+        {
+            DAO dao = new DAO();
+            string sql = "Select * from destinations where destination_id = @id";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
+            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
+            if (reader.Read())
+            {
+                Destination destination = new Destination(reader);
+                return destination;
+            }
+            else return null;
+        }
+
         public Dictionary<int, Destination> GetDestinationsByIds(List<int> ids)
         {
             DAO dao = new DAO();
@@ -68,16 +65,7 @@ namespace DaNangTourism.Server.DAL
             MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
             while (reader.Read())
             {
-                Destination destination = new Destination();
-                destination.Id = reader.GetInt32("destination_id");
-                destination.Name = reader.GetString("destination_name");
-                destination.Address = reader.GetString("destination_address");
-                destination.OpenTime = TimeOnly.Parse(reader.GetString("open_time"));
-                destination.CloseTime = TimeOnly.Parse(reader.GetString("close_time"));
-                destination.OpenDay = Enum.Parse<DayOfWeek>(reader.GetString("destination_address"));
-                destination.HtmlText = reader.GetString("destination_address");
-                destination.ImgURL = reader.GetString("destination_address").Split(';');
-                destination.Rating = reader.GetFloat("rating");
+                Destination destination = new Destination(reader);
                 destinations.Add(destination.Id, destination);
             }
             return destinations;
