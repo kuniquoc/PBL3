@@ -34,3 +34,4 @@ D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\refint\DaNangTourism
 D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.pdb
 D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.genruntimeconfig.cache
 D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\ref\DaNangTourism.Server.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\MySqlConnector.dll
