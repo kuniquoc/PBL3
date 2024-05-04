@@ -76,11 +76,11 @@ namespace DaNangTourism.Server.Models
             _id = reader.GetInt32("destination_id");
             _name = reader.GetString("destination_name");
             _address = reader.GetString("destination_address");
-            _openTime = TimeOnly.Parse(reader.GetString("open_time"));
-            _closeTime = TimeOnly.Parse(reader.GetString("close_time"));
-            _openDay = Enum.Parse<DayOfWeek>(reader.GetString("destination_address"));
-            _htmlText = reader.GetString("destination_address");
-            _imgURL = reader.GetString("destination_address").Split(';');
+            _openTime = reader.GetTimeOnly("open_time");
+            _closeTime = reader.GetTimeOnly("close_time");
+            _openDay = Enum.Parse<DayOfWeek>(reader.GetString("open_day"));
+            _htmlText = reader.GetString("destination_html");
+            _imgURL = reader.GetString("destination_image_url").Split(';');
             _rating = reader.GetFloat("rating");
             _reviews = new Dictionary<int, Review>();
         }

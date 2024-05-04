@@ -32,8 +32,7 @@ namespace DaNangTourism.Server.DAL
             }
             return destinations;
         }
-
-        public Destination GetDestinationsById(int id)
+        public Destination? GetDestinationsById(int id)
         {
             DAO dao = new DAO();
             string sql = "Select * from destinations where destination_id = @id";
@@ -69,6 +68,23 @@ namespace DaNangTourism.Server.DAL
                 destinations.Add(destination.Id, destination);
             }
             return destinations;
+        }
+        public int AddDestination(Destination destination)
+        {
+            DAO dao = new DAO();
+            string sql = "Insert into destinations(destination_name, destination_address, open_time, close_time, open_day, destination_html, destination_image_url, rating)" +
+                "values (@destination_name, @destination_address, @open_time, @close_time, @open_day, @destination_html, @destination_image_url, @rating)";
+            MySqlParameter[] parameters = new MySqlParameter[8];
+            parameters[0] = new MySqlParameter("@destination_name", destination.Name);
+            parameters[1] = new MySqlParameter("@destination_address", destination.Address);
+            parameters[2] = new MySqlParameter("@open_time", destination.OpenTime.ToString("HH:mm:ss"));
+            parameters[3] = new MySqlParameter("@close_time", destination.CloseTime.ToString("HH:mm:ss"));
+            parameters[4] = new MySqlParameter("@open_day", destination.OpenDay);
+            parameters[5] = new MySqlParameter("@destination_html", destination.HtmlText);
+            parameters[6] = new MySqlParameter("@destination_image_url", string.Join(';', destination.ImgURL));
+            parameters[7] = new MySqlParameter("@rating", destination.Rating);
+
+            return dao.ExecuteNonQuery(sql, parameters);
         }
         public int UpdateDestination(Destination destination)
         {

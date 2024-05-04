@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2024 at 08:52 PM
+-- Generation Time: May 04, 2024 at 10:32 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,16 +43,22 @@ CREATE TABLE `blogs` (
 
 CREATE TABLE `destinations` (
   `destination_id` int(11) NOT NULL,
-  `admin_id` int(11) NOT NULL,
   `destination_name` varchar(255) NOT NULL,
   `destination_address` varchar(255) NOT NULL,
   `open_time` time NOT NULL,
   `close_time` time NOT NULL,
-  `open_day` enum('monday','tuesday','wednesday','thursday','friday','saturday','sunday') NOT NULL,
+  `open_day` enum('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') NOT NULL,
   `destination_html` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `destination_image_url` text NOT NULL,
   `rating` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `destinations`
+--
+
+INSERT INTO `destinations` (`destination_id`, `destination_name`, `destination_address`, `open_time`, `close_time`, `open_day`, `destination_html`, `destination_image_url`, `rating`) VALUES
+(2, 'Dragon Bridge', 'Nguyen Van Linh Street', '00:00:00', '23:59:59', 'Wednesday', 'a', 'a', 3.5);
 
 -- --------------------------------------------------------
 
@@ -154,9 +160,16 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `is_logged_in` tinyint(1) NOT NULL DEFAULT 0,
-  `permission` enum('admin','user') NOT NULL DEFAULT 'user'
+  `permission` enum('admin','user') NOT NULL DEFAULT 'user',
+  `avatar_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `full_name`, `birthday`, `email`, `user_name`, `password`, `permission`, `avatar_url`) VALUES
+(1, 'Lê Xuân Bá Quốc', '2024-05-15', 'lxbquoc@gmail.com', 'lxbquoc', 'quoc123', 'admin', '.');
 
 --
 -- Indexes for dumped tables
@@ -173,8 +186,7 @@ ALTER TABLE `blogs`
 -- Indexes for table `destinations`
 --
 ALTER TABLE `destinations`
-  ADD PRIMARY KEY (`destination_id`),
-  ADD KEY `FK_destination_admin` (`admin_id`);
+  ADD PRIMARY KEY (`destination_id`);
 
 --
 -- Indexes for table `favourite_destinations`
@@ -226,9 +238,7 @@ ALTER TABLE `schedule_destinations`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `user_name` (`user_name`);
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -244,7 +254,7 @@ ALTER TABLE `blogs`
 -- AUTO_INCREMENT for table `destinations`
 --
 ALTER TABLE `destinations`
-  MODIFY `destination_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `favourite_destinations`
@@ -286,7 +296,7 @@ ALTER TABLE `schedule_destinations`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -297,12 +307,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `blogs`
   ADD CONSTRAINT `FK_blog_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `destinations`
---
-ALTER TABLE `destinations`
-  ADD CONSTRAINT `FK_destination_admin` FOREIGN KEY (`admin_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `favourite_destinations`

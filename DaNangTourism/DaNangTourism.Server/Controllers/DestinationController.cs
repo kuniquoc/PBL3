@@ -23,27 +23,32 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetDestinationById(int id)
         {
             DestinationDAO destinationDAO = new DestinationDAO();
-            Destination destination = destinationDAO.GetDestinationsById(id);
+            Destination? destination = destinationDAO.GetDestinationsById(id);
             if (destination == null)
             {
                 return NotFound();
             }
             else return Ok(destination);
         }
-        //[HttpPost("add")]
-        //public IActionResult AddDestination([FromBody] Destination destination)
-        //{
-        //    DestinationDAO destinationDAO = new DestinationDAO();
-        //    destinationDAO.Add()
-        //}
+        [HttpPost("add")]
+        public IActionResult AddDestination([FromBody] Destination destination)
+        {
+            DestinationDAO destinationDAO = new DestinationDAO();
+            bool check = (destinationDAO.AddDestination(destination) > 0)? true: false;
+            if (check)
+            {
+                return Ok();
+            }
+            else return BadRequest();
+        }
         [HttpPut("update")]
         public IActionResult UpdateDestination([FromBody] Destination destination)
         {
             DestinationDAO destinationDAO = new DestinationDAO();
-            bool check = (destinationDAO.UpdateDestination(destination) > 1) ? true: false;
+            bool check = (destinationDAO.UpdateDestination(destination) > 0) ? true: false;
             if (check)
             {
-                return NoContent();
+                return Ok();
             }
             else return BadRequest();
         }
@@ -51,10 +56,10 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult DeleteDestination(int id)
         {
             DestinationDAO destinationDAO = new DestinationDAO();
-            bool check = (destinationDAO.DeleteDestination(id) > 1) ? true : false;
+            bool check = (destinationDAO.DeleteDestination(id) > 0) ? true : false;
             if (check)
             {
-                return NoContent();
+                return Ok();
             }
             else return BadRequest();
         }
@@ -62,7 +67,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult SortDestinationByRating()
         {
             DestinationDAO destinationDAO = new DestinationDAO();
-            List<Destination> destinations = destinationDAO.GetDescendingDestination();
+            List<Destination> destinations = destinationDAO.GetDescendingDestination();  
             if (destinations.Count == 0)
             {
                 return NotFound();
