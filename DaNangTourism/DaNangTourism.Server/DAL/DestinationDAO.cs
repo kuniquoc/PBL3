@@ -5,50 +5,71 @@ namespace DaNangTourism.Server.DAL
 {
     public class DestinationDAO
     {
+        private DAO _dao;
+        private static DestinationDAO _instance;
+        public static DestinationDAO Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DestinationDAO(DAO.Instance);
+                }
+                return _instance;
+            }
+            private set { }
+        }
+        private DestinationDAO(DAO dao)
+        {
+            _dao = dao;
+        }
         public Dictionary<int, Destination> GetAllDestinations()
         {
-            DAO dao = new DAO();
             Dictionary<int, Destination> destinations = new Dictionary<int, Destination>();
             string sql = "Select * from destinations";
-            MySqlDataReader reader = dao.ExecuteQuery(sql, null);
+            _dao.OpenConnection();
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
                 Destination destination = new Destination(reader);
                 destinations.Add(destination.Id, destination);
             }
+            _dao.CloseConnection();
             return destinations;
         }
         public List<Destination> GetDescendingDestination()
         {
-            DAO dao = new DAO();
             List<Destination> destinations = new List<Destination>();
             // Lấy danh sách các destination theo thứ tự rating giảm dần từ db;
             string sql = "Select * from destinations order by rating desc;";
-            MySqlDataReader reader = dao.ExecuteQuery(sql, null);
+            _dao.OpenConnection();
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
                 Destination destination = new Destination(reader);
                 destinations.Add(destination);
             }
+            _dao.CloseConnection();
             return destinations;
         }
         public Destination? GetDestinationsById(int id)
         {
-            DAO dao = new DAO();
             string sql = "Select * from destinations where destination_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
+            _dao.OpenConnection();
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
             if (reader.Read())
             {
                 Destination destination = new Destination(reader);
+                _dao.CloseConnection();
                 return destination;
             }
-            else return null;
+            _dao.CloseConnection();
+            return null;
         }
 
         public Dictionary<int, Destination> GetDestinationsByIds(List<int> ids)
         {
-            DAO dao = new DAO();
             string sql = "Select * from destinations where destination_id in (@id0" ;
             MySqlParameter[] parameters = new MySqlParameter[ids.Count];
             parameters[0] = new MySqlParameter("id0", ids[0]);
@@ -61,17 +82,18 @@ namespace DaNangTourism.Server.DAL
             sql += ");" ;
 
             Dictionary<int, Destination> destinations = new Dictionary<int, Destination>();
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
+            _dao.OpenConnection();
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
             while (reader.Read())
             {
                 Destination destination = new Destination(reader);
                 destinations.Add(destination.Id, destination);
             }
+            _dao.CloseConnection();
             return destinations;
         }
         public int AddDestination(Destination destination)
         {
-            DAO dao = new DAO();
             string sql = "Insert into destinations(destination_name, destination_address, open_time, close_time, open_day, destination_html, destination_image_url, rating)" +
                 "values (@destination_name, @destination_address, @open_time, @close_time, @open_day, @destination_html, @destination_image_url, @rating)";
             MySqlParameter[] parameters = new MySqlParameter[8];
@@ -83,12 +105,13 @@ namespace DaNangTourism.Server.DAL
             parameters[5] = new MySqlParameter("@destination_html", destination.HtmlText);
             parameters[6] = new MySqlParameter("@destination_image_url", string.Join(';', destination.ImgURL));
             parameters[7] = new MySqlParameter("@rating", destination.Rating);
-
-            return dao.ExecuteNonQuery(sql, parameters);
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
         }
         public int UpdateDestination(Destination destination)
         {
-            DAO dao = new DAO();
             string sql = "Update destinations set destination_name = @destination_name, destination_address = @destination_address, " +
                 "open_time = @open_time, close_time = @close_time, open_day = @open_day, destination_html = @destination_html, " +
                 "destination_image_url = @destination_image_url, rating = @rating where destination_id = @destination_id";
@@ -103,14 +126,19 @@ namespace DaNangTourism.Server.DAL
             parameters[7] = new MySqlParameter("@rating", destination.Rating);
             parameters[8] = new MySqlParameter("@destination_id", destination.Id);
 
-            return dao.ExecuteNonQuery(sql, parameters);
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
         }
         public int DeleteDestination(int id)
         {
-            DAO dao = new DAO();
             string sql = "Delete from destinations where destination_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            return dao.ExecuteNonQuery(sql, parameters);
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
         }
     }
 }

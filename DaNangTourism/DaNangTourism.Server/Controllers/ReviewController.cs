@@ -14,6 +14,6 @@ namespace DaNangTourism.Server.Controllers
 
             return Ok();
         }
-
+        
     }
 }

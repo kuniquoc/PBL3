@@ -7,7 +7,7 @@ namespace DaNangTourism.Server.DAL
     {
         public Dictionary<int, Schedule> GetAllSchedule()
         {
-            DAO dao = new DAO();
+            DAO dao = DAO.Instance;
             string sql = "Select * from schedules";
             MySqlDataReader reader = dao.ExecuteQuery(sql, null);
             Dictionary<int, Schedule> schedules = new Dictionary<int, Schedule>();
@@ -27,7 +27,7 @@ namespace DaNangTourism.Server.DAL
         }
         public Schedule GetScheduleById(int id)
         {
-            DAO dao = new DAO();
+            DAO dao = DAO.Instance;
             string sql = "Select * from schedules where schedule_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
@@ -47,7 +47,7 @@ namespace DaNangTourism.Server.DAL
 
         public int UpdateSchedule(Schedule schedule)
         {
-            DAO dao = new DAO();
+            DAO dao = DAO.Instance;
             string sql = "Update schedules set schedule_name = @scheduleName, schedule_describe = @scheduleDescribe, " +
                 "status = @status, is_public = @isPublic where schedule_id = @scheduleId";
             MySqlParameter[] parameters = new MySqlParameter[5];
@@ -60,7 +60,7 @@ namespace DaNangTourism.Server.DAL
         }
         public int DeleteDestination(int id)
         {
-            DAO dao = new DAO();
+            DAO dao = DAO.Instance;
             string sql = "Delete from schedules where schedule_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             return dao.ExecuteNonQuery(sql, parameters);

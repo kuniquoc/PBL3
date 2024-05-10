@@ -11,7 +11,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("get/all")]
         public IActionResult GetAllDestinations()
         {
-            DestinationDAO destinationDAO = new DestinationDAO();
+            DestinationDAO destinationDAO = DestinationDAO.Instance;
             Dictionary<int, Destination> destinations = destinationDAO.GetAllDestinations();
             if (destinations.Count == 0 )
             {
@@ -22,7 +22,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("get/{id}")]
         public IActionResult GetDestinationById(int id)
         {
-            DestinationDAO destinationDAO = new DestinationDAO();
+            DestinationDAO destinationDAO = DestinationDAO.Instance;
             Destination? destination = destinationDAO.GetDestinationsById(id);
             if (destination == null)
             {
@@ -33,7 +33,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpPost("add")]
         public IActionResult AddDestination([FromBody] Destination destination)
         {
-            DestinationDAO destinationDAO = new DestinationDAO();
+            DestinationDAO destinationDAO = DestinationDAO.Instance;
             bool check = (destinationDAO.AddDestination(destination) > 0)? true: false;
             if (check)
             {
@@ -44,7 +44,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpPut("update")]
         public IActionResult UpdateDestination([FromBody] Destination destination)
         {
-            DestinationDAO destinationDAO = new DestinationDAO();
+            DestinationDAO destinationDAO = DestinationDAO.Instance;
             bool check = (destinationDAO.UpdateDestination(destination) > 0) ? true: false;
             if (check)
             {
@@ -55,7 +55,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteDestination(int id)
         {
-            DestinationDAO destinationDAO = new DestinationDAO();
+            DestinationDAO destinationDAO = DestinationDAO.Instance; 
             bool check = (destinationDAO.DeleteDestination(id) > 0) ? true : false;
             if (check)
             {
@@ -66,7 +66,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("Sort/Rating")]
         public IActionResult SortDestinationByRating()
         {
-            DestinationDAO destinationDAO = new DestinationDAO();
+            DestinationDAO destinationDAO = DestinationDAO.Instance;
             List<Destination> destinations = destinationDAO.GetDescendingDestination();  
             if (destinations.Count == 0)
             {

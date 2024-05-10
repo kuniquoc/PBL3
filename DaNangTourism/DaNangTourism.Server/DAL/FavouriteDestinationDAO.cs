@@ -10,7 +10,7 @@ namespace DaNangTourism.Server.DAL
             List<int> favDestinationIds = new List<int>();
             string sql = "select * from favourite_destinations where user_id = @userId";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@userId", userId) };
-            DAO dao = new DAO();
+            DAO dao = DAO.Instance;
             MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
             while (reader.Read())
             {

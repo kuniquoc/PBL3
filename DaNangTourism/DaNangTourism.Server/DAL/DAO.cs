@@ -4,62 +4,89 @@ namespace DaNangTourism.Server.DAL
 {
     internal class DAO
     {
-        private MySqlConnection? con;
-        private MySqlCommand? Command;
-        ~DAO()
+        private MySqlConnection? _con;
+        private MySqlCommand? _command;
+        private static DAO? _instance;
+        public static DAO Instance
         {
-            CloseConnection();
+            get
+            {
+                if (_instance == null)
+                {
+                    string s = "server=127.0.0.1;database=pbl3;uid=root;password=";
+                    _instance = new DAO(s);
+                }
+                return _instance;
+            }
+            private set { }
+        }
+        private DAO(string s)
+        {
+            _con = new MySqlConnection(s);
+            _command = new MySqlCommand { Connection = _con };
         }
         public void OpenConnection()
         {
-            if (con == null)
-            {
-                con = new MySqlConnection("server=127.0.0.1;database=pbl3;uid=root;password=");
-                con.Open();
-                Command = new MySqlCommand { Connection = con };
-            }
+            _con.Open();
         }
         public void CloseConnection()
         {
-            if (con != null)
-            {
-                con.Close();
-                Command = null;
-                con = null;
-            }
+            _con.Close();
+        }
+        public MySqlDataReader ExecuteQuery(string query)
+        {
+            _command.CommandText = query;
+            MySqlDataReader reader = _command.ExecuteReader();
+            return reader;
         }
         public MySqlDataReader ExecuteQuery(string query, MySqlParameter[]? parameters)
         {
-            OpenConnection();
-            Command.CommandText = query;
-            Command.Parameters.Clear();
+            _command.CommandText = query;
+            _command.Parameters.Clear();
             if (parameters != null && parameters.Length > 0)
             {
-                Command.Parameters.AddRange(parameters);
+                _command.Parameters.AddRange(parameters);
             }
-            return Command.ExecuteReader();
+            MySqlDataReader reader = _command.ExecuteReader();
+            return reader;
+        }
+        public int ExecuteNonQuery(string query)
+        {
+            _con.Open();
+            _command.CommandText = query;
+            int result = _command.ExecuteNonQuery();
+            return result;
         }
         public int ExecuteNonQuery(string query, MySqlParameter[]? parameters)
         {
-            OpenConnection();
-            Command.CommandText = query;
-            Command.Parameters.Clear();
+            _con.Open();
+            _command.CommandText = query;
+            _command.Parameters.Clear();
             if (parameters != null && parameters.Length > 0)
             {
-                Command.Parameters.AddRange(parameters);
+                _command.Parameters.AddRange(parameters);
             }
-            return Command.ExecuteNonQuery();
+            int result = _command.ExecuteNonQuery();
+            return result;
+        }
+        public object? ExecuteScalar(string query)
+        {
+            _con.Open();
+            _command.CommandText = query;
+            object? result = _command.ExecuteScalar();
+            return result;
         }
         public object? ExecuteScalar(string query, MySqlParameter[]? parameters)
         {
-            OpenConnection();
-            Command.CommandText = query;
-            Command.Parameters.Clear();
+            _con.Open();
+            _command.CommandText = query;
+            _command.Parameters.Clear();
             if (parameters != null && parameters.Length > 0)
             {
-                Command.Parameters.AddRange(parameters);
+                _command.Parameters.AddRange(parameters);
             }
-            return Command.ExecuteScalar();
+            object? result = _command.ExecuteScalar();
+            return result;
         }
     }
 }

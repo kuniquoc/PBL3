@@ -591,19 +591,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\admin\\.nuget\\packages\\": {}
+    "C:\\Users\\lxbqu\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+      "projectUniqueName": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
       "projectName": "DaNangTourism.Server",
-      "projectPath": "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
-      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+      "projectPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+      "packagesPath": "C:\\Users\\lxbqu\\.nuget\\packages\\",
+      "outputPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lxbqu\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -666,7 +666,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
