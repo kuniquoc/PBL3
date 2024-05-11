@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< Updated upstream:DaNangTourism/DaNangTourism/obj/DaNangTourism.csproj.nuget.dgspec.json
     "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj": {}
   },
   "projects": {
@@ -12,9 +13,22 @@
         "projectPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj",
         "packagesPath": "C:\\Users\\lxbqu\\.nuget\\packages\\",
         "outputPath": "D:\\PBL3\\DaNangTourism\\obj\\",
+=======
+    "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {}
+  },
+  "projects": {
+    "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+        "projectName": "DaNangTourism.Server",
+        "projectPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+        "packagesPath": "C:\\Users\\LÊ SINH\\.nuget\\packages\\",
+        "outputPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+>>>>>>> Stashed changes:DaNangTourism/DaNangTourism.Server/obj/DaNangTourism.Server.csproj.nuget.dgspec.json
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\lxbqu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LÊ SINH\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +48,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -69,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
