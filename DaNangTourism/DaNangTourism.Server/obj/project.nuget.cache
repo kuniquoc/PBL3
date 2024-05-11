@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "64GVpl1f6KFuqgzfaynSpU+Ii/RS02ntovvOKQTvAjP6cG4QpceC/5U8+365EQN7m5ZHJITPsIoRcd94HDusNw==",
+  "dgSpecHash": "yzZNmN46yhhFt2vbwu9rzg2V07/mGAxmDXjEFLusBz316Q4cGOUYTkd8qAq0QC5gjbPHz+Bs8/BVxQnrCWARgA==",
   "success": true,
-  "projectFilePath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+  "projectFilePath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\LÊ SINH\\.nuget\\packages\\microsoft.aspnetcore.spaproxy\\8.0.4\\microsoft.aspnetcore.spaproxy.8.0.4.nupkg.sha512",
     "C:\\Users\\LÊ SINH\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
@@ -14,5 +14,12 @@
     "C:\\Users\\LÊ SINH\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
     "C:\\Users\\LÊ SINH\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

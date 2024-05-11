@@ -596,11 +596,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+      "projectUniqueName": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
       "projectName": "DaNangTourism.Server",
-      "projectPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+      "projectPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
       "packagesPath": "C:\\Users\\LÊ SINH\\.nuget\\packages\\",
-      "outputPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+      "outputPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\LÊ SINH\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -664,5 +664,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
