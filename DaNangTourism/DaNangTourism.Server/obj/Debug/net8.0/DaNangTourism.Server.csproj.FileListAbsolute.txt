@@ -1,0 +1,74 @@
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\spa.proxy.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\appsettings.Development.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\appsettings.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.exe
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.deps.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.runtimeconfig.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.pdb
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.AspNetCore.SpaProxy.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.AssemblyReference.cache
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\spa.proxy.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.GeneratedMSBuildEditorConfig.editorconfig
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.AssemblyInfoInputs.cache
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.AssemblyInfo.cs
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.CoreCompileInputs.cache
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.MvcApplicationPartsAssemblyInfo.cs
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.MvcApplicationPartsAssemblyInfo.cache
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.sourcelink.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets.build.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets.development.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.DaNangTourism.Server.Microsoft.AspNetCore.StaticWebAssets.props
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.build.DaNangTourism.Server.props
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.DaNangTourism.Server.props
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.DaNangTourism.Server.props
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets.pack.json
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\scopedcss\bundle\DaNangTourism.Server.styles.css
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTo.EE5FF0D3.Up2Date
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\refint\DaNangTourism.Server.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.pdb
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.genruntimeconfig.cache
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\ref\DaNangTourism.Server.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\MySqlConnector.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.AssemblyReference.cache
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\spa.proxy.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.AssemblyInfoInputs.cache
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.AssemblyInfo.cs
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.CoreCompileInputs.cache
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.MvcApplicationPartsAssemblyInfo.cs
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.MvcApplicationPartsAssemblyInfo.cache
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.sourcelink.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\refint\DaNangTourism.Server.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.pdb
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\appsettings.Development.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\appsettings.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\spa.proxy.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.exe
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.deps.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.runtimeconfig.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\DaNangTourism.Server.pdb
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.AspNetCore.SpaProxy.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\MySqlConnector.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets.build.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets.development.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.DaNangTourism.Server.Microsoft.AspNetCore.StaticWebAssets.props
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.build.DaNangTourism.Server.props
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.DaNangTourism.Server.props
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.DaNangTourism.Server.props
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\staticwebassets.pack.json
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\scopedcss\bundle\DaNangTourism.Server.styles.css
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTo.EE5FF0D3.Up2Date
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.genruntimeconfig.cache
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\ref\DaNangTourism.Server.dll
