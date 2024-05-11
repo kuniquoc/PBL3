@@ -1,17 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {}
+<<<<<<< Updated upstream:DaNangTourism/DaNangTourism/obj/DaNangTourism.csproj.nuget.dgspec.json
+    "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {
+    "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+        "projectUniqueName": "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj",
+        "projectName": "DaNangTourism",
+        "projectPath": "D:\\PBL3\\DaNangTourism\\DaNangTourism.csproj",
+        "packagesPath": "C:\\Users\\lxbqu\\.nuget\\packages\\",
+        "outputPath": "D:\\PBL3\\DaNangTourism\\obj\\",
+=======
+    "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {}
+  },
+  "projects": {
+    "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
         "projectName": "DaNangTourism.Server",
-        "projectPath": "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+        "projectPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
         "packagesPath": "C:\\Users\\LÊ SINH\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+        "outputPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+>>>>>>> Stashed changes:DaNangTourism/DaNangTourism.Server/obj/DaNangTourism.Server.csproj.nuget.dgspec.json
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\LÊ SINH\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,17 +54,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.SpaProxy": {
-              "target": "Package",
-              "version": "[8.*-*, )"
-            },
             "MySqlConnector": {
               "target": "Package",
-              "version": "[2.3.7, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[2.3.6, )"
             }
           },
           "imports": [

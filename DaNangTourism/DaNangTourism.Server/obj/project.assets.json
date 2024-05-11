@@ -596,11 +596,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+      "projectUniqueName": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
       "projectName": "DaNangTourism.Server",
-      "projectPath": "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+      "projectPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
       "packagesPath": "C:\\Users\\LÊ SINH\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\LÊ SINH\\Downloads\\PBL3-Huy\\PBL3-Huy\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+      "outputPath": "D:\\PBL3\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\LÊ SINH\\AppData\\Roaming\\NuGet\\NuGet.Config",
