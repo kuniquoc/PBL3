@@ -1,4 +1,6 @@
-﻿namespace DaNangTourism.Server.Models
+﻿using MySqlConnector;
+
+namespace DaNangTourism.Server.Models
 {
     public class ScheduleDestination
     {
@@ -23,6 +25,15 @@
             _leaveTime = leaveTime;
             _costEstimate = costEstimate;
             _note = note;
+        }
+        public ScheduleDestination(MySqlDataReader reader)
+        {
+            _id = reader.GetInt32("sd_id");
+            _destinationId = reader.GetInt32("destination_id");
+            _arrivalTime = reader.GetDateTime("arrival_time");
+            _leaveTime = reader.GetDateTime("leave_time");
+            _costEstimate = reader.GetInt64("cost_estimate");
+            _note = reader.GetString("note");
         }
     }
 }

@@ -5,16 +5,13 @@ namespace DaNangTourism.Server.DAL
 {
     public class DestinationDAO
     {
-        private DAO _dao;
+        private readonly DAO _dao;
         private static DestinationDAO _instance;
         public static DestinationDAO Instance
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new DestinationDAO(DAO.Instance);
-                }
+                _instance = new DestinationDAO(DAO.Instance);
                 return _instance;
             }
             private set { }
@@ -52,10 +49,10 @@ namespace DaNangTourism.Server.DAL
             _dao.CloseConnection();
             return destinations;
         }
-        public Destination? GetDestinationsById(int id)
+        public Destination? GetDestinationById(int id)
         {
             string sql = "Select * from destinations where destination_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
+            MySqlParameter[] parameters = [new MySqlParameter("@id", id)];
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
             if (reader.Read())

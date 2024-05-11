@@ -1,4 +1,6 @@
-﻿namespace DaNangTourism.Server.Models
+﻿using MySqlConnector;
+
+namespace DaNangTourism.Server.Models
 {
     public class Review
     {
@@ -26,6 +28,12 @@
             _id = id;
             _content = content;
             _star = star;
+        }
+        public Review(MySqlDataReader reader)
+        {
+            _id = reader.GetInt32("review_id");
+            _content = reader.GetString("content");
+            _star = reader.GetInt32("star");
         }
     }
 }

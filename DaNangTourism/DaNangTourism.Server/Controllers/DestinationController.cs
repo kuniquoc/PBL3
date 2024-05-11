@@ -1,5 +1,6 @@
 ﻿using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaNangTourism.Server.Controllers
@@ -23,7 +24,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetDestinationById(int id)
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance;
-            Destination? destination = destinationDAO.GetDestinationsById(id);
+            Destination? destination = destinationDAO.GetDestinationById(id);
             if (destination == null)
             {
                 return NotFound();
@@ -34,7 +35,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult AddDestination([FromBody] Destination destination)
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance;
-            bool check = (destinationDAO.AddDestination(destination) > 0)? true: false;
+            bool check = destinationDAO.AddDestination(destination) > 0;
             if (check)
             {
                 return Ok();
@@ -45,7 +46,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult UpdateDestination([FromBody] Destination destination)
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance;
-            bool check = (destinationDAO.UpdateDestination(destination) > 0) ? true: false;
+            bool check = destinationDAO.UpdateDestination(destination) > 0 ;
             if (check)
             {
                 return Ok();
@@ -56,7 +57,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult DeleteDestination(int id)
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance; 
-            bool check = (destinationDAO.DeleteDestination(id) > 0) ? true : false;
+            bool check = destinationDAO.DeleteDestination(id) > 0;
             if (check)
             {
                 return Ok();

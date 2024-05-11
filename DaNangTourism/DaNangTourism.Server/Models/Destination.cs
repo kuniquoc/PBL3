@@ -14,7 +14,7 @@ namespace DaNangTourism.Server.Models
         private string? _htmlText;
         private string[] _imgURL;
         private float _rating;
-        private Dictionary<int, Review>? _reviews;
+        //private Dictionary<int, Review>? _reviews;
 
         public int Id
         {
@@ -61,15 +61,15 @@ namespace DaNangTourism.Server.Models
             get { return _rating; }
             set { _rating = value; }
         }
-        public Dictionary<int, Review>? Reviews
-        {
-            get { return _reviews; }
-            set { _reviews = value; }
-        }
+        //public Dictionary<int, Review>? Reviews
+        //{
+        //    get { return _reviews; }
+        //    set { _reviews = value; }
+        //}
         public Destination()
         {
             _imgURL = new string[0];
-            _reviews = new Dictionary<int, Review>();
+            //_reviews = new Dictionary<int, Review>();
         }
         public Destination(MySqlDataReader reader)
         {
@@ -82,41 +82,41 @@ namespace DaNangTourism.Server.Models
             _htmlText = reader.GetString("destination_html");
             _imgURL = reader.GetString("destination_image_url").Split(';');
             _rating = reader.GetFloat("rating");
-            _reviews = new Dictionary<int, Review>();
+            //_reviews = new Dictionary<int, Review>();
         }
-        public void AddReview(Review review)
-        {
-            if (_reviews == null) _reviews = new Dictionary<int, Review>();
-            _reviews.Add(review.Id, review);
-        }
-        public void AddRangeReview(Review[] reviews)
-        {
-            if (_reviews == null) _reviews = new Dictionary<int, Review>();
-            foreach (Review review in reviews)
-            {
-                _reviews.Add(review.Id, review);
-            }
-        }
-        public bool UpdateReview(Review review)
-        {
-            if (_reviews == null) _reviews = new Dictionary<int, Review>();
-            if (_reviews.ContainsKey(review.Id))
-            {
-                Review changeReview = _reviews[review.Id];
-                changeReview.Content = review.Content;
-                changeReview.Star = review.Star;
-                return true;
-            }
-            return false;
-        }
-        public void DeleteReview(int reviewId)
-        {
-            if (_reviews == null) _reviews = new Dictionary<int, Review>();
-            if (_reviews.ContainsKey(reviewId))
-            {
-                _reviews.Remove(reviewId);
-            }    
+        //public void AddReview(Review review)
+        //{
+        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
+        //    _reviews.Add(review.Id, review);
+        //}
+        //public void AddRangeReview(Review[] reviews)
+        //{
+        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
+        //    foreach (Review review in reviews)
+        //    {
+        //        _reviews.Add(review.Id, review);
+        //    }
+        //}
+        //public bool UpdateReview(Review review)
+        //{
+        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
+        //    if (_reviews.ContainsKey(review.Id))
+        //    {
+        //        Review changeReview = _reviews[review.Id];
+        //        changeReview.Content = review.Content;
+        //        changeReview.Star = review.Star;
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        //public void DeleteReview(int reviewId)
+        //{
+        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
+        //    if (_reviews.ContainsKey(reviewId))
+        //    {
+        //        _reviews.Remove(reviewId);
+        //    }    
                 
-        }
+        //}
     }
 }

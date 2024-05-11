@@ -5,49 +5,89 @@ namespace DaNangTourism.Server.DAL
 {
     public class ScheduleDAO
     {
-        public Dictionary<int, Schedule> GetAllSchedule()
+        private readonly DAO _dao;
+        private static ScheduleDAO _instance;
+        public static ScheduleDAO Instance
         {
-            DAO dao = DAO.Instance;
-            string sql = "Select * from schedules";
-            MySqlDataReader reader = dao.ExecuteQuery(sql, null);
-            Dictionary<int, Schedule> schedules = new Dictionary<int, Schedule>();
-            while (reader.Read())
+            get
             {
-                Schedule schedule = new Schedule();
-                schedule.Id = reader.GetInt32("schedule_id");
-                schedule.UserId = reader.GetInt32("user_id");
-                schedule.Name = reader.GetString("name");
-                schedule.Describe = reader.GetString("describe");
-                string s = reader.GetString(reader.GetOrdinal("status"));
-                schedule.Status = (ScheduleStatus)Enum.Parse(typeof(ScheduleStatus), s); ;
-                schedule.IsPublic = reader.GetBoolean("is_public");
-                schedules.Add(schedule.Id, schedule);
+                if (_instance == null)
+                {
+                    _instance = new ScheduleDAO(DAO.Instance);
+                }    
+                return _instance;
             }
-            return schedules;
+            private set { }
         }
-        public Schedule GetScheduleById(int id)
+        private ScheduleDAO(DAO dao)
         {
-            DAO dao = DAO.Instance;
-            string sql = "Select * from schedules where schedule_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
-            Schedule schedule = new Schedule();
-            if (reader.Read())
-            {
-                schedule.Id = reader.GetInt32("schedule_id");
-                schedule.UserId = reader.GetInt32("user_id");
-                schedule.Name = reader.GetString("name");
-                schedule.Describe = reader.GetString("describe");
-                string s = reader.GetString(reader.GetOrdinal("status"));
-                schedule.Status = (ScheduleStatus)Enum.Parse(typeof(ScheduleStatus), s); ;
-                schedule.IsPublic = reader.GetBoolean("is_public");
-            }
-            return schedule;
+            _dao = dao;
         }
 
+        public Dictionary<int, Schedule> GetAllSchedule()
+        {
+            string sql = "Select * from schedules";
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
+            Dictionary<int, Schedule> schedules = new Dictionary<int, Schedule>();
+            _dao.OpenConnection();
+            while (reader.Read())
+            {
+                Schedule schedule = new Schedule(reader);
+                schedules.Add(schedule.Id, schedule);
+            }
+            _dao.CloseConnection();
+            return schedules;
+        }
+        public Dictionary<int, Schedule> GetSchedulesByUserId(int userId)
+        {
+            string sql = "Select * from schedules where user_id = @userId";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@userId", userId) };
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
+            Dictionary<int, Schedule> schedules = new Dictionary<int, Schedule>();
+            _dao.OpenConnection();
+            if (reader.Read())
+            {
+                Schedule schedule = new Schedule(reader);
+                schedules.Add(schedule.Id, schedule);
+            }
+            _dao.CloseConnection();
+            return schedules;
+        }
+
+        public Schedule? GetScheduleById(int id)
+        {
+            string sql = "Select * from schedules where schedule_id = @id";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
+
+            _dao.OpenConnection();
+            if (reader.Read())
+            {
+                Schedule schedule = new Schedule(reader);
+                _dao.CloseConnection();
+                return schedule;
+            }
+            _dao.CloseConnection();
+            return null;
+        }
+
+        public int AddSchedule(int userId, Schedule schedule)
+        {
+            string sql = "Insert into schedules(user_id, schedule_name, schedule_describe, status, is_public)" +
+                "values (@userId, @scheduleName, @scheduleDescribe, @status, @isPublic)";
+            MySqlParameter[] parameters = new MySqlParameter[5];
+            parameters[0] = new MySqlParameter("@userId", userId);
+            parameters[1] = new MySqlParameter("@scheduleName", schedule.Name);
+            parameters[2] = new MySqlParameter("@scheduleDescribe", schedule.Describe);
+            parameters[3] = new MySqlParameter("@status", schedule.Status);
+            parameters[4] = new MySqlParameter("@isPublic", schedule.IsPublic);
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
+        }
         public int UpdateSchedule(Schedule schedule)
         {
-            DAO dao = DAO.Instance;
             string sql = "Update schedules set schedule_name = @scheduleName, schedule_describe = @scheduleDescribe, " +
                 "status = @status, is_public = @isPublic where schedule_id = @scheduleId";
             MySqlParameter[] parameters = new MySqlParameter[5];
@@ -56,14 +96,19 @@ namespace DaNangTourism.Server.DAL
             parameters[2] = new MySqlParameter("@status", schedule.Status);
             parameters[3] = new MySqlParameter("@isPublic", schedule.IsPublic);
             parameters[4] = new MySqlParameter("@scheduleId", schedule.Id);
-            return dao.ExecuteNonQuery(sql, parameters);
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
         }
-        public int DeleteDestination(int id)
+        public int DeleteSchedule(int id)
         {
-            DAO dao = DAO.Instance;
             string sql = "Delete from schedules where schedule_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            return dao.ExecuteNonQuery(sql, parameters);
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
         }
     }
 }
