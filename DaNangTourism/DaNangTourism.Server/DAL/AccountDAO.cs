@@ -33,8 +33,12 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "Select * from users where user_name = @username";
             MySqlParameter[] parameters = new MySqlParameter[] { new("@username", username) };
+            _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            return reader.Read();
+            bool result = reader.Read();
+            reader.Close();
+            _dao.CloseConnection(); 
+            return result;
         }
 
         //Thêm tài khoản
@@ -79,6 +83,7 @@ namespace DaNangTourism.Server.DAL
         public Dictionary<int, Account> GetAllAccounts()
         {
             string sql = "Select * from users";
+            _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql);
             Dictionary<int, Account> accounts = new();
             while (reader.Read())
@@ -86,6 +91,7 @@ namespace DaNangTourism.Server.DAL
                 Account account = new(reader);
                 accounts.Add(account.Id, account);
             }
+            _dao.CloseConnection();
             return accounts;
         }
         //Lấy tài khoản theo id
@@ -93,12 +99,14 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "Select * from users where user_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new("@id", id) };
+            _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
             Account account = new();
             if (reader.Read())
             {
                 account = new Account(reader);
             }
+            _dao.CloseConnection();
             return account;
         }
 
@@ -107,12 +115,14 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "Select * from users where user_name = @username";
             MySqlParameter[] parameters = new MySqlParameter[] { new("@username", username) };
+            _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
             Account account = new();
             if (reader.Read())
             {
                 account = new Account(reader);
             }
+            _dao.CloseConnection();
             return account;
         }
         /*

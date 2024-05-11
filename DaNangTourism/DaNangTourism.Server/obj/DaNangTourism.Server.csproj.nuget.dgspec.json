@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {}
+    "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {}
   },
   "projects": {
-    "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {
+    "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+        "projectUniqueName": "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
         "projectName": "DaNangTourism.Server",
-        "projectPath": "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Tài Liệu\\PBL3\\Code\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
+        "projectPath": "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\DaNangTourism.Server\\DaNangTourism.Server.csproj",
+        "packagesPath": "C:\\Users\\LÊ SINH\\.nuget\\packages\\",
+        "outputPath": "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\DaNangTourism.Server\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LÊ SINH\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +34,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -85,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
