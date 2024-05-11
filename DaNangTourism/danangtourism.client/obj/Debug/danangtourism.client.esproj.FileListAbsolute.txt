@@ -1,1 +1,2 @@
 D:\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
+D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
