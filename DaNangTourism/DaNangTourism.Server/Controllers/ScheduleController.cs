@@ -22,7 +22,7 @@ namespace DaNangTourism.Server.Controllers
             return Ok(schedules);
         }
         [HttpGet("get/userId")]
-        public IActionResult GetSchedulesByUserId(int userId) { 
+        public IActionResult GetSchedulesByUserId([FromBody] int userId) { 
             ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
             Dictionary<int, Schedule> schedules = scheduleDAO.GetSchedulesByUserId(userId);
             if (schedules.Count == 0)
@@ -32,7 +32,7 @@ namespace DaNangTourism.Server.Controllers
             return Ok(schedules);
         }
         [HttpGet("get/{id}")]
-        public IActionResult GetScheduleById(int id)
+        public IActionResult GetScheduleById([FromRoute] int id)
         {
             ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
             Schedule? schedule = scheduleDAO.GetScheduleById(id);
@@ -65,7 +65,7 @@ namespace DaNangTourism.Server.Controllers
             return BadRequest();
         }
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteSchedule(int id)
+        public IActionResult DeleteSchedule([FromRoute] int id)
         {
             ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
             bool check = scheduleDAO.DeleteSchedule(id) > 0;

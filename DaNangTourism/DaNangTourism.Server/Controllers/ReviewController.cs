@@ -9,7 +9,7 @@ namespace DaNangTourism.Server.Controllers
     public class ReviewController : Controller
     {
         [HttpGet("get/{id}")]
-        public IActionResult GetReviewById(int id)
+        public IActionResult GetReviewById([FromRoute] int id)
         {
             Review? review = ReviewDAO.Instance.GetReviewById(id);
             if (review == null)
@@ -29,7 +29,7 @@ namespace DaNangTourism.Server.Controllers
             else return Ok(reviews);
         }
         [HttpPost("add/{destinationId}")] 
-        public IActionResult AddReview([FromBody] AddReviewRequest addReviewRequest, int destinationId)
+        public IActionResult AddReview([FromBody] AddReviewRequest addReviewRequest, [FromRoute] int destinationId)
         {
             ReviewDAO reviewDAO = ReviewDAO.Instance;
             bool check = reviewDAO.AddReview(addReviewRequest.UserId, destinationId, addReviewRequest.Review) > 0;
@@ -51,7 +51,7 @@ namespace DaNangTourism.Server.Controllers
             return BadRequest();
         }
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteReview(int id)
+        public IActionResult DeleteReview([FromRoute] int id)
         {
             ReviewDAO reviewDAO = ReviewDAO.Instance;
             bool check = reviewDAO.DeleteReview(id) > 0;

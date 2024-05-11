@@ -20,7 +20,7 @@ namespace DaNangTourism.Server.Controllers
             return Ok(sDs);
         }
         [HttpGet("get/{id}")]
-        public IActionResult GetSDById([FromBody] int id)
+        public IActionResult GetSDById([FromRoute] int id)
         {
             ScheduleDestinationDAO sDDAO = ScheduleDestinationDAO.Instance;
             ScheduleDestination? sD = sDDAO.GetSDById(id);
@@ -30,11 +30,11 @@ namespace DaNangTourism.Server.Controllers
             }
             return Ok(sD);
         }
-        [HttpPost("add/{scheduleId}")] 
-        public IActionResult AddSD(int scheduleId, int destinationId, [FromBody] ScheduleDestination sD)
+        [HttpPost("add")] 
+        public IActionResult AddSD([FromBody] AddSDRequest addSDRequest)
         {
             ScheduleDestinationDAO sDDAO = ScheduleDestinationDAO.Instance;
-            bool check = sDDAO.AddSD(scheduleId, destinationId, sD) > 0;
+            bool check = sDDAO.AddSD(addSDRequest.ScheduleId, addSDRequest.DestinationId, addSDRequest.SD) > 0;
             if (check)
             {
                 return Ok();
@@ -52,8 +52,8 @@ namespace DaNangTourism.Server.Controllers
             }
             return BadRequest();
         }
-        [HttpDelete("delete")]
-        public IActionResult DeleteSD(int id)
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeleteSD([FromRoute] int id)
         {
             ScheduleDestinationDAO sDDAO = ScheduleDestinationDAO.Instance;
             bool check = sDDAO.DeleteSD(id) > 0;

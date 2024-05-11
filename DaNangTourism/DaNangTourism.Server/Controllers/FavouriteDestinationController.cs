@@ -21,7 +21,7 @@ namespace DaNangTourism.Server.Controllers
             return NotFound();
         }
         [HttpGet("check/{destinationId}")] // kiểm tra đã thêm điểm đến vào mục yêu thích chưa
-        public IActionResult IsFavDes([FromBody] int userId, int destinationId)
+        public IActionResult IsFavDes([FromBody] int userId, [FromRoute] int destinationId)
         {
             FavouriteDestinationDAO fDDao = FavouriteDestinationDAO.Instance;
             bool check = fDDao.IsDuplicate(userId, destinationId);
@@ -32,7 +32,7 @@ namespace DaNangTourism.Server.Controllers
             return Ok();
         }
         [HttpPost("add/{destinationId}")] // nếu chưa thêm vào mục yêu thích thì mới thêm
-        public IActionResult AddFavDes([FromBody] int userId, int destinationId)
+        public IActionResult AddFavDes([FromBody] int userId, [FromRoute] int destinationId)
         {
             FavouriteDestinationDAO fDDao = FavouriteDestinationDAO.Instance;
             bool check = fDDao.IsDuplicate(userId, destinationId);
@@ -45,7 +45,7 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpDelete("delete/{destinationId}")]
-        public IActionResult DeleteFavDes([FromBody] int userId, int destinationId)
+        public IActionResult DeleteFavDes([FromBody] int userId, [FromRoute] int destinationId)
         {
             FavouriteDestinationDAO fDDao = FavouriteDestinationDAO.Instance;
             bool check = fDDao.AddFavDes(userId, destinationId) > 0;

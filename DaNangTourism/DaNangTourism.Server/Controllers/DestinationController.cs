@@ -21,7 +21,7 @@ namespace DaNangTourism.Server.Controllers
             else return Ok(destinations);
         }
         [HttpGet("get/{id}")]
-        public IActionResult GetDestinationById(int id)
+        public IActionResult GetDestinationById([FromRoute] int id)
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance;
             Destination? destination = destinationDAO.GetDestinationById(id);
@@ -54,7 +54,7 @@ namespace DaNangTourism.Server.Controllers
             else return BadRequest();
         }
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteDestination(int id)
+        public IActionResult DeleteDestination([FromRoute] int id)
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance; 
             bool check = destinationDAO.DeleteDestination(id) > 0;
