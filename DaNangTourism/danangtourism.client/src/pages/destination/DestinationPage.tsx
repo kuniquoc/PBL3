@@ -82,6 +82,10 @@ const DestinationPage: React.FC = () => {
 			// simulate delay
 			await new Promise((resolve) => setTimeout(resolve, 2000))
 			setDestinations(response.data.data)
+			const testFetch = await axios.get(
+				`http://localhost:5014/destination/get/all`,
+			)
+			console.log(testFetch.data)
 		} catch (error) {
 			console.error(error)
 		}
