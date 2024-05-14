@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "Hash": "yMoDSI6BrRVZ9ATLGIMLFjHyKiUGdi5LhgwsCfwCuWE=",
+  "Hash": "tNx5RZue0gvG/80LOrE6iYA9EJCdiM6fssSNUzLz5h8=",
   "Source": "DaNangTourism.Server",
   "BasePath": "_content/DaNangTourism.Server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [
     {
-      "Identity": "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\danangtourism.client\\danangtourism.client.esproj",
+      "Identity": "D:\\PBL3\\DaNangTourism\\danangtourism.client\\danangtourism.client.esproj",
       "Version": 2,
       "Source": "danangtourism.client",
       "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",

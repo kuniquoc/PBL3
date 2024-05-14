@@ -64,15 +64,12 @@ namespace DaNangTourism.Server.DAL
         }
         public int ExecuteNonQuery(string query)
         {
-            _con.Open();
             _command.CommandText = query;
             int result = _command.ExecuteNonQuery();
-            _con.Close();
             return result;
         }
         public int ExecuteNonQuery(string query, MySqlParameter[]? parameters)
         {
-            _con.Open();
             _command.CommandText = query;
             _command.Parameters.Clear();
             if (parameters != null && parameters.Length > 0)
@@ -80,20 +77,16 @@ namespace DaNangTourism.Server.DAL
                 _command.Parameters.AddRange(parameters);
             }
             int result = _command.ExecuteNonQuery();
-            _con.Close();
             return result;
         }
         public object? ExecuteScalar(string query)
         {
-            _con.Open();
             _command.CommandText = query;
             object? result = _command.ExecuteScalar();
-            _con.Close();
             return result;
         }
         public object? ExecuteScalar(string query, MySqlParameter[]? parameters)
         {
-            _con.Open();
             _command.CommandText = query;
             _command.Parameters.Clear();
             if (parameters != null && parameters.Length > 0)
@@ -101,7 +94,6 @@ namespace DaNangTourism.Server.DAL
                 _command.Parameters.AddRange(parameters);
             }
             object? result = _command.ExecuteScalar();
-            _con.Close();
             return result;
         }
     }

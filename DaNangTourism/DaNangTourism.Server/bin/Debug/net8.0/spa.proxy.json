@@ -3,7 +3,7 @@
 "ServerUrl": "https://localhost:5173",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "D:\\PBL3_Clone\\PBL3\\DaNangTourism\\DaNangTourism.Server\\..\\danangtourism.client",
+"WorkingDirectory": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\..\\danangtourism.client",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }
