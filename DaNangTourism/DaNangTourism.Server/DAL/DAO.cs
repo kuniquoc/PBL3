@@ -1,4 +1,5 @@
 ﻿using MySqlConnector;
+using System.Data;
 
 namespace DaNangTourism.Server.DAL
 {
@@ -38,6 +39,17 @@ namespace DaNangTourism.Server.DAL
             _command.CommandText = query;
             MySqlDataReader reader = _command.ExecuteReader();
             return reader;
+        }
+        public DataTable ExecuteQueryReturnDataTable(string query, MySqlParameter[]? parameters)
+        {
+            DataTable dt = new DataTable();
+            MySqlDataAdapter da = new MySqlDataAdapter(query, _con);
+            if (parameters != null && parameters.Length > 0)
+            {
+                da.SelectCommand.Parameters.AddRange(parameters);
+            }
+            da.Fill(dt);
+            return dt;
         }
         public MySqlDataReader ExecuteQuery(string query, MySqlParameter[]? parameters)
         {

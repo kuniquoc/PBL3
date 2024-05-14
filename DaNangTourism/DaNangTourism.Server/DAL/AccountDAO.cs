@@ -3,6 +3,8 @@ using DaNangTourism.Server.Models;
 using System.Security.Cryptography;
 using System.Security;
 using System.Xml.Linq;
+using System.Runtime.CompilerServices;
+using System.Data;
 
 namespace DaNangTourism.Server.DAL
 {
@@ -42,18 +44,20 @@ namespace DaNangTourism.Server.DAL
         }
 
         //Thêm tài khoản
-        public int AddAccount(Account account)
+        public int AddAccount(AccountRegister account, byte[] passwordHash, byte[] passwordSalt)
         {
-            string sql = "Insert into users(full_name, birthday, email, user_name, password, permission, avatar_url) values(@name, @birthday, @email, @username, @password, @permission, @avatar)";
+            string sql = "Insert into users(full_name, birthday, email, user_name, password_hash, password_salt , permission, avatar_url) " +
+                "values(@name, @birthday, @email, @username, @passwordHash, @passwordSalt, @permission, @avatar)";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
-                new("@name", account.Name),
-                new("@birthday", account.Birthday),
+                new("@name", account.Username),
+                new("@birthday", new DateTime(2000,1,1)),
                 new("@email", account.Email),
                 new("@username", account.Username),
-                new("@password", account.Password),
-                new("@permission", account.Permission),
-                new("@avatar", account.Avatar)
+                new("@passwordHash", passwordHash),
+                new("@passwordSalt", passwordSalt),
+                new("@permission", Permission.user.ToString()),
+                new("@avatar", account.avartarDefault),
             };
             return _dao.ExecuteNonQuery(sql, parameters);
         }
@@ -123,6 +127,18 @@ namespace DaNangTourism.Server.DAL
                 account = new Account(reader);
             }
             _dao.CloseConnection();
+
+         //   DataTable dt = _dao.ExecuteQueryReturnDataTable(sql, parameters);
+         //   DataRow dataRow = dt.Rows[0];
+         //   account.Id = Convert.ToInt32(dataRow["user_id"].ToString());
+         //   account.Name = dataRow["full_name"].ToString();
+         //   account.Birthday = Convert.ToDateTime(dataRow["birthday"].ToString());
+         //   account.Email = dataRow["email"].ToString();
+         //   account.Username = dataRow["user_name"].ToString();
+         //   account.PasswordHash = (byte[])dataRow["password_hash"];
+         //   account.PasswordSalt = (byte[])dataRow["password_salt"];
+         //   account.Permission = Enum.Parse<Permission>(dataRow["permission"].ToString());
+         //   account.Avatar = dataRow["avatar_url"].ToString();
             return account;
         }
         /*
