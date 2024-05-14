@@ -119,3 +119,8 @@ D:\PBL3_Clone\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\scopedcss
 D:\PBL3_Clone\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.CopyComplete
 D:\PBL3_Clone\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.genruntimeconfig.cache
 D:\PBL3_Clone\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\ref\DaNangTourism.Server.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
