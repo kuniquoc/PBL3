@@ -1,0 +1,104 @@
+{
+	"status": 200,
+	"message": "Success",
+	"data": {
+		"id": 30000001,
+		"title": "5-Day Itinerary: Unveiling the Coastal Charm of Central Vietnam",
+		"description": "Nestled along the vibrant coast of central Vietnam, Da Nang is a captivating city that seamlessly blends modern attractions with ancient wonders. From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers",
+		"isPublic": true,
+		"status": "Ongoing",
+		"author": {
+			"id": 40000001,
+			"name": "User Name",
+			"avatar": "https://cdn.iconscout.com/icon/free/png-256/avatar-380-456332.png"
+		},
+		"updated_at": "2024-05-10T12:00:00Z",
+		"details": [
+			{
+				"date": "2024-06-21",
+				"destinations": [
+					{
+						"id": 10000001,
+						"name": "Golden Bridge",
+						"address": "Ba Na Hills, Hoa Ninh, Hoa Vang",
+						"date": "2024-06-21",
+						"arrival_time": "07:00",
+						"departure_time": "10:00",
+						"budget": 50,
+						"note": ""
+					},
+					{
+						"id": 10000002,
+						"name": "Dragon Bridge",
+						"address": "Nguyen Van Linh Street",
+						"date": "2024-06-21",
+						"arrival_time": "19:30",
+						"departure_time": "21:00",
+						"budget": 35,
+						"note": ""
+					}
+				]
+			},
+			{
+				"date": "2024-06-22",
+				"destinations": [
+					{
+						"id": 10000003,
+						"name": "My Khe Beach",
+						"address": "Phuoc My Ward, Son Tra District",
+						"date": "2024-06-22",
+						"arrival_time": "05:45",
+						"departure_time": "06:30",
+						"budget": 25,
+						"note": "Wake up early to catch the sunrise"
+					}
+				]
+			},
+			{
+				"date": "2024-06-23",
+				"destinations": [
+					{
+						"id": 10000004,
+						"name": "Ba Na Hills",
+						"address": "An Son Hamlet, Hoa Ninh Commune, Hoa Vang District",
+						"date": "2024-06-23",
+						"arrival_time": "08:00",
+						"departure_time": "11:00",
+						"budget": 30,
+						"note": ""
+					}
+				]
+			},
+			{
+				"date": "2024-06-24",
+				"destinations": [
+					{
+						"id": 10000005,
+						"name": "Hoi An Ancient Town",
+						"address": "Hoi An, Quang Nam",
+						"date": "2024-06-24",
+						"arrival_time": "14:00",
+						"departure_time": "20:00",
+						"budget": 100,
+						"note": "Explore the lantern-lit streets at night"
+					}
+				]
+			},
+			{
+				"date": "2024-06-25",
+				"destinations": [
+					{
+						"id": 10000006,
+						"name": "Ba Na Hills",
+						"address": "An Son Hamlet, Hoa Ninh Commune, Hoa Vang District",
+						"date": "2024-06-25",
+						"arrival_time": "08:00",
+						"departure_time": "17:00",
+						"budget": 80,
+						"note": "Visit the French Village"
+					}
+				]
+			}
+		]
+	}
+}
