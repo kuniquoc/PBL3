@@ -1,10 +1,13 @@
 ﻿using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 
 
@@ -20,6 +23,13 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetAllAccounts()
         {
             Dictionary<int, Account> accounts = accountDAO.GetAllAccounts();
+            byte[] a = new byte[] {0,1,1,0 };
+            string a1 = Encoding.UTF8.GetString(a);
+            Console.WriteLine(a);
+            byte[] a2 = Encoding.UTF8.GetBytes(a1);
+            Console.WriteLine(a1);
+            Console.WriteLine(a2);
+
             if (accounts.Count == 0)
             { 
                 return NotFound();
@@ -39,9 +49,14 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddAccount([FromBody] Account account)
+        public IActionResult AddAccount([FromBody] AccountRegister account)
         {
-            int check = accountDAO.AddAccount(account);
+            //Tạo passwordhash và passwordsalt
+            CreatePasswordHash(account.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            //string PasswordHash = Encoding.UTF8.GetString(passwordHash);
+            //string PasswordSalt = Encoding.UTF8.GetString(passwordSalt);
+
+            int check = accountDAO.AddAccount(account, passwordHash, passwordSalt);
             if (check > 0)
             {
                 return Ok();
@@ -73,7 +88,7 @@ namespace DaNangTourism.Server.Controllers
 
         //Đăng ký tài khoản
         [HttpPost("register")]
-        public ActionResult<Account> Register([FromBody] Account newAccount)
+        public ActionResult<Account> Register([FromBody] AccountRegister newAccount)
         {
             //Kiểm tra tài khoản tồn tại
             if (accountDAO.CheckAccountExist(newAccount.Username))
@@ -82,10 +97,10 @@ namespace DaNangTourism.Server.Controllers
             }
             //Tạo passwordhash và passwordsalt
             CreatePasswordHash(newAccount.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            newAccount.PasswordHash = passwordHash;
-            newAccount.PasswordSalt = passwordSalt;
+            //string PasswordHash = Encoding.ASCII.GetString(passwordHash);
+            //string PasswordSalt = Encoding.ASCII.GetString(passwordSalt);
             //Thêm tài khoản
-            int check = accountDAO.AddAccount(newAccount);
+            int check = accountDAO.AddAccount(newAccount, passwordHash, passwordSalt);
             if (check > 0)
             {
                 return Ok();
@@ -114,7 +129,9 @@ namespace DaNangTourism.Server.Controllers
             }
             //Lấy thông tin tài khoản
             var accountDB = accountDAO.GetAccountByUsername(accountLogin.Username);
-            //Kiểm tra password
+        //    //Kiểm tra password
+        //    byte[] pH = Convert.FromBase64String(accountDB.PasswordHash);
+        //    byte[] pS = Convert.FromBase64String(accountDB.PasswordSalt);
             if (!VerifyPasswordHash(accountLogin.Password, accountDB.PasswordHash, accountDB.PasswordSalt))
             {
                 return Unauthorized();
@@ -144,7 +161,7 @@ namespace DaNangTourism.Server.Controllers
                 new Claim(ClaimTypes.Role, account.Permission.ToString())
             };
             //Tạo token
-            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("super secret key"));
+            SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("Secret"));
             SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha512Signature);
             SecurityTokenDescriptor tokenDescriptor = new()
             {
