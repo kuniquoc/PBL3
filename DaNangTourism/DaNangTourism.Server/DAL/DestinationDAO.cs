@@ -20,16 +20,16 @@ namespace DaNangTourism.Server.DAL
         {
             _dao = dao;
         }
-        public Dictionary<int, Destination> GetAllDestinations()
+        public List<Destination> GetAllDestinations()
         {
-            Dictionary<int, Destination> destinations = new Dictionary<int, Destination>();
+            List<Destination> destinations = new List<Destination>();
             string sql = "Select * from destinations";
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
                 Destination destination = new Destination(reader);
-                destinations.Add(destination.Id, destination);
+                destinations.Add(destination);
             }
             _dao.CloseConnection();
             return destinations;
@@ -65,7 +65,7 @@ namespace DaNangTourism.Server.DAL
             return null;
         }
 
-        public Dictionary<int, Destination> GetDestinationsByIds(List<int> ids)
+        public List<Destination> GetDestinationsByIds(List<int> ids)
         {
             string sql = "Select * from destinations where destination_id in (@id0" ;
             MySqlParameter[] parameters = new MySqlParameter[ids.Count];
@@ -78,13 +78,13 @@ namespace DaNangTourism.Server.DAL
             }
             sql += ");" ;
 
-            Dictionary<int, Destination> destinations = new Dictionary<int, Destination>();
+            List<Destination> destinations = new List<Destination>();
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
             while (reader.Read())
             {
                 Destination destination = new Destination(reader);
-                destinations.Add(destination.Id, destination);
+                destinations.Add(destination);
             }
             _dao.CloseConnection();
             return destinations;

@@ -24,11 +24,11 @@ namespace DaNangTourism.Server.DAL
             _dao = dao;
         }
 
-        public Dictionary<int, Schedule> GetAllSchedule()
+        public List<Schedule> GetAllSchedule()
         {
             string sql = "Select * from schedules";
             MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
-            Dictionary<int, Schedule> schedules = new Dictionary<int, Schedule>();
+            List<Schedule> schedules = new List<Schedule>();
             _dao.OpenConnection();
             while (reader.Read())
             {
@@ -38,17 +38,17 @@ namespace DaNangTourism.Server.DAL
             _dao.CloseConnection();
             return schedules;
         }
-        public Dictionary<int, Schedule> GetSchedulesByUserId(int userId)
+        public List<Schedule> GetSchedulesByUserId(int userId)
         {
             string sql = "Select * from schedules where user_id = @userId";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@userId", userId) };
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            Dictionary<int, Schedule> schedules = new Dictionary<int, Schedule>();
+            List<Schedule> schedules = new List<Schedule>();
             _dao.OpenConnection();
             if (reader.Read())
             {
                 Schedule schedule = new Schedule(reader);
-                schedules.Add(schedule.Id, schedule);
+                schedules.Add(schedule);
             }
             _dao.CloseConnection();
             return schedules;

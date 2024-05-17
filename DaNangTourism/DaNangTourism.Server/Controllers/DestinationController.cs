@@ -13,13 +13,12 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetAllDestinations()
         {
             DestinationDAO destinationDAO = DestinationDAO.Instance;
-            Dictionary<int, Destination> destinations = destinationDAO.GetAllDestinations();
-            List<Destination> destinations1 = destinations.Values.ToList();
+            List<Destination> destinations = destinationDAO.GetAllDestinations();
             if (destinations.Count == 0 )
             {
                 return NotFound();
             }
-            else return Ok(destinations1);
+            else return Ok(destinations);
         }
         [HttpGet("get/{id}")]
         public IActionResult GetDestinationById([FromRoute] int id)

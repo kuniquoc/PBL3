@@ -14,7 +14,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetAllSchedules(string userId)
         {
             ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            Dictionary<int, Schedule> schedules = scheduleDAO.GetAllSchedule();
+            List<Schedule> schedules = scheduleDAO.GetAllSchedule();
             if (schedules.Count == 0)
             {
                 return NotFound();
@@ -24,7 +24,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("get/userId")]
         public IActionResult GetSchedulesByUserId([FromBody] int userId) { 
             ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            Dictionary<int, Schedule> schedules = scheduleDAO.GetSchedulesByUserId(userId);
+            List<Schedule> schedules = scheduleDAO.GetSchedulesByUserId(userId);
             if (schedules.Count == 0)
             {
                 return NotFound();

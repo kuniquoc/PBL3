@@ -22,17 +22,17 @@ namespace DaNangTourism.Server.DAL
         {
             _dao = dao;
         }
-        public Dictionary<int, ScheduleDestination> GetSDsByScheduleID(int scheduleId)
+        public List<ScheduleDestination> GetSDsByScheduleID(int scheduleId)
         {
             string sql = "Select * from schedule_destinations where schedule_id = @scheduleId";
             MySqlParameter[] parameters = new MySqlParameter[] {new MySqlParameter("scheduleId", scheduleId)};
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            Dictionary<int, ScheduleDestination> sDs = new Dictionary<int, ScheduleDestination>();
+            List<ScheduleDestination> sDs = new List<ScheduleDestination>();
             _dao.OpenConnection();
             while (reader.Read())
             {
                 ScheduleDestination sD = new ScheduleDestination(reader);
-                sDs.Add(sD.Id, sD);
+                sDs.Add(sD);
             }
             _dao.CloseConnection();
             return sDs;

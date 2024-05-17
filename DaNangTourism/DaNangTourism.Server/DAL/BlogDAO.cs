@@ -9,25 +9,25 @@ namespace DaNangTourism.Server.DAL
     {
         DAO dao = DAO.Instance;
         // lấy tất cả blog
-        public Dictionary<int, Blog> GetAllBlog()
+        public List<Blog> GetAllBlog()
         {
-            Dictionary<int, Blog> blogs = new Dictionary<int, Blog>();
+            List<Blog> blogs = new List<Blog>();
             string sql = "Select * from blogs";
             dao.OpenConnection();
             MySqlDataReader reader = dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
                 Blog blog = new Blog(reader);
-                blogs.Add(blog.BlogID, blog);
+                blogs.Add(blog);
             }
             dao.CloseConnection();
             return blogs;
         }
         // lấy danh sách blog theo content
-        public Dictionary<int, Blog> GetBlogByContent(string? content)
+        public List<Blog> GetBlogByContent(string? content)
         {
             if(string.IsNullOrEmpty(content)) return GetAllBlog();
-            Dictionary<int, Blog> blogs = new Dictionary<int, Blog>();
+            List<Blog> blogs = new List<Blog>();
             string sql = "Select * from blogs where content = @content";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter ("@content", content) };
             dao.OpenConnection();
@@ -35,7 +35,7 @@ namespace DaNangTourism.Server.DAL
             while (reader.Read())
             {
                 Blog blog = new Blog(reader);
-                blogs.Add (blog.BlogID, blog);
+                blogs.Add (blog);
             }
             dao.CloseConnection() ;
             return blogs;

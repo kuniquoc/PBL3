@@ -15,7 +15,7 @@ namespace DaNangTourism.Server.Controllers
             List<int> favDesIds = favDesDAO.GetAllFavouriteDestination(userID);
             if (favDesIds.Count > 0)
             {
-                Dictionary<int, Destination> destinations = DestinationDAO.Instance.GetDestinationsByIds(favDesIds);
+                List<Destination> destinations = DestinationDAO.Instance.GetDestinationsByIds(favDesIds);
                 return Ok(destinations);
             }
             return NotFound();

@@ -23,31 +23,31 @@ namespace DaNangTourism.Server.DAL
         {
             _dao = dao;
         }
-        public Dictionary<int, Review> GetAllReviews()
+        public List<Review> GetAllReviews()
         {
             string sql = "Select * from reviews";
             MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
-            Dictionary<int, Review> reviews = new Dictionary<int, Review>();
+            List<Review> reviews = new List<Review>();
             _dao.OpenConnection();
             while (reader.Read())
             {
                 Review review = new Review(reader);
-                reviews.Add(review.Id, review);
+                reviews.Add(review);
             }
             _dao.CloseConnection();
             return reviews;
         }
-        public Dictionary<int, Review> GetReviewsByDesId(int destinationId)
+        public List<Review> GetReviewsByDesId(int destinationId)
         {
             string sql = "Select * from reviews where destination_id = @destinationId;";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@destinationId", destinationId) };
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            Dictionary<int, Review> reviews = new Dictionary<int, Review>();
+            List<Review> reviews = new List<Review>();
             _dao.OpenConnection();
             while(reader.Read())
             {
                 Review review = new Review(reader);
-                reviews.Add(review.Id, review);
+                reviews.Add(review);
             }
             _dao.CloseConnection();
             return reviews;

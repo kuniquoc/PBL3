@@ -12,7 +12,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetSDsByScheduleId([FromBody] int scheduleId)
         {
             ScheduleDestinationDAO sDDAO = ScheduleDestinationDAO.Instance;
-            Dictionary<int, ScheduleDestination> sDs = sDDAO.GetSDsByScheduleID(scheduleId);
+            List<ScheduleDestination> sDs = sDDAO.GetSDsByScheduleID(scheduleId);
             if (sDs.Count == 0)
             {
                 return NotFound();

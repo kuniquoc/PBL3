@@ -21,7 +21,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("get/all")]
         public IActionResult GetReviewsByDesId([FromBody] int id)
         {
-            Dictionary<int, Review> reviews = ReviewDAO.Instance.GetReviewsByDesId(id);
+            List<Review> reviews = ReviewDAO.Instance.GetReviewsByDesId(id);
             if (reviews.Count == 0)
             {
                 return NotFound();
