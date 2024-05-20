@@ -11,70 +11,25 @@ namespace DaNangTourism.Server.Models
     }
     public class Schedule
     {
-        private int _id;
-        private int _userId;
-        private string? _name;
-        private string? _describe;
-        private ScheduleStatus _status;
-        private bool _isPublic;
-        //private Dictionary<int, ScheduleDestination> _destinations;
-        public int Id { get { return _id; } set { _id = value; } }
-        public int UserId { get { return _userId; } set { _userId = value; } }
-        public string? Name { get { return _name; } set { _name = value; } }
-        public string? Describe { get { return _describe; } set { _describe = value; } }
-        public ScheduleStatus Status { get { return _status; } set { _status = value; } }
-        public bool IsPublic { get { return _isPublic; } set { _isPublic = value; } }
-        //public Dictionary<int, ScheduleDestination> Destinations
-        //{
-        //    get { return _destinations; }
-        //    set { _destinations = value; }
-        //}
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string? Name { get; set; }
+        public string? Describe { get; set; }
+        public ScheduleStatus Status { get; set; }
+        public bool IsPublic { get; set; }
         public Schedule()
         {
-            //_destinations = new Dictionary<int, ScheduleDestination>();
-        }
-        public Schedule(int id, int userId, string name, string describe, ScheduleStatus status, bool isPublic, Dictionary<int, ScheduleDestination> destinations)
-        {
-            _id = id;
-            _userId = userId;
-            _name = name;
-            _describe = describe;
-            _status = status;
-            _isPublic = isPublic;
-            //_destinations = destinations;
+
         }
         public Schedule(MySqlDataReader reader)
         {
-            _id = reader.GetInt32("schedule_id");
-            _userId = reader.GetInt32("user_id");
-            _name = reader.GetString("name");
-            _describe = reader.GetString("describe");
+            Id = reader.GetInt32("schedule_id");
+            UserId = reader.GetInt32("user_id");
+            Name = reader.GetString("name");
+            Describe = reader.GetString("describe");
             string s = reader.GetString(reader.GetOrdinal("status"));
-            _status = (ScheduleStatus)Enum.Parse(typeof(ScheduleStatus), s); ;
-            _isPublic = reader.GetBoolean("is_public");
+            Status = (ScheduleStatus)Enum.Parse(typeof(ScheduleStatus), s); ;
+            IsPublic = reader.GetBoolean("is_public");
         }
-        //public void AddDestination(ScheduleDestination destination)
-        //{
-        //    _destinations.Add(destination.Id, destination);
-        //}
-        //public void AddRangeDestination(ScheduleDestination[] destinations)
-        //{
-        //    foreach (ScheduleDestination destination in destinations)
-        //    {
-        //        _destinations.Add(destination.Id, destination);
-        //    }
-        //}
-        //public void UpdateDestination(ScheduleDestination destination)
-        //{
-        //    ScheduleDestination changeDestination = _destinations[destination.Id];
-        //    changeDestination.ArrivalTime = destination.ArrivalTime;
-        //    changeDestination.LeaveTime = destination.LeaveTime;
-        //    changeDestination.CostEstimate = destination.CostEstimate;
-        //    changeDestination.Note = destination.Note;
-        //}
-        //public void DeleteReview(int destinationId)
-        //{
-        //    _destinations.Remove(destinationId);
-        //}
     }
 }

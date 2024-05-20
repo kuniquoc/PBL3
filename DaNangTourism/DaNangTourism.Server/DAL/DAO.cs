@@ -7,7 +7,7 @@ namespace DaNangTourism.Server.DAL
     {
         private MySqlConnection? _con;
         private MySqlCommand? _command;
-        private static DAO? _instance;
+        private static  DAO? _instance;
         public static DAO Instance
         {
             get
@@ -34,24 +34,7 @@ namespace DaNangTourism.Server.DAL
         {
             _con.Close();
         }
-        public MySqlDataReader ExecuteQuery(string query)
-        {
-            _command.CommandText = query;
-            MySqlDataReader reader = _command.ExecuteReader();
-            return reader;
-        }
-        public DataTable ExecuteQueryReturnDataTable(string query, MySqlParameter[]? parameters)
-        {
-            DataTable dt = new DataTable();
-            MySqlDataAdapter da = new MySqlDataAdapter(query, _con);
-            if (parameters != null && parameters.Length > 0)
-            {
-                da.SelectCommand.Parameters.AddRange(parameters);
-            }
-            da.Fill(dt);
-            return dt;
-        }
-        public MySqlDataReader ExecuteQuery(string query, MySqlParameter[]? parameters)
+        public MySqlDataReader ExecuteQuery(string query,params MySqlParameter[]? parameters)
         {
             _command.CommandText = query;
             _command.Parameters.Clear();
@@ -62,13 +45,7 @@ namespace DaNangTourism.Server.DAL
             MySqlDataReader reader = _command.ExecuteReader();
             return reader;
         }
-        public int ExecuteNonQuery(string query)
-        {
-            _command.CommandText = query;
-            int result = _command.ExecuteNonQuery();
-            return result;
-        }
-        public int ExecuteNonQuery(string query, MySqlParameter[]? parameters)
+        public int ExecuteNonQuery(string query,params MySqlParameter[]? parameters)
         {
             _command.CommandText = query;
             _command.Parameters.Clear();
@@ -79,13 +56,7 @@ namespace DaNangTourism.Server.DAL
             int result = _command.ExecuteNonQuery();
             return result;
         }
-        public object? ExecuteScalar(string query)
-        {
-            _command.CommandText = query;
-            object? result = _command.ExecuteScalar();
-            return result;
-        }
-        public object? ExecuteScalar(string query, MySqlParameter[]? parameters)
+        public object? ExecuteScalar(string query,params MySqlParameter[]? parameters)
         {
             _command.CommandText = query;
             _command.Parameters.Clear();

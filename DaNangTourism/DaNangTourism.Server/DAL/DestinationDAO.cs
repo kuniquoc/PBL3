@@ -3,7 +3,7 @@ using DaNangTourism.Server.Models;
 
 namespace DaNangTourism.Server.DAL
 {
-    public class DestinationDAO
+    public class DestinationDAO 
     {
         private readonly DAO _dao;
         private static DestinationDAO _instance;
@@ -11,7 +11,8 @@ namespace DaNangTourism.Server.DAL
         {
             get
             {
-                _instance = new DestinationDAO(DAO.Instance);
+                if (_instance == null)
+                    _instance = new DestinationDAO(DAO.Instance);
                 return _instance;
             }
             private set { }
@@ -20,30 +21,30 @@ namespace DaNangTourism.Server.DAL
         {
             _dao = dao;
         }
-        public List<Destination> GetAllDestinations()
+        public List<HomeDestination> GetNewestDestinations(int limit = 5)
         {
-            List<Destination> destinations = new List<Destination>();
-            string sql = "Select * from destinations";
+            List<HomeDestination> destinations = new List<HomeDestination>();
+            string sql = "Select Id, Name, Address, Images, Rating from destinations order by id desc limit @limit";
+            MySqlParameter parameter = new MySqlParameter("@limit", limit);
             _dao.OpenConnection();
-            MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameter);
             while (reader.Read())
             {
-                Destination destination = new Destination(reader);
+                HomeDestination destination = new HomeDestination(reader);
                 destinations.Add(destination);
             }
             _dao.CloseConnection();
             return destinations;
         }
-        public List<Destination> GetDescendingDestination()
+        public List<ListDestination> GetListDestination(string filter = "")
         {
-            List<Destination> destinations = new List<Destination>();
-            // Lấy danh sách các destination theo thứ tự rating giảm dần từ db;
-            string sql = "Select * from destinations order by rating desc;";
+            List<ListDestination> destinations = new List<ListDestination>();
+            string sql = "Select Id, Name, Address, Images, Rating, Cost, OpenTime, CloseTime, Tags from destinations" + filter;
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {
-                Destination destination = new Destination(reader);
+                ListDestination destination = new ListDestination(reader);
                 destinations.Add(destination);
             }
             _dao.CloseConnection();
@@ -98,9 +99,9 @@ namespace DaNangTourism.Server.DAL
             parameters[1] = new MySqlParameter("@destination_address", destination.Address);
             parameters[2] = new MySqlParameter("@open_time", destination.OpenTime.ToString("HH:mm:ss"));
             parameters[3] = new MySqlParameter("@close_time", destination.CloseTime.ToString("HH:mm:ss"));
-            parameters[4] = new MySqlParameter("@open_day", destination.OpenDay);
-            parameters[5] = new MySqlParameter("@destination_html", destination.HtmlText);
-            parameters[6] = new MySqlParameter("@destination_image_url", string.Join(';', destination.ImgURL));
+            //parameters[4] = new MySqlParameter("@open_day", destination.OpenDay);
+            //parameters[5] = new MySqlParameter("@destination_html", destination.HtmlText);
+            //parameters[6] = new MySqlParameter("@destination_image_url", string.Join(';', destination.ImgURL));
             parameters[7] = new MySqlParameter("@rating", destination.Rating);
             _dao.OpenConnection();
             int result = _dao.ExecuteNonQuery(sql, parameters);
@@ -117,9 +118,9 @@ namespace DaNangTourism.Server.DAL
             parameters[1] = new MySqlParameter("@destination_address", destination.Address);
             parameters[2] = new MySqlParameter("@open_time", destination.OpenTime);
             parameters[3] = new MySqlParameter("@close_time", destination.CloseTime);
-            parameters[4] = new MySqlParameter("@open_day", destination.OpenDay);
-            parameters[5] = new MySqlParameter("@destination_html", destination.HtmlText);
-            parameters[6] = new MySqlParameter("@destination_image_url", string.Join(';',destination.ImgURL));
+            //parameters[4] = new MySqlParameter("@open_day", destination.OpenDay);
+            //parameters[5] = new MySqlParameter("@destination_html", destination.HtmlText);
+            //parameters[6] = new MySqlParameter("@destination_image_url", string.Join(';',destination.ImgURL));
             parameters[7] = new MySqlParameter("@rating", destination.Rating);
             parameters[8] = new MySqlParameter("@destination_id", destination.Id);
 

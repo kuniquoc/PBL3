@@ -22,7 +22,7 @@ namespace DaNangTourism.Server.DAL
         {
             _dao = dao;
         }
-        public List<int> GetAllFavouriteDestination(int userId)
+        public List<int> GetFavDesIds(int userId)
         {
             List<int> favDestinationIds = new List<int>();
             string sql = "select * from favourite_destinations where user_id = @userId";
@@ -36,20 +36,6 @@ namespace DaNangTourism.Server.DAL
             }
             _dao.CloseConnection();
             return favDestinationIds;
-        }
-        public bool IsDuplicate(int userId, int destinationId)
-        {
-            string sql = "select * from favourite_destinations where user_id = @userId and destination_id = @destinationId";
-            MySqlParameter[] parameters = new MySqlParameter[2];
-            parameters[0] = new MySqlParameter("@userId", userId);
-            parameters[1] = new MySqlParameter("@destinationId", destinationId);
-            _dao.OpenConnection();
-            MySqlDataReader reader = _dao.ExecuteQuery(sql,parameters);
-            if (reader.Read())
-            {
-                return true;
-            }
-            return false;
         }
         public int AddFavDes(int userId, int destinationId)
         {

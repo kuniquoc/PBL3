@@ -33,7 +33,7 @@ namespace DaNangTourism.Server.DAL
             while (reader.Read())
             {
                 Schedule schedule = new Schedule(reader);
-                schedules.Add(schedule.Id, schedule);
+                schedules.Add(schedule);
             }
             _dao.CloseConnection();
             return schedules;

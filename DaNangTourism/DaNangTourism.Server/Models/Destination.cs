@@ -1,122 +1,87 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.Extensions.Hosting;
 using MySqlConnector;
 
 namespace DaNangTourism.Server.Models
 {
     public class Destination
     {
-        private int _id;
-        private string? _name;
-        private string? _address;
-        private TimeOnly _openTime;
-        private TimeOnly _closeTime;
-        private DayOfWeek _openDay;
-        private string? _htmlText;
-        private string[] _imgURL;
-        private float _rating;
-        //private Dictionary<int, Review>? _reviews;
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? LocalName { get; set; }
+        public string? Address { get; set; }
+        public string[] Images { get; set; }
+        public double Cost { get; set; }
+        public TimeOnly OpenTime { get; set; }
+        public TimeOnly CloseTime { get; set; }
+        public string[] Tags { get; set; }
+        public string Introduction { get; set; }
+        public string GoogleMapURL { get; set; }
+        public float Rating { get; set; }
 
-        public int Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
-        public string? Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-        public string? Address
-        {
-            get { return _address; }
-            set { _address = value; }
-        }
-        public TimeOnly OpenTime
-        {
-            get { return _openTime; }
-            set { _openTime = value; }
-        }
-        public TimeOnly CloseTime
-        {
-            get { return _closeTime; }
-            set { _closeTime = value; }
-        }
-        public DayOfWeek OpenDay
-        {
-            get { return _openDay; }
-            set { _openDay = value; }
-        }
-        public string? HtmlText
-        {
-            get { return _htmlText; }
-            set { _htmlText = value; }
-        }
-        public string[] ImgURL
-        {
-            get { return _imgURL; }
-            set { _imgURL = value; }
-        }
-        public float Rating
-        {
-            get { return _rating; }
-            set { _rating = value; }
-        }
-        //public Dictionary<int, Review>? Reviews
-        //{
-        //    get { return _reviews; }
-        //    set { _reviews = value; }
-        //}
         public Destination()
         {
-            _imgURL = new string[0];
-            //_reviews = new Dictionary<int, Review>();
+            Images = new string[0];
+            Tags = new string[0];
         }
         public Destination(MySqlDataReader reader)
         {
-            _id = reader.GetInt32("destination_id");
-            _name = reader.GetString("destination_name");
-            _address = reader.GetString("destination_address");
-            _openTime = reader.GetTimeOnly("open_time");
-            _closeTime = reader.GetTimeOnly("close_time");
-            _openDay = Enum.Parse<DayOfWeek>(reader.GetString("open_day"));
-            _htmlText = reader.GetString("destination_html");
-            _imgURL = reader.GetString("destination_image_url").Split(';');
-            _rating = reader.GetFloat("rating");
-            //_reviews = new Dictionary<int, Review>();
+            Id = reader.GetInt32("Id");
+            Name = reader.GetString("Name");
+            LocalName = reader.GetString("LocalName");
+            Address = reader.GetString("Address");
+            Images = reader.GetString("Images").Split(';');
+            Cost = reader.GetDouble("Cost");
+            OpenTime = reader.GetTimeOnly("OpenTime");
+            CloseTime = reader.GetTimeOnly("CloseTime");
+            Tags = reader.GetString("Tags").Split(';');
+            Introduction = reader.GetString("Introduction");
+            GoogleMapURL = reader.GetString("GoogleMapURL");
+            Rating = reader.GetFloat("rating");
         }
-        //public void AddReview(Review review)
-        //{
-        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
-        //    _reviews.Add(review.Id, review);
-        //}
-        //public void AddRangeReview(Review[] reviews)
-        //{
-        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
-        //    foreach (Review review in reviews)
-        //    {
-        //        _reviews.Add(review.Id, review);
-        //    }
-        //}
-        //public bool UpdateReview(Review review)
-        //{
-        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
-        //    if (_reviews.ContainsKey(review.Id))
-        //    {
-        //        Review changeReview = _reviews[review.Id];
-        //        changeReview.Content = review.Content;
-        //        changeReview.Star = review.Star;
-        //        return true;
-        //    }
-        //    return false;
-        //}
-        //public void DeleteReview(int reviewId)
-        //{
-        //    if (_reviews == null) _reviews = new Dictionary<int, Review>();
-        //    if (_reviews.ContainsKey(reviewId))
-        //    {
-        //        _reviews.Remove(reviewId);
-        //    }    
-                
-        //}
+    }
+    public class HomeDestination
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Address { get; set; }
+        public string? Image { get; set; }
+        public double Rating { get; set; }
+        public HomeDestination(MySqlDataReader reader)
+        {
+            Id = reader.GetInt32("Id");
+            Name = reader.GetString("Name");
+            Address = reader.GetString("Address");
+            Image = reader.GetString("Images").Split(';').FirstOrDefault();
+            Rating = reader.GetFloat("Rating");
+        }
+    }
+    public class ListDestination
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Address { get; set; }
+        public string? Image { get; set; }
+        public double Cost { get; set; }
+        public double Rating { get; set; }
+        public TimeOnly OpenTime { get; set; }
+        public TimeOnly CloseTime { get; set; }
+        public string[] Tags { get; set; }
+        public bool Favourite { get; set; }
+
+        public ListDestination(MySqlDataReader reader)
+        {
+            Id = reader.GetInt32("Id");
+            Name = reader.GetString("Name");
+            Address = reader.GetString("Address");
+            Image = reader.GetString("Images").Split(';').FirstOrDefault();
+            Rating = reader.GetFloat("Rating");
+            Cost = reader.GetDouble("Cost");
+            OpenTime = reader.GetTimeOnly("OpenTime");
+            CloseTime = reader.GetTimeOnly("CloseTime");
+            Tags = reader.GetString("Tags").Split(';');
+            // giá trị mặc định là không phải yêu thích
+            Favourite = false;
+        }
     }
 }

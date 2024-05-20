@@ -13,7 +13,7 @@ namespace DaNangTourism.Server.Controllers
         public IActionResult GetAllBlog()
         {
             BlogDAO blogDAO = new BlogDAO();
-            Dictionary<int, Blog> blogs = blogDAO.GetAllBlog();
+            List<Blog> blogs = blogDAO.GetAllBlog();
             if(blogs.Count == 0)
             {
                 return NotFound();

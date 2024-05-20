@@ -4,36 +4,21 @@ namespace DaNangTourism.Server.Models
 {
     public class ScheduleDestination
     {
-        private int _id;
-        private int _destinationId;
-        private DateTime _arrivalTime;
-        private DateTime _leaveTime;
-        private long _costEstimate;
-        private string? _note;
-        public int Id { get { return _id; } set { _id = value; } }
-        public int DestinationId { get { return _destinationId; } set { _destinationId = value; } }
-        public DateTime ArrivalTime { get { return _arrivalTime; } set { _arrivalTime = value; } }
-        public DateTime LeaveTime { get { return _leaveTime; } set { _leaveTime = value; } }
-        public long CostEstimate { get { return _costEstimate; } set { _costEstimate = value; } }
-        public string? Note { get { return _note; } set { } }
+        public int Id { get; set; }
+        public int DestinationId { get; set; }
+        public DateTime ArrivalTime { get; set; }
+        public DateTime LeaveTime { get; set; }
+        public long CostEstimate { get; set; }
+        public string? Note { get; set; }
         public ScheduleDestination() { }
-        public ScheduleDestination(int id, int destinationId, DateTime arrivalTime, DateTime leaveTime, long costEstimate, string note)
-        {
-            _id = id;
-            _destinationId = destinationId;
-            _arrivalTime = arrivalTime;
-            _leaveTime = leaveTime;
-            _costEstimate = costEstimate;
-            _note = note;
-        }
         public ScheduleDestination(MySqlDataReader reader)
         {
-            _id = reader.GetInt32("sd_id");
-            _destinationId = reader.GetInt32("destination_id");
-            _arrivalTime = reader.GetDateTime("arrival_time");
-            _leaveTime = reader.GetDateTime("leave_time");
-            _costEstimate = reader.GetInt64("cost_estimate");
-            _note = reader.GetString("note");
+            Id = reader.GetInt32("sd_id");
+            DestinationId = reader.GetInt32("destination_id");
+            ArrivalTime = reader.GetDateTime("arrival_time");
+            LeaveTime = reader.GetDateTime("leave_time");
+            CostEstimate = reader.GetInt64("cost_estimate");
+            Note = reader.GetString("note");
         }
     }
 }
