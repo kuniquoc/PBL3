@@ -33,12 +33,13 @@ namespace DaNangTourism.Server.DAL
             return blogHomes;
         }
         // lấy tất cả blog
-        public List<BlogPage> getAllBlogPage()
+        public List<BlogPage> getAllBlogPage(int page)
         {
             List<BlogPage> blogPages = new List<BlogPage>();
             string sql = "Select id, title, image, type, uid, created_at, views, introduction " +
-                         "from blogs";
+                         "from blogs limit 5 offset @page";
             dao.OpenConnection();
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@page", (page - 1) * 5) }; 
             MySqlDataReader reader = dao.ExecuteQuery(sql, null);
             while (reader.Read())
             {

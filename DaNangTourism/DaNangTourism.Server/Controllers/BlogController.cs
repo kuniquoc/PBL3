@@ -22,10 +22,10 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpGet("blogPage")]
-        public IActionResult getAllBlog()
+        public IActionResult getAllBlog(int page)
         {
             BlogDAO blogDAO = new BlogDAO();
-            List<BlogPage> blogPages = blogDAO.getAllBlogPage();
+            List<BlogPage> blogPages = blogDAO.getAllBlogPage(page);
             if(blogPages.Count == 0)
             {
                 return NotFound();
