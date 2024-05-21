@@ -1,4 +1,5 @@
-﻿using DaNangTourism.Server.DAL;
+﻿using DaNangTourism.Server.BLL;
+using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
@@ -12,8 +13,7 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("home")]
         public IActionResult get5MostView()
         {
-            BlogDAO blogDAO = new BlogDAO();
-            List<BlogHome> blogHomes = blogDAO.get5MostView();
+            List<BlogHome> blogHomes = BlogBLL.Instance.get5MostView();
             if(blogHomes.Count == 0)
             {
                 return NotFound();
@@ -22,51 +22,36 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpGet("blogPage")]
-        public IActionResult getAllBlog(int page)
+        public IActionResult getAllBlog(IQueryCollection query)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            List<BlogPage> blogPages = blogDAO.getAllBlogPage(page);
+            List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(query);
             if(blogPages.Count == 0)
             {
                 return NotFound();
             }
             return Ok(blogPages);
         }
-
-        [HttpGet("blog/{title}")]
-        public IActionResult getBlogByTitle(string title)
+        [HttpGet("random")]
+        public IActionResult getRandomBlog(IQueryCollection query)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            List<BlogPage> blogPages = blogDAO.getBlogByTitle(title);
-            if (blogPages.Count == 0)
+            List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(query);
+            if (blogRandoms.Count == 0)
             {
                 return NotFound();
             }
-            return Ok(blogPages);
-        }
-        [HttpGet("random")]
-        public IActionResult getRandomBlog()
-        {
-            BlogDAO blogDAO = new BlogDAO();
-            List<BlogRandom> blogRandoms = blogDAO.getRandomBlog();
-        //    if (blogPages.Count == 0)
-        //    {
-        //        return NotFound();
-        //    }
             return Ok(blogRandoms);
         }
         [HttpGet("blogDetail/{id}")]
-        public IActionResult getBlogDetail(int id)
+        public IActionResult getBlogDetail([FromRoute]int id)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            BlogDetail blogDetail = blogDAO.getBlogDetail(id);
+            BlogDetail blogDetail = BlogBLL.Instance.getBlogDetail(id);
             if (blogDetail == null)
             {
                 return NotFound();
             }
             else
             {
-                blogDAO.increaseView(id);
+                BlogDAO.Instance.increaseView(id);
                 return Ok(blogDetail);
             }
         }

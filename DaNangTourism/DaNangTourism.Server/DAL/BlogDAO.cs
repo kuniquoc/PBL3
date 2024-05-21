@@ -18,6 +18,7 @@ namespace DaNangTourism.Server.DAL
             }
             private set { }
         }
+        // lấy 5 blog được view cao nhất
         public List<BlogHome> get5MostView()
         {
             List<BlogHome> blogHomes = new List<BlogHome>();
@@ -32,32 +33,15 @@ namespace DaNangTourism.Server.DAL
             dao.CloseConnection();
             return blogHomes;
         }
-        // lấy tất cả blog
-        public List<BlogPage> getAllBlogPage(int page)
+        // lấy blog theo page
+        public List<BlogPage> getBlogPage(string filter, List<MySqlParameter> parameters)
         {
             List<BlogPage> blogPages = new List<BlogPage>();
             string sql = "Select id, title, image, type, uid, created_at, views, introduction " +
-                         "from blogs limit 5 offset @page";
+                         "from blogs" + filter;
             dao.OpenConnection();
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@page", (page - 1) * 5) }; 
-            MySqlDataReader reader = dao.ExecuteQuery(sql, null);
+            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters.ToArray());
             while (reader.Read())
-            {
-                blogPages.Add(new BlogPage(reader));
-            }
-            dao.CloseConnection();
-            return blogPages;
-        }
-        //lấy danh sách blog theo title
-        public List<BlogPage> getBlogByTitle(string title)
-        {
-            List<BlogPage > blogPages = new List<BlogPage>();
-            string sql = "Select id, title, image, type, uid, created_at, views, introduction " +
-                         "from blogs where title = @title";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@title", title) };
-            dao.OpenConnection();
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
-            while(reader.Read())
             {
                 blogPages.Add(new BlogPage(reader));
             }
@@ -83,11 +67,10 @@ namespace DaNangTourism.Server.DAL
     //       return blogs;
     //   }
         //lấy blog dựa vào id // để hiển thị bài blog
-        public BlogDetail getBlogDetail(int id)
+        public BlogDetail getBlogDetail(MySqlParameter[] parameters)
         {
             string sql = "Select id, title, type, uid, created_at, views, content" +
                          " from blogs where id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             dao.OpenConnection() ;
             MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
             BlogDetail blogDetail = new BlogDetail();
@@ -104,13 +87,13 @@ namespace DaNangTourism.Server.DAL
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             dao.ExecuteNonQuery(sql, parameters);
         }
-        public List<BlogRandom> getRandomBlog()
+        public List<BlogRandom> getRandomBlog(string filter, List<MySqlParameter> parameters)
         {
             List<BlogRandom> blogRandoms = new List<BlogRandom>();
             string sql = "Select id, title, type, image, uid, created_at from blogs " +
-                         "order by rand() limit 5";
+                         "order by rand()" + filter;
             dao.OpenConnection();
-            MySqlDataReader reader = dao.ExecuteQuery(sql);
+            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters.ToArray());
             while(reader.Read())
             {
                 blogRandoms.Add(new BlogRandom(reader));
