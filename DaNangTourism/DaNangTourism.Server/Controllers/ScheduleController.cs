@@ -43,14 +43,8 @@ namespace DaNangTourism.Server.Controllers
             return Ok(schedule);
         }
         [HttpPost("add")]
-        public IActionResult AddSchedule([FromBody] AddScheduleRequest addScheduleRequest)
+        public IActionResult AddSchedule()
         {
-            ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            bool check = scheduleDAO.AddSchedule(addScheduleRequest.UserId, addScheduleRequest.Schedule) > 0;
-            if (check)
-            {
-                return Ok();
-            }
             return BadRequest();
         }
         [HttpPut("update")]
