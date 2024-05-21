@@ -1,25 +1,17 @@
 ﻿using MySqlConnector;
 using DaNangTourism.Server.Models;
-using System.Security.Cryptography;
-using System.Security;
-using System.Xml.Linq;
-using System.Runtime.CompilerServices;
-using System.Data;
 
 namespace DaNangTourism.Server.DAL
 {
     public class AccountDAO
     {
         private readonly DAO _dao;
-        private static AccountDAO _instance;
+        private static AccountDAO? _instance;
         public static AccountDAO Instance
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new AccountDAO();
-                }
+                _instance ??= new AccountDAO();
                 return _instance;
             }
             private set { }
@@ -30,57 +22,56 @@ namespace DaNangTourism.Server.DAL
             _dao = DAO.Instance;
         }
 
-        //Kiểm tra tài khoản tồn tại
-        public bool CheckAccountExist(string username)
+        //Thêm tài khoản
+        public int AddAccount(Account account)
         {
-            string sql = "Select * from users where user_name = @username";
-            MySqlParameter[] parameters = new MySqlParameter[] { new("@username", username) };
+            string sql = "Insert into users(full_name, birthday, email, password_hash, password_salt , permission, avatar_url, created_at) " +
+                "values(@name, @birthday, @email, @passwordHash, @passwordSalt, @permission, @avatar, @createdat)";
+            MySqlParameter[] parameters =
+            [
+                new("@name", account.Name),
+                new("@birthday", new DateTime(2000,1,1)),
+                new("@email", account.Email),
+                new("@passwordHash", account.PasswordHash),
+                new("@passwordSalt", account.PasswordSalt),
+                new("@permission", Permission.user.ToString()),
+                new("@avatar", account.Avatar),
+                new("@createdat", account.CreatedAt)
+            ];
             _dao.OpenConnection();
-            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            bool result = reader.Read();
-            reader.Close();
-            _dao.CloseConnection(); 
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
             return result;
         }
 
-        //Thêm tài khoản
-        public int AddAccount(AccountRegister account, byte[] passwordHash, byte[] passwordSalt)
-        {
-            string sql = "Insert into users(full_name, birthday, email, user_name, password_hash, password_salt , permission, avatar_url) " +
-                "values(@name, @birthday, @email, @username, @passwordHash, @passwordSalt, @permission, @avatar)";
-            MySqlParameter[] parameters = new MySqlParameter[]
-            {
-                new("@name", account.Username),
-                new("@birthday", new DateTime(2000,1,1)),
-                new("@email", account.Email),
-                new("@username", account.Username),
-                new("@passwordHash", passwordHash),
-                new("@passwordSalt", passwordSalt),
-                new("@permission", Permission.user.ToString()),
-                new("@avatar", account.avartarDefault),
-            };
-            return _dao.ExecuteNonQuery(sql, parameters);
-        }
-
         //Cập nhật thông tin tài khoản
-        public int UpdateAccountÌnformation(Account account)
+        public int UpdateAccount(Account account)
         {
-            string sql = "Update users set full_name = @name, birthday = @birthday, avatar_url = @avatar where user_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[]
-            {
+            string sql = "Update users set full_name = @name, birthday = @birthday, email = @email, password_hash = @passwordhash, password_salt = @passwordsalt, permission = @permission, avatar_url = @avatar where user_id = @id";
+            MySqlParameter[] parameters =
+            [
                 new("@name", account.Name),
                 new("@birthday", account.Birthday),
+                new("@email", account.Email),
+                new("@passwordhash", account.PasswordHash),
+                new("@passwordsalt", account.PasswordSalt),
+                new("@permission", account.Permission.ToString()),
                 new("@avatar", account.Avatar),
                 new("@id", account.Id)
-            };
-            return _dao.ExecuteNonQuery(sql, parameters);
+            ];
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            _dao.CloseConnection();
+            return result;
         }
         //Xóa tài khoản
         public int DeleteAccount(int id)
         {
             string sql = "Delete from users where user_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new("@id", id) };
-            return _dao.ExecuteNonQuery(sql, parameters);
+            MySqlParameter[] parameters = [new("@id", id)];
+            _dao.OpenConnection();
+            int result = _dao.ExecuteNonQuery(sql, parameters);
+            return result;
         }
 
         //Lấy toàn bộ tài khoản
@@ -89,7 +80,7 @@ namespace DaNangTourism.Server.DAL
             string sql = "Select * from users";
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql);
-            Dictionary<int, Account> accounts = new();
+            Dictionary<int, Account> accounts = [];
             while (reader.Read())
             {
                 Account account = new(reader);
@@ -98,134 +89,25 @@ namespace DaNangTourism.Server.DAL
             _dao.CloseConnection();
             return accounts;
         }
-        //Lấy tài khoản theo id
-        public Account GetAccountById(int id)
+        public Author getAuthorById(int id)
         {
-            string sql = "Select * from users where user_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new("@id", id) };
+            string sql = "Select id, name, avatar from users where id = @id";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            Account account = new();
-            if (reader.Read())
-            {
-                account = new Account(reader);
-            }
+            Author author = new Author(reader);
             _dao.CloseConnection();
-            return account;
+            return author;
         }
-
-        //Lấy tài khoản theo username
-        public Account GetAccountByUsername(string username)
+        public string getAuthorName(int id)
         {
-            string sql = "Select * from users where user_name = @username";
-            MySqlParameter[] parameters = new MySqlParameter[] { new("@username", username) };
+            string sql = "Select name from users where id = @id";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             _dao.OpenConnection();
             MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            Account account = new();
-            if (reader.Read())
-            {
-                account = new Account(reader);
-            }
+            string name  = reader.GetString(0);
             _dao.CloseConnection();
-
-         //   DataTable dt = _dao.ExecuteQueryReturnDataTable(sql, parameters);
-         //   DataRow dataRow = dt.Rows[0];
-         //   account.Id = Convert.ToInt32(dataRow["user_id"].ToString());
-         //   account.Name = dataRow["full_name"].ToString();
-         //   account.Birthday = Convert.ToDateTime(dataRow["birthday"].ToString());
-         //   account.Email = dataRow["email"].ToString();
-         //   account.Username = dataRow["user_name"].ToString();
-         //   account.PasswordHash = (byte[])dataRow["password_hash"];
-         //   account.PasswordSalt = (byte[])dataRow["password_salt"];
-         //   account.Permission = Enum.Parse<Permission>(dataRow["permission"].ToString());
-         //   account.Avatar = dataRow["avatar_url"].ToString();
-            return account;
+            return name;
         }
-        /*
-        
-        //Đổi mật khẩu
-        public int ChangePassword(int id, string newPassword)
-        {
-            DAO dao = new();
-            string sql = "Update users set password = @password where user_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[]
-            {
-                new("@password", newPassword),
-                new("@id", id)
-            };
-            return dao.ExecuteNonQuery(sql, parameters);
-        }
-
-        //Đổi email
-        public int ChangeEmail(int id, string newEmail)
-        {
-            DAO dao = new();
-            string sql = "Update users set email = @email where user_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[]
-            {
-                new("@email", newEmail),
-                new("@id", id)
-            };
-            return dao.ExecuteNonQuery(sql, parameters);
-        }
-
-        //Xóa tài khoản
-        public int DeleteAccount(int id)
-        {
-            DAO dao = new();
-            string sql = "Delete from users where user_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new("@id", id) };
-            return dao.ExecuteNonQuery(sql, parameters);
-        }
-
-        //Kiểm tra tài khoản tồn tại
-        public bool CheckAccountExist(string username)
-        {
-            DAO dao = new();
-            string sql = "Select * from users where user_name = @username";
-            MySqlParameter[] parameters = new MySqlParameter[] { new("@username", username) };
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
-            return reader.Read();
-        }
-
-        //Kiểm tra đăng nhập
-        public Account? CheckLogin(string username, string password)
-        {
-            DAO dao = new();
-            string sql = "Select * from users where user_name = @username and password = @password" ;
-            MySqlParameter[] parameters = new MySqlParameter[]
-            {
-                new("@username", username),
-                new("@password", password)
-            };
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
-            if (reader.Read())
-            {
-                Account account = new(reader);
-                return account;
-            }
-            return null;
-        }
-
-        //Kiểm tra đăng ký
-        public int CheckRegister(string username, string email)
-        {
-            DAO dao = new();
-            string sql = "Select * from users where user_name = @username or email = @email";
-            MySqlParameter[] parameters = new MySqlParameter[]
-            {
-                new("@username", username),
-                new("@email", email)
-            };
-            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
-            if (reader.Read())
-            {
-                if (reader.GetString("user_name") == username) return 1; //Trùng username
-                else return 2; //Trùng email
-            }
-            return 0; //Không trùng
-        }
-        */
-
     }
 }

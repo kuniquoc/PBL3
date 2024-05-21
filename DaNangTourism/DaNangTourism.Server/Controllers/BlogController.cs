@@ -1,5 +1,7 @@
-﻿using DaNangTourism.Server.DAL;
+﻿using DaNangTourism.Server.BLL;
+using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
 
@@ -9,60 +11,137 @@ namespace DaNangTourism.Server.Controllers
     [Route("blog")]
     public class BlogController : Controller
     {
-        [HttpGet("get/all")]
-        public IActionResult GetAllBlog()
+        [HttpGet("home")]
+        public IActionResult get5MostView()
         {
-            BlogDAO blogDAO = new BlogDAO();
-            List<Blog> blogs = blogDAO.GetAllBlog();
-            if(blogs.Count == 0)
+            try
             {
-                return NotFound();
+                List<BlogHome> blogHomes = BlogBLL.Instance.get5MostView();
+                if (blogHomes.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(blogHomes);
             }
-            return Ok(blogs);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
-        [HttpGet("get/{blogID}")]
-        public IActionResult GetDestinationById(int blogID)
+
+        [HttpGet("blogPage")]
+        public IActionResult getAllBlog(IQueryCollection query)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            Blog blog = blogDAO.GetBlogByBlogID(blogID);
-            if (blog == null)
+            try
             {
-                return NotFound();
+                List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(query);
+                if (blogPages.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(blogPages);
             }
-            else return Ok(blog);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
-        [HttpPost("add")]
-        public IActionResult AddBlog([FromBody] Blog blog)
+        [HttpGet("random")]
+        public IActionResult getRandomBlog(IQueryCollection query)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            bool check = blogDAO.AddBlog(blog) > 0;
-            if (check)
+            try
             {
-                return Ok();
+                List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(query);
+                if (blogRandoms.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(blogRandoms);
             }
-            else return BadRequest();
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
-        [HttpPut("update")]
-        public IActionResult UpdateDestination([FromBody] Blog blog)
+        [HttpGet("blogDetail/{id}")]
+        public IActionResult getBlogDetail([FromRoute]int id)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            bool check = blogDAO.EditBlog(blog) > 0;
-            if (check)
+            try
             {
-                return Ok();
+                BlogDetail blogDetail = BlogBLL.Instance.getBlogDetail(id);
+                if (blogDetail == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    BlogDAO.Instance.increaseView(id);
+                    return Ok(blogDetail);
+                }
             }
-            else return BadRequest();
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
-        [HttpDelete("delete/{blogID}")]
-        public IActionResult DeleteDestination([FromRoute] int blogID)
+        [Authorize]
+        [HttpPost("create")]
+        public IActionResult CreateNewBlog(IQueryCollection query)
         {
-            BlogDAO blogDAO = new BlogDAO();
-            bool check = blogDAO.DeleteBlog(blogID) > 0;
-            if (check)
+            string? token;
+            if (HttpContext.Request.Cookies.TryGetValue("token", out token))
             {
-                return Ok();
+                //xác thực token và nhận id
+
             }
-            else return BadRequest();
+            return Ok();
         }
+        [HttpPut("update/{id}")]
+        public IActionResult UpdateBlog([FromRoute] int id)
+        {
+            return Ok();
+        }
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeleteBlog([FromRoute] int id)
+        {
+            return Ok();
+        }
+        //    [HttpPost("add")]
+        //    public IActionResult AddBlog([FromBody] Blog blog)
+        //    {
+        //        BlogDAO blogDAO = new BlogDAO();
+        //        bool check = blogDAO.AddBlog(blog) > 0;
+        //        if (check)
+        //        {
+        //            return Ok();
+        //        }
+        //        else return BadRequest();
+        //    }
+        //    [HttpPut("update")]
+        //    public IActionResult UpdateDestination([FromBody] Blog blog)
+        //    {
+        //        BlogDAO blogDAO = new BlogDAO();
+        //        bool check = blogDAO.EditBlog(blog) > 0;
+        //        if (check)
+        //        {
+        //            return Ok();
+        //        }
+        //        else return BadRequest();
+        //    }
+        //    [HttpDelete("delete/{blogID}")]
+        //    public IActionResult DeleteDestination([FromRoute] int blogID)
+        //    {
+        //        BlogDAO blogDAO = new BlogDAO();
+        //        bool check = blogDAO.DeleteBlog(blogID) > 0;
+        //        if (check)
+        //        {
+        //            return Ok();
+        //        }
+        //        else return BadRequest();
+        //    }
     }
 }
