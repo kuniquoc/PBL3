@@ -1,6 +1,7 @@
 ﻿using DaNangTourism.Server.BLL;
 using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata;
 
@@ -13,60 +14,99 @@ namespace DaNangTourism.Server.Controllers
         [HttpGet("home")]
         public IActionResult get5MostView()
         {
-            List<BlogHome> blogHomes = BlogBLL.Instance.get5MostView();
-            if(blogHomes.Count == 0)
+            try
             {
-                return NotFound();
+                List<BlogHome> blogHomes = BlogBLL.Instance.get5MostView();
+                if (blogHomes.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(blogHomes);
             }
-            return Ok(blogHomes);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
 
         [HttpGet("blogPage")]
         public IActionResult getAllBlog(IQueryCollection query)
         {
-            List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(query);
-            if(blogPages.Count == 0)
+            try
             {
-                return NotFound();
+                List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(query);
+                if (blogPages.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(blogPages);
             }
-            return Ok(blogPages);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
         [HttpGet("random")]
         public IActionResult getRandomBlog(IQueryCollection query)
         {
-            List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(query);
-            if (blogRandoms.Count == 0)
+            try
             {
-                return NotFound();
+                List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(query);
+                if (blogRandoms.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(blogRandoms);
             }
-            return Ok(blogRandoms);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
         }
         [HttpGet("blogDetail/{id}")]
         public IActionResult getBlogDetail([FromRoute]int id)
         {
-            BlogDetail blogDetail = BlogBLL.Instance.getBlogDetail(id);
-            if (blogDetail == null)
+            try
             {
-                return NotFound();
+                BlogDetail blogDetail = BlogBLL.Instance.getBlogDetail(id);
+                if (blogDetail == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    BlogDAO.Instance.increaseView(id);
+                    return Ok(blogDetail);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                BlogDAO.Instance.increaseView(id);
-                return Ok(blogDetail);
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
             }
         }
+        [Authorize]
         [HttpPost("create")]
-        public IActionResult CreateNewDestination(IQueryCollection query)
+        public IActionResult CreateNewBlog(IQueryCollection query)
         {
+            string? token;
+            if (HttpContext.Request.Cookies.TryGetValue("token", out token))
+            {
+                //xác thực token và nhận id
+
+            }
             return Ok();
         }
         [HttpPut("update/{id}")]
-        public IActionResult UpdateDestination([FromRoute] int id)
+        public IActionResult UpdateBlog([FromRoute] int id)
         {
             return Ok();
         }
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteDestination([FromRoute] int id)
+        public IActionResult DeleteBlog([FromRoute] int id)
         {
             return Ok();
         }
