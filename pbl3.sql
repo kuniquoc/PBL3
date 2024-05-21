@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 04, 2024 lúc 03:07 PM
+-- Thời gian đã tạo: Th5 21, 2024 lúc 06:20 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.2.12
+-- Phiên bản PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -53,14 +53,6 @@ CREATE TABLE `destinations` (
   `destination_image_url` text NOT NULL,
   `rating` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Đang đổ dữ liệu cho bảng `destinations`
---
-
-INSERT INTO `destinations` (`destination_id`, `admin_id`, `destination_name`, `destination_address`, `open_time`, `close_time`, `open_day`, `destination_html`, `destination_image_url`, `rating`) VALUES
-(1, 2, 'Ba Na Hills', 'An Son Village, Hoa Ninh Commune, Hoa Vang District, Da Nang City, Vietnam', '08:00:00', '22:00:00', 'monday', '<p>As part of Sun World Amusement Park Group and over 20 km away from Danang downtown, Sun World ba Na Hills is the most significant resort and recreational complex of Vietnam. At the height of 1,487 m from the sea level, Sun World Ba Na Hills is coined the “heaven on earth” owing to its spectacular climate and otherworldly natural landscape. Just travel to Sun World Ba Na Hills and revel yourselves in the typical rotation of four seasons in a single day and numerous festivities, recreations and relaxation and cuisine.</p>', 'https://th.bing.com/th/id/OIP.NFqYvQE4BusNly_wMRJidQHaFj?rs=1&pid=ImgDetMain, https://explorevietnam.com.vn/hoi-an/wp-content/uploads/2019/04/Sunset-at-Golden-Bridge-Ba-Na-Hills.jpg, https://th.bing.com/th/id/R.53af2068a98ce9309975da727b06c2ee?rik=6d270yK87I%2baOw&riu=http%3a%2f%2fvietcetera.com%2fwp-content%2fuploads%2f2016%2f12%2fBana-Hills.jpg&ehk=7dc3T2RF65n9XZzS3tE7J5N4rrfSjahGwKawIufst2M%3d&risl=&pid=ImgRaw&r=0', 4.5),
-(2, 2, 'Nui Than Tai Hot Springs Park', '14G Highway, Hoa Phu Commune, Hoa Vang District, Danang City, Vietnam', '07:00:00', '20:00:00', 'monday', '<p>Nui Than Tai not only has the beautiful natural scenery in Ba Na Nui Chua but also owns the unique hot mineral springs. Thanks to the favor which donated by Mother Nature, Nui Than Tai always know how to charm the tourists with the magic charm, etc. Nui Than Tai Hot Springs Park is about 20 km from the center of Da Nang City and it takes visitors about 30 minutes to travel by car. They can visit during the day or overnight stay. Here, visitors can admire and discover the majestic beauty of the mountains as well as be immersed in the fresh air of four seasons nature in a day.</p>', 'https://nuithantai.vn/Content/UserFiles/Images/About/1%20copy.jpg;https://nuithantai.vn/Content/UserFiles/Images/About/Cong%20vien%20nuoc%202.JPG', 4.6);
 
 -- --------------------------------------------------------
 
@@ -160,27 +152,21 @@ CREATE TABLE `users` (
   `full_name` varchar(255) NOT NULL,
   `birthday` date NOT NULL,
   `email` varchar(255) NOT NULL,
-  `user_name` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password_hash` blob NOT NULL,
+  `password_salt` blob NOT NULL,
   `permission` enum('admin','user') NOT NULL DEFAULT 'user',
-  `avatar_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
+  `avatar_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`user_id`, `full_name`, `birthday`, `email`, `user_name`, `password`, `permission`, `avatar_url`) VALUES
-(1, 'Nguyễn Văn Huy', '2004-08-15', 'nvhuy@gmail.com', 'NVHuy', '15082004', 'admin', 'string'),
-(2, 'Lê Nguyễn Phúc Sinh', '2004-10-18', 'lnpsinh@gmail.com', 'LSinh1810', '18102004', 'admin', 'string'),
-(3, 'Nguyễn Đức Bảo', '2004-08-12', 'ndbao@gmail.com', 'NDBao', '12082004', 'admin', 'string'),
-(4, 'Lê Xuân Bá Quốc', '2004-07-19', 'lxbquoc@gmail.com', 'LXBQuoc', '19072004', 'admin', 'string'),
-(5, 'Lê Văn Mười', '1975-05-19', 'lvmuoi@gmail.com', 'LVMuoi', '19051975', 'user', 'string'),
-(6, 'Nguyễn Thị Kim Ngân', '2007-09-12', 'ntkngan@gmail.com', 'NTKNgan', '12092007', 'user', 'string'),
-(7, 'Trần Văn Tiến', '2005-10-31', 'tvtien@gmail.con', 'TVTien', '31102005', 'user', 'string'),
-(8, 'Võ Bảo Hoàng', '2001-03-20', 'vbhoang@gmail.com', 'VBHoang', '20032001', 'user', 'string'),
-(9, 'Nguyễn Ngọc Bảo', '2001-05-17', 'nnbao@gmail.com', 'NNBao', '17052001', 'user', 'string'),
-(10, 'Tô Thanh Châu', '1999-02-02', 'ttchau@gmail.com', 'TTChau', '02021999', 'user', 'string');
+INSERT INTO `users` (`user_id`, `full_name`, `birthday`, `email`, `password_hash`, `password_salt`, `permission`, `avatar_url`, `created_at`) VALUES
+(18, 'User6035', '2000-01-01', 'ldblckrs', 0xc2f3b474621f1ef265e98227a834bf39c802239cee1b17530f3686bca7a8eacff5b5b30b4235626dbe6db748fa432840d26586e3882a34cd3f3ece86bdc06caf, 0xa19bfa03c356b7bcc77ed5e99009b0736e2ab05dc6c0595d8e2dc6217b5bd965c110a1f312abb97d23f3f7c06c79557dffcb72fc9a778a1525cbd148f5ccd3e1c429fc997be8aaedde0514cc41c31ed5bdfdefdf46a02a48083a7ca82c4f3be2f64a9aaac2dcd0ebac66dce246594a8dfecbf27273335b438e8663aab1631ec5, 'admin', 'https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png', '2024-05-21'),
+(19, 'string', '2000-01-01', 'string', 0xe184013947295c325676c9358a6c5942a65a0550fb4f2f204d057dd7245776d9e7d9d198726e930c430bb2c82bbc050d206c640bf1648ddbc11e35841859f7d7, 0x109c2bf5c03e27ce80a8fff0d9b2aba43018c096b6f742a66ebb20d8388e12721c74d109a39ca4dea891e9463ac336a344d3ab6377777f848d4328616873a743341fde38445a26ec5fc4482ca9452cac339d6e8469e4a02892827b0d62ca1d7d5fd24d041a4c98b40ac1f0ce55744eac60ed97d771c004cc5b3491b093f25b2c, 'user', 'https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png', '2024-05-21'),
+(20, 'admin', '2000-01-01', 'admin', 0x3c4554415ab9172f75d64c792b655df3d4ddb57ad480e11cb69eeba7b9e723fadf77bd5849cb860b1cd15333e0a160f61f97109c48757bf09b65db340ccd6c23, 0x990e761771578690809125cbec1033c341d890b973f3888044180dda2c0cf0255de81e7df757d3efb84fe223a1af5b2c7121523f1a9eac4ff92eae12e225c6316731453d41cbe1bbeb81bd7e0240584fa9aa3500eb5c8dc92c03331bab9d359e8900163c3c337183b6fcee387b4c34d7202f0bcf6fb81712ade00d78da05a681, 'admin', 'https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png', '2024-05-21');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -308,7 +294,7 @@ ALTER TABLE `schedule_destinations`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

@@ -26,7 +26,7 @@ namespace DaNangTourism.Server.Models
             id = reader.GetInt32("blog_id");
             title = reader.GetString("title");
             image = reader.GetString("image");
-            authorName = AccountDAO.Instance.getAuthorName(uid);
+            authorName = AccountDAO.Instance.GetAccountById(uid).Name;
             created_at = reader.GetDateTime("created_at");
         }
     }
@@ -45,7 +45,7 @@ namespace DaNangTourism.Server.Models
             title = reader.GetString("title");
             image = reader.GetString("image");
             type = reader.GetString("type");
-            author = AccountDAO.Instance.getAuthorById(uid);
+            author = new Author(AccountDAO.Instance.GetAccountById(uid));
             created_at = reader.GetDateTime("created_at");
             views = reader.GetInt32("views");
             introduction = reader.GetString("introduction");
@@ -64,7 +64,7 @@ namespace DaNangTourism.Server.Models
             title = reader.GetString("title");
             type = reader.GetString("type");
             image = reader.GetString("image");
-            authorName = AccountDAO.Instance.getAuthorName(uid);
+            authorName = AccountDAO.Instance.GetAccountById(uid).Name;
             created_at = reader.GetDateTime("created_at");
         }
     }
@@ -81,7 +81,7 @@ namespace DaNangTourism.Server.Models
             id = reader.GetInt32("blog_id");
             title = reader.GetString("title");
             type = reader.GetString("type");
-            author = AccountDAO.Instance.getAuthorById(uid);
+            author = new Author(AccountDAO.Instance.GetAccountById(uid));
             created_at = reader.GetDateTime("created_at");
             views = reader.GetInt32("views");
             content = reader.GetString("blog_view");

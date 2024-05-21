@@ -105,11 +105,11 @@ namespace DaNangTourism.Server.Models
         public string? name { get; set; }
         public string? avatar { get; set; }
         public Author() { }
-        public Author(int id, string? name, string? avatar)
+        public Author(Account? account)
         {
-            this.id = id;
-            this.name = name;
-            this.avatar = avatar;
+            id = account.Id;
+            name = account.Name;
+            avatar = account.Avatar;
         }
         public Author(MySqlDataReader reader)
         {
