@@ -21,8 +21,8 @@ namespace DaNangTourism.Server.Models
 
         public Destination()
         {
-            Images = new string[0];
-            Tags = new string[0];
+            Images = [];
+            Tags = [];
         }
         public Destination(MySqlDataReader reader)
         {

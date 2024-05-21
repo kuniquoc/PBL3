@@ -124,3 +124,15 @@ D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityMo
 D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
 D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\PBL3\DaNangTourism\DaNangTourism.Server\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.AssemblyReference.cache
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\spa.proxy.json
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.GeneratedMSBuildEditorConfig.editorconfig
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.AssemblyInfoInputs.cache
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.AssemblyInfo.cs
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.CoreCompileInputs.cache
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.MvcApplicationPartsAssemblyInfo.cs
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.MvcApplicationPartsAssemblyInfo.cache
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.sourcelink.json
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.dll
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\refint\DaNangTourism.Server.dll
+D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.pdb
