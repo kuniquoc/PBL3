@@ -41,6 +41,23 @@ namespace DaNangTourism.Server.BLL
             }
             return BlogDAO.Instance.getRandomBlog(filter, parameters);
         }
+        public int addBlog(BlogAdd blogAdd, int uid)
+        {
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@id",null),
+                new MySqlParameter("@uid", uid),
+                new MySqlParameter("@title", blogAdd.title),
+                new MySqlParameter("@type", blogAdd.type),
+                new MySqlParameter("@image", blogAdd.image),
+                new MySqlParameter("@introduction", blogAdd.introduction),
+                new MySqlParameter("@created_at", DateTime.Now),
+                new MySqlParameter("@content", blogAdd.content),
+                new MySqlParameter("@views", 0),
+                new MySqlParameter("@status", Status.pending),
+            };
+            return BlogDAO.Instance.addBlog(parameters);
+        }
         public List<BlogPage> getBlogPage(IQueryCollection query)
         {
             string filter = "";

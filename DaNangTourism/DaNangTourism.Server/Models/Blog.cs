@@ -3,12 +3,17 @@ using MySqlConnector;
 
 namespace DaNangTourism.Server.Models
 {
+    public enum Status
+    {
+        pending,
+        published,
+        rejected
+    }
     public class Blog
     {
         public int id { get; set; }
         public string? title { get; set; }
         public DateTime created_at { get; set; }
-        //public Blog() { }
     }
     public class BlogHome : Blog
     {
@@ -17,8 +22,8 @@ namespace DaNangTourism.Server.Models
         public BlogHome() { }
         public BlogHome(MySqlDataReader reader)
         {
-            int uid = reader.GetInt32("uid");
-            id = reader.GetInt32("id");
+            int uid = reader.GetInt32("user_id");
+            id = reader.GetInt32("blog_id");
             title = reader.GetString("title");
             image = reader.GetString("image");
             authorName = AccountDAO.Instance.getAuthorName(uid);
@@ -35,8 +40,8 @@ namespace DaNangTourism.Server.Models
         public BlogPage() { }
         public BlogPage(MySqlDataReader reader)
         {
-            int uid = reader.GetInt32("uid");
-            id = reader.GetInt32("id");
+            int uid = reader.GetInt32("user_id");
+            id = reader.GetInt32("blog_id");
             title = reader.GetString("title");
             image = reader.GetString("image");
             type = reader.GetString("type");
@@ -54,8 +59,8 @@ namespace DaNangTourism.Server.Models
         public BlogRandom() { }
         public BlogRandom(MySqlDataReader reader)
         {
-            int uid = reader.GetInt32("uid");
-            id = reader.GetInt32("id");
+            int uid = reader.GetInt32("user_id");
+            id = reader.GetInt32("blog_id");
             title = reader.GetString("title");
             type = reader.GetString("type");
             image = reader.GetString("image");
@@ -72,14 +77,22 @@ namespace DaNangTourism.Server.Models
         public BlogDetail() { }
         public BlogDetail(MySqlDataReader reader)
         {
-            int uid = reader.GetInt32("uid");
-            id = reader.GetInt32("id");
+            int uid = reader.GetInt32("user_id");
+            id = reader.GetInt32("blog_id");
             title = reader.GetString("title");
             type = reader.GetString("type");
             author = AccountDAO.Instance.getAuthorById(uid);
             created_at = reader.GetDateTime("created_at");
             views = reader.GetInt32("views");
-            content = reader.GetString("content");
+            content = reader.GetString("blog_view");
         }
-    }        
+    }   
+    public class BlogAdd
+    {
+        public string? title { get; set; }
+        public string? type { get; set; }
+        public string? image { get; set; }
+        public string? introduction { get; set; }
+        public string? content { get; set; }
+    }
 }

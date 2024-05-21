@@ -3,7 +3,10 @@ using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 
 namespace DaNangTourism.Server.Controllers
 {
@@ -90,15 +93,29 @@ namespace DaNangTourism.Server.Controllers
         }
         [Authorize]
         [HttpPost("create")]
-        public IActionResult CreateNewBlog(IQueryCollection query)
+        public IActionResult CreateNewBlog([FromBody] BlogAdd blogAdd)
         {
             string? token;
-            if (HttpContext.Request.Cookies.TryGetValue("token", out token))
+            int uid = 0;
+            if (!HttpContext.Request.Cookies.ContainsKey("token"))
             {
                 //xác thực token và nhận id
-
+                return Unauthorized();
             }
-            return Ok();
+            else
+            {
+                try
+                {
+                    // uid = ?
+                    int blogId = BlogBLL.Instance.addBlog(blogAdd, uid);
+                    return CreatedAtAction("Success", new { id = blogId }, blogAdd);
+                }
+                catch(Exception ex) 
+                {
+                    Console.WriteLine(ex.Message);
+                    return StatusCode(500, "Server error");
+                }
+            }
         }
         [HttpPut("update/{id}")]
         public IActionResult UpdateBlog([FromRoute] int id)
