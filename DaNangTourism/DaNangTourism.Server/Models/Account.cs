@@ -98,4 +98,24 @@ namespace DaNangTourism.Server.Models
         public required string OldPassword { get; set; }
         public required string NewPassword { get; set; }
     }
+
+    public class Author
+    {
+        public int id { get; set; }
+        public string? name { get; set; }
+        public string? avatar { get; set; }
+        public Author() { }
+        public Author(int id, string? name, string? avatar)
+        {
+            this.id = id;
+            this.name = name;
+            this.avatar = avatar;
+        }
+        public Author(MySqlDataReader reader)
+        {
+            id = reader.GetInt32("id");
+            name = reader.GetString("name");
+            avatar = reader.GetString("avatar");
+        }
+    }
 }

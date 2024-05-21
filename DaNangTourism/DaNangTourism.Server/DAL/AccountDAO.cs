@@ -89,6 +89,25 @@ namespace DaNangTourism.Server.DAL
             _dao.CloseConnection();
             return accounts;
         }
-
+        public Author getAuthorById(int id)
+        {
+            string sql = "Select id, name, avatar from users where id = @id";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
+            _dao.OpenConnection();
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
+            Author author = new Author(reader);
+            _dao.CloseConnection();
+            return author;
+        }
+        public string getAuthorName(int id)
+        {
+            string sql = "Select name from users where id = @id";
+            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
+            _dao.OpenConnection();
+            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
+            string name  = reader.GetString(0);
+            _dao.CloseConnection();
+            return name;
+        }
     }
 }
