@@ -48,24 +48,20 @@ namespace DaNangTourism.Server.DAL
             dao.CloseConnection();
             return blogPages;
         }
-
-    //   // lấy danh sách blog theo content
-    //   public List<Blog> GetBlogByContent(string? content)
-    //   {
-    //       if(string.IsNullOrEmpty(content)) return GetAllBlog();
-    //       List<Blog> blogs = new List<Blog>();
-    //       string sql = "Select * from blogs where content = @content";
-    //       MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter ("@content", content) };
-    //       dao.OpenConnection();
-    //       MySqlDataReader reader = dao.ExecuteQuery(sql, parameters);
-    //       while (reader.Read())
-    //       {
-    //           Blog blog = new Blog(reader);
-    //           blogs.Add (blog);
-    //       }
-    //       dao.CloseConnection() ;
-    //       return blogs;
-    //   }
+        public List<BlogList> getBlogList(string filter , List<MySqlParameter> parameters)
+        {
+            List<BlogList> blogLists = new List<BlogList>();
+            string sql = "Select blog_id, title, type, user_id, created_at, status " +
+                         "from blogs" + filter;
+            dao.OpenConnection();
+            MySqlDataReader reader = dao.ExecuteQuery(sql, parameters.ToArray());
+            while (reader.Read())
+            {
+                blogLists.Add(new BlogList(reader));
+            }
+            dao.CloseConnection();
+            return blogLists;
+        }
         //lấy blog dựa vào id // để hiển thị bài blog
         public BlogDetail getBlogDetail(MySqlParameter[] parameters)
         {
@@ -81,12 +77,13 @@ namespace DaNangTourism.Server.DAL
             dao.CloseConnection();
             return blogDetail;
         }
-        public void increaseView(int id)
+        // tăng view
+        public int increaseView(MySqlParameter[] parameters)
         {
-            string sql = "update blogs set views = views + 1 where blog_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            dao.ExecuteNonQuery(sql, parameters);
+            string sql = "update blogs set views = views + 1 where blog_id = @id";            
+            return dao.ExecuteNonQuery(sql, parameters);
         }
+        // lấy random blog
         public List<BlogRandom> getRandomBlog(string filter, List<MySqlParameter> parameters)
         {
             List<BlogRandom> blogRandoms = new List<BlogRandom>();
@@ -101,32 +98,46 @@ namespace DaNangTourism.Server.DAL
             dao.CloseConnection();
             return blogRandoms;
         }
-    //    // thêm blog
+        // cập nhật trạng thái Blog
+        public int updateStatus(MySqlParameter[] parameters)
+        {
+            string sql = "update blogs set status = @status where id = @blogID";
+            return DAO.Instance.ExecuteNonQuery(sql, parameters);
+        }
+        // thêm blog
         public int addBlog(MySqlParameter[] parameters)
         {
             string sql = "insert into blogs values (@id, @uid, @title, @type, @image, @introduction, " +
                 "@created_at, @content, @views, @status)";
             return dao.ExecuteNonQuery(sql, parameters);
         }
-    //    // sửa blog
-    //    public int EditBlog(Blog blog)
-    //    {
-    //        string sql = "update blogs set title = @title, content = @content, post_time = @postTime, blog_view = @blogView";
-    //        MySqlParameter[] parameters = new MySqlParameter[]
-    //        {
-    //            new MySqlParameter("@title", blog.Title),
-    //            new MySqlParameter("@content", blog.Content),
-    //            new MySqlParameter("@postTime", blog.PostTime),
-    //            new MySqlParameter("@blogView", blog.BlogView),
-    //        };
-    //        return dao.ExecuteNonQuery(sql, parameters);
-    //    }
-    //    // xóa blog
-    //    public int DeleteBlog(int blogID)
-    //    {
-    //        string sql = "delete from blogs where blog_id = @blogID";
-    //        MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@blogID", blogID) };
-    //        return dao.ExecuteNonQuery(sql, parameters);
-    //    }
+        // sửa blog
+        public int updateBlog(MySqlParameter[] parameters)
+        {
+            string sql = "update blogs set title = @title, type = @type, image = @image, " +
+                "introduction = @introduction, content = @content where id = @blogID";            
+            return dao.ExecuteNonQuery(sql, parameters);
+        }
+
+        // xóa blog
+        public int deleteBlog(MySqlParameter[] parameters)
+        {
+            string sql = "delete from blogs where blog_id = @blogID";
+            return dao.ExecuteNonQuery(sql, parameters);
+        }
+        // kiểm tra tác giả bài viết
+        public int checkBlogBelongToUser(MySqlParameter[] parameters)
+        {
+            string sql = "select * from blogs where id = @blogID and uid = @uid";
+            MySqlDataReader reader = DAO.Instance.ExecuteQuery(sql, parameters);
+            if(reader.HasRows)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }

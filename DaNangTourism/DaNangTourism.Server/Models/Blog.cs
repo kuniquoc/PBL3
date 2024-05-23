@@ -95,4 +95,20 @@ namespace DaNangTourism.Server.Models
         public string? introduction { get; set; }
         public string? content { get; set; }
     }
+    public class BlogList : Blog
+    {
+        public string? type { get; set;}
+        public string? authorName { get; set; } 
+        public Status status { get; set;}
+        public BlogList(MySqlDataReader reader)
+        {
+            int uid = reader.GetInt32("user_id");
+            id = reader.GetInt32("blog_id");
+            title = reader.GetString("title");
+            type = reader.GetString("type");
+            created_at = reader.GetDateTime("created_at");
+            status = Enum.Parse<Status>(reader.GetString("status"));
+            authorName = AccountDAO.Instance.GetAccountById(uid).Name;
+        }
+    }
 }

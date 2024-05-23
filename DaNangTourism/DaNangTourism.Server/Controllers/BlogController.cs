@@ -3,6 +3,7 @@ using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata;
@@ -14,6 +15,13 @@ namespace DaNangTourism.Server.Controllers
     [Route("blog")]
     public class BlogController : Controller
     {
+        private readonly IConfiguration _configuration;
+        private AccountBLL accountBLL;
+        public BlogController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            accountBLL = AccountBLL.Instance(_configuration);
+        }
         [HttpGet("home")]
         public IActionResult get5MostView()
         {
@@ -70,7 +78,7 @@ namespace DaNangTourism.Server.Controllers
             }
         }
         [HttpGet("blogDetail/{id}")]
-        public IActionResult getBlogDetail([FromRoute]int id)
+        public IActionResult getBlogDetail([FromRoute] int id)
         {
             try
             {
@@ -81,7 +89,7 @@ namespace DaNangTourism.Server.Controllers
                 }
                 else
                 {
-                    BlogDAO.Instance.increaseView(id);
+                    BlogBLL.Instance.increaseView(id);
                     return Ok(blogDetail);
                 }
             }
@@ -91,11 +99,9 @@ namespace DaNangTourism.Server.Controllers
                 return StatusCode(500, "Server Error");
             }
         }
-        [Authorize]
         [HttpPost("create")]
-        public IActionResult CreateNewBlog([FromBody] BlogAdd blogAdd)
+        public IActionResult createNewBlog([FromBody] BlogAdd blogAdd)
         {
-            string? token;
             int uid = 0;
             if (!HttpContext.Request.Cookies.ContainsKey("token"))
             {
@@ -106,11 +112,12 @@ namespace DaNangTourism.Server.Controllers
             {
                 try
                 {
-                    // uid = ?
+                    var claims = accountBLL.GetClaimsByCookie(HttpContext);
+                    uid = Convert.ToInt32(claims["id"]);
                     int blogId = BlogBLL.Instance.addBlog(blogAdd, uid);
                     return CreatedAtAction("Success", new { id = blogId }, blogAdd);
                 }
-                catch(Exception ex) 
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     return StatusCode(500, "Server error");
@@ -118,14 +125,137 @@ namespace DaNangTourism.Server.Controllers
             }
         }
         [HttpPut("update/{id}")]
-        public IActionResult UpdateBlog([FromRoute] int id)
+        public IActionResult updateBlog([FromRoute] int id, [FromBody] BlogAdd blogAdd)
         {
-            return Ok();
+            if (!HttpContext.Request.Cookies.ContainsKey("token"))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                try
+                {
+                    var claims = accountBLL.GetClaimsByCookie(HttpContext);
+                    int uid = Convert.ToInt32(claims["id"]);
+                    if (BlogBLL.Instance.checkBlogBelongToUser(id, uid) == 1)
+                    {
+                        BlogBLL.Instance.updateBlog(blogAdd, id);
+                        return StatusCode(200, "Success");
+                    }
+                    else
+                    {
+                        return StatusCode(500, "You are not Author");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return StatusCode(500, "Server Error");
+                }
+            }
         }
         [HttpDelete("delete/{id}")]
-        public IActionResult DeleteBlog([FromRoute] int id)
+        public IActionResult deleteBlog([FromRoute] int id)
         {
-            return Ok();
+            if (!HttpContext.Request.Cookies.ContainsKey("token"))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                try
+                {
+                    var claims = accountBLL.GetClaimsByCookie(HttpContext);
+                    int uid = Convert.ToInt32(claims["id"]);
+                    var account = AccountDAO.Instance.GetAccountById(uid);
+
+                    if (account.Permission == Permission.admin)
+                    {
+                        BlogBLL.Instance.deleteBlog(id);
+                        return StatusCode(200, "Success");
+                    }
+                    else
+                    {
+                        if (BlogBLL.Instance.checkBlogBelongToUser(id, uid) == 1)
+                        {
+                            BlogBLL.Instance.deleteBlog(id);
+                            return StatusCode(200, "Success");
+                        }
+                        else
+                        {
+                            return StatusCode(500, "You are not Author");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return StatusCode(500, "Server Error");
+                }
+            }
+        }
+        [HttpGet("blogList")]
+        public IActionResult getBlogList(IQueryCollection query)
+        {
+            if(!HttpContext.Request.Cookies.ContainsKey("token"))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                try
+                {
+                    var claims = accountBLL.GetClaimsByCookie(HttpContext);
+                    var uid = Convert.ToInt32(claims["id"]);
+                    var account = AccountDAO.Instance.GetAccountById(uid);
+                    if(account.Permission == Permission.admin)
+                    {
+                        List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(query);
+                        return Ok(blogLists);
+                    }
+                    else
+                    {
+                        return StatusCode(500, "You are not Admin");
+                    }
+                }
+                catch(Exception ex) 
+                {
+                    Console.WriteLine(ex.Message);
+                    return StatusCode(500, "Server Error");
+                }
+            }
+        }
+
+        [HttpPut("updateStatus/{id}")]
+        public IActionResult updateStatus([FromRoute] int id, [FromRoute] Status status)
+        {
+            if (!HttpContext.Request.Cookies.ContainsKey("token"))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                try 
+                {
+                    var claims = accountBLL.GetClaimsByCookie(HttpContext);
+                    var uid = Convert.ToInt32(claims["id"]);
+                    var account = AccountDAO.Instance.GetAccountById(uid);
+                    if(account.Permission == Permission.admin)
+                    {
+                        BlogBLL.Instance.updateStatus(id, status);
+                        return StatusCode(200, "Success");
+                    }
+                    else
+                    {
+                        return StatusCode(500, "You are not Admin");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return StatusCode(500, "Server Error");
+                }
+            }
         }
         //    [HttpPost("add")]
         //    public IActionResult AddBlog([FromBody] Blog blog)
