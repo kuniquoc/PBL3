@@ -39,19 +39,19 @@ namespace DaNangTourism.Server.Models
 
         public Destination(MySqlDataReader reader)
         {
-            Id = reader.GetInt32("DestinationId");
-            Name = reader.GetString("Name");
-            LocalName = reader.GetString("LocalName");
-            Address = reader.GetString("Address");
-            Images = reader.GetString("Images").Split(';');
-            Cost = reader.GetDouble("Cost");
-            OpenTime = reader.GetTimeOnly("OpenTime");
-            CloseTime = reader.GetTimeOnly("CloseTime");
-            Tags = reader.GetString("Tags").Split(';');
-            Introduction = reader.GetString("Introduction");
-            GoogleMapUrl = reader.GetString("GoogleMapUrl");
-            Rating = reader.GetFloat("Rating");
-            Created_At = reader.GetDateTime("Created_At");
+            Id = reader.GetInt32(reader.GetOrdinal("DestinationId"));
+            Name = reader.GetString(reader.GetOrdinal("Name"));
+            LocalName = reader.GetString(reader.GetOrdinal("LocalName"));
+            Address = reader.GetString(reader.GetOrdinal("Address"));
+            Images = reader.GetString(reader.GetOrdinal("Images")).Split(';');
+            Cost = reader.GetDouble(reader.GetOrdinal("Cost"));
+            OpenTime = reader.GetTimeOnly(reader.GetOrdinal("OpenTime"));
+            CloseTime = reader.GetTimeOnly(reader.GetOrdinal("CloseTime"));
+            Tags = reader.GetString(reader.GetOrdinal("Tags")).Split(';');
+            Introduction = reader.GetString(reader.GetOrdinal("Introduction"));
+            GoogleMapUrl = reader.GetString(reader.GetOrdinal("GoogleMapUrl"));
+            Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
+            Created_At = reader.GetDateTime(reader.GetOrdinal("Created_At"));
         }
     }
 }

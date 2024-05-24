@@ -11,7 +11,7 @@ namespace DaNangTourism.Server.Models
         public int Page { get; set; }
         [JsonPropertyName("limit")]
         public int Limit { get; set; }
-        public List<DestinationReview> Items { get; set; }
+        public List<DestinationReview> Items { get; set; } = new List<DestinationReview>();
     }
     public class DestinationReview
     {
@@ -30,12 +30,12 @@ namespace DaNangTourism.Server.Models
         public DateTime Created_At { get; set; }
         public DestinationReview(MySqlDataReader reader)
         {
-            Id = reader.GetInt32("ReviewId");
-            Author = reader.GetString("Author");
-            Avatar = reader.GetString("Avatar");
-            Rating = reader.GetInt32("Rating");
-            Comment = reader.GetString("Comment");
-            Created_At = reader.GetDateTime("Created_At");
+            Id = reader.GetInt32(0);
+            Author = reader.GetString(1);
+            Avatar = reader.GetString(2);
+            Rating = reader.GetInt32(3);
+            Comment = reader.GetString(4);
+            Created_At = reader.GetDateTime(5);
         }
     }
 }

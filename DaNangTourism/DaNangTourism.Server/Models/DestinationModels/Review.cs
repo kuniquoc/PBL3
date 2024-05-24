@@ -20,10 +20,10 @@ namespace DaNangTourism.Server.Models
         }
         public Review (MySqlDataReader reader)
         {
-            Id = reader.GetInt32("ReviewId");
-            UserId = reader.GetInt32("UserId");
-            Rating = reader.GetInt32("Rating");
-            Comment = reader.GetString("Comment");
+            Id = reader.GetInt32(reader.GetOrdinal("ReviewId"));
+            UserId = reader.GetInt32(reader.GetOrdinal("UserId"));
+            Rating = reader.GetInt32(reader.GetOrdinal("Rating"));
+            Comment = reader.GetString(reader.GetOrdinal("Comment"));
         }
     }
 }

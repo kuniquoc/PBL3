@@ -16,6 +16,10 @@ namespace DaNangTourism.Server.Models
         public int Limit { get; set; }
         [JsonPropertyName("items")]
         public List<DestinationElement> Items { get; set; }
+        public AdminDestinations()
+        {
+            Items = new List<DestinationElement>();
+        }
     }
     public class DestinationElement
     {
@@ -34,16 +38,20 @@ namespace DaNangTourism.Server.Models
         [JsonPropertyName("created_at")]
         [JsonConverter(typeof(ConvertToISO8061DateTime))]
         public DateTime Created_At { get; set; } 
-        public DestinationElement () { }
+        public DestinationElement ()
+        {
+            Name = string.Empty;
+            Address = string.Empty;
+        }
         public DestinationElement(MySqlDataReader reader)
         {
-            Id = reader.GetInt32("d.DestinationId");
-            Name = reader.GetString("d.Name");
-            Address = reader.GetString("d.Address");
-            Rating = reader.GetFloat("d.Rating");
-            CountOfReview = reader.GetInt32("Review");
-            CountOfFavorite = reader.GetInt32("Favorite");
-            Created_At = reader.GetDateTime("d.Created_At");
+            Id = reader.GetInt32(reader.GetOrdinal("DestinationId"));
+            Name = reader.GetString(reader.GetOrdinal("Name"));
+            Address = reader.GetString(reader.GetOrdinal("Address"));
+            Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
+            CountOfReview = reader.GetInt32(reader.GetOrdinal("CountOfReview"));
+            CountOfFavorite = reader.GetInt32(reader.GetOrdinal("CountOfFavorite"));
+            Created_At = reader.GetDateTime(reader.GetOrdinal("Created_At"));
         }
     }
 }

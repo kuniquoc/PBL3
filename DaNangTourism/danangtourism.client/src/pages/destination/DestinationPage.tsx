@@ -78,7 +78,7 @@ const DestinationPage: React.FC = () => {
 	const getDestinations = async (page: number) => {
 		try {
 			setDestinations(undefined)
-			const response = await axios.get(`http://localhost:5014/destination/get/all`)
+			const response = await axios.get(`http://localhost:5014/destination/list`)
 			console.log(response.data)
 			// simulate delay
 			//await new Promise((resolve) => setTimeout(resolve, 2000))

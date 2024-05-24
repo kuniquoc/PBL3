@@ -21,20 +21,20 @@ namespace DaNangTourism.Server.Models
         public DesGeneralReview GeneralReview { get; set; }
         public DestinationDetail(MySqlDataReader reader)
         {
-            Id = reader.GetInt32("DestinationId");
-            string Name = reader.GetString("Name");
-            string LocalName = reader.GetString("LocalName");
-            string Address = reader.GetString("Address");
-            string[] Images = reader.GetString("Images").Split(';');
-            double Cost = reader.GetDouble("Cost");
-            TimeOnly OpenTime = reader.GetTimeOnly("OpenTime");
-            TimeOnly CloseTime = reader.GetTimeOnly("CloseTime");
-            string[] Tags = reader.GetString("Tags").Split(';');
+            Id = reader.GetInt32(reader.GetOrdinal("DestinationId"));
+            string Name = reader.GetString(reader.GetOrdinal("Name"));
+            string LocalName = reader.GetString(reader.GetOrdinal("LocalName"));
+            string Address = reader.GetString(reader.GetOrdinal("Address"));
+            string[] Images = reader.GetString(reader.GetOrdinal("Images")).Split(';');
+            double Cost = reader.GetDouble(reader.GetOrdinal("Cost"));
+            TimeOnly OpenTime = reader.GetTimeOnly(reader.GetOrdinal("OpenTime"));
+            TimeOnly CloseTime = reader.GetTimeOnly(reader.GetOrdinal("CloseTime"));
+            string[] Tags = reader.GetString(reader.GetOrdinal("Tags")).Split(';');
             Information = new DesInfo(Name, LocalName, Address, Images, Cost, OpenTime, CloseTime, Tags);
-            Introduction = reader.GetString("Introduction");
-            GoogleMapUrl = reader.GetString("GoogleMapUrl");
+            Introduction = reader.GetString(reader.GetOrdinal("Introduction"));
+            GoogleMapUrl = reader.GetString(reader.GetOrdinal("GoogleMapUrl"));
             GeneralReview = new DesGeneralReview();
-            GeneralReview.Rating = reader.GetFloat("Rating");
+            GeneralReview.Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
         }
     }
     public class DesInfo

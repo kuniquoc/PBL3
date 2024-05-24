@@ -1,11 +1,7 @@
-﻿using DaNangTourism.Server.BLL;
-using DaNangTourism.Server.Models;
-using DaNangTourism.Server.Models.DestinationModels;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using DaNangTourism.Server.Models;
+using DaNangTourism.Server.Service;
+using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using Microsoft.Extensions.Primitives;
 
 namespace DaNangTourism.Server.Controllers
 {
@@ -13,14 +9,20 @@ namespace DaNangTourism.Server.Controllers
     [Route("destination")]
     public class DestinationController : Controller
     {
+        private readonly IDestinationService _destinationService;
+        private readonly IAuthenticationHelper _authenticationHelper;
+        public DestinationController (IDestinationService destinationService, IAuthenticationHelper authenticationHelper)
+        {
+            _destinationService = destinationService;
+            _authenticationHelper = authenticationHelper;
+        }
         [HttpGet("home")]
         public IActionResult GetHomeDestinations()
         {
             try
             {
-                DestinationBLL db = new DestinationBLL();
-                var destinations = db.GetHomeDestinations();
-                if (destinations.Count == 0)
+                var destinations = _destinationService.GetHomeDestinations();
+                if (destinations.Count() == 0)
                 {
                     return NotFound();
                 }
@@ -28,33 +30,29 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, "Server error");
+                return StatusCode(500, e.Message);
             }
         }
         [HttpGet("list")]
-        public IActionResult GetListDestinations(IQueryCollection query)
+        public IActionResult GetListDestinations([FromQuery] DestinationFilter destinationFilter)
         {
-            int userId = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("token"))
-            {
-                //xác thực token và nhận id
-
-            }
             try
             {
-                DestinationBLL db = new DestinationBLL();
-                var destinations = db.GetListDestinations(userId, query);
-                if (destinations.Count == 0)
+                int userId = _authenticationHelper.GetUserIdFromToken();
+                var destinations = _destinationService.GetListDestinations(userId, destinationFilter);
+                if (destinations.Count() == 0)
                 {
                     return NotFound();
                 }
                 else return Ok(destinations);
             }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, "Server error");
+                return StatusCode(500, e.Message);
             }
         }
         [HttpGet("detail/{id}")]
@@ -62,8 +60,7 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                DestinationBLL db = new DestinationBLL();
-                var destination = db.GetDestinationDetail(id);
+                var destination = _destinationService.GetDestinationDetail(id);
                 if (destination == null)
                 {
                     return NotFound();
@@ -72,8 +69,7 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, "Server error");
+                return StatusCode(500, e.Message);
             }
 
         }
@@ -106,14 +102,12 @@ namespace DaNangTourism.Server.Controllers
                     destinationId = Int32.Parse(Request.Form["destinationId"].ToString());
                     try
                     {
-                        DestinationBLL db = new DestinationBLL();
-                        int reviewId = db.AddReview(userId, destinationId, review);
-                        return CreatedAtAction("Review created", new {id = reviewId}, review);
+                        int reviewId = _destinationService.AddReview(userId, destinationId, review);
+                        return CreatedAtAction("Review created", new { id = reviewId }, review);
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
-                        return StatusCode(500, "Server error");
+                        return StatusCode(500, e.Message);
                     }
                 }
             }
@@ -132,25 +126,22 @@ namespace DaNangTourism.Server.Controllers
             {
                 try
                 {
-                    DestinationBLL db = new DestinationBLL();
-                    db.UpdateFavDes(userId, destinationId, favorite);
+                    _destinationService.UpdateFavDes(userId, destinationId, favorite);
                     return Ok("Favorite updated");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    return StatusCode(500, "Server error");
+                    return StatusCode(500, e.Message);
                 }
             }
         }
         [HttpGet("random")]
-        public IActionResult GetRandomDestinations(IQueryCollection query)
+        public IActionResult GetRandomDestinations([FromQuery] IQueryCollection query)
         {
             try
             {
-                DestinationBLL db = new DestinationBLL();
-                List<HomeDestination> destinations = db.GetRandomDestinations(query);
-                if (destinations.Count == 0)
+                var destinations = _destinationService.GetRandomDestinations(query);
+                if (destinations.Count() == 0)
                 {
                     return NotFound();
                 }
@@ -158,12 +149,11 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, "Server error");
+                return StatusCode(500, e.Message);
             }
         }
         [HttpGet("managelist")]
-        public IActionResult GetAdminList(IQueryCollection query, [FromBody] AdminDestinations adminDestinations)
+        public IActionResult GetAdminList([FromQuery] IQueryCollection query)
         {
             // xác thực admin
 
@@ -171,8 +161,7 @@ namespace DaNangTourism.Server.Controllers
             //
             try
             {
-                DestinationBLL db = new DestinationBLL();
-                adminDestinations.Items = db.GetDestinationElements(query);
+                AdminDestinations adminDestinations = _destinationService.GetDestinationElements(query);
                 if (adminDestinations.Items.Count == 0)
                 {
                     return NotFound();
@@ -181,23 +170,20 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, "Server error");
+                return StatusCode(500, e.Message);
             }
         }
         [HttpPost("create")]
-        public IActionResult CreateNewDestination([FromBody] DestinationModel destination)
+        public IActionResult CreateNewDestination([FromBody] InputDestinationModel destination)
         {
             try
             {
-                DestinationBLL db = new DestinationBLL();
-                int destinationId = db.AddDestination(destination);
+                int destinationId = _destinationService.AddDestination(destination);
                 return CreatedAtAction("Destination created", new { id = destinationId }, destination);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                return StatusCode(500, "Server error");
+                return StatusCode(500, e.Message);
             }
         }
         [HttpPut("update/{id}")]

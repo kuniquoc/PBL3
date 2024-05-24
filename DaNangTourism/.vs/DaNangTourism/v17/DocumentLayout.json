@@ -1,50 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\",
+  "WorkspaceRootPath": "D:\\PBL3\\DaNangTourism\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\danangtourism.server\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\pbl3\\danangtourism\\danangtourism.server\\models\\destinationmodels\\inputdestinationmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\models\\destinationmodels\\inputdestinationmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\t\u00E0i li\u1EC7u\\pbl3\\code\\newmain\\danangtourism\\danangtourism.server\\bll\\blogbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\bll\\blogbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\pbl3\\danangtourism\\danangtourism.server\\models\\destinationmodels\\destinationdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\models\\destinationmodels\\destinationdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\danangtourism.server\\dal\\blogdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\dal\\blogdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\pbl3\\danangtourism\\danangtourism.server\\models\\destinationmodels\\destination.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\models\\destinationmodels\\destination.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\t\u00E0i li\u1EC7u\\pbl3\\code\\newmain\\danangtourism\\danangtourism.server\\bll\\accountbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\bll\\accountbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\danangtourism.server\\controllers\\destinationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\controllers\\destinationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\t\u00E0i li\u1EC7u\\pbl3\\code\\newmain\\danangtourism\\danangtourism.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\t\u00E0i li\u1EC7u\\pbl3\\code\\newmain\\danangtourism\\danangtourism.server\\bll\\destinationbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\bll\\destinationbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\danangtourism.server\\models\\blog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\models\\blog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\t\u00E0i li\u1EC7u\\pbl3\\code\\newmain\\danangtourism\\danangtourism.server\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\danangtourism.server\\controllers\\blogcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\controllers\\blogcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\t\u00E0i li\u1EC7u\\pbl3\\code\\newmain\\danangtourism\\danangtourism.server\\dal\\accountdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\dal\\accountdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|d:\\pbl3\\danangtourism\\danangtourism.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{DB3EA94B-49E8-4862-879A-968D12BDF850}|DaNangTourism.Server\\DaNangTourism.Server.csproj|solutionrelative:danangtourism.server\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,8 +26,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 195,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "InputDestinationModel.cs",
+              "DocumentMoniker": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\Models\\DestinationModels\\InputDestinationModel.cs",
+              "RelativeDocumentMoniker": "DaNangTourism.Server\\Models\\DestinationModels\\InputDestinationModel.cs",
+              "ToolTip": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\Models\\DestinationModels\\InputDestinationModel.cs",
+              "RelativeToolTip": "DaNangTourism.Server\\Models\\DestinationModels\\InputDestinationModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-24T04:05:12.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DestinationDetail.cs",
+              "DocumentMoniker": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\Models\\DestinationModels\\DestinationDetail.cs",
+              "RelativeDocumentMoniker": "DaNangTourism.Server\\Models\\DestinationModels\\DestinationDetail.cs",
+              "ToolTip": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\Models\\DestinationModels\\DestinationDetail.cs",
+              "RelativeToolTip": "DaNangTourism.Server\\Models\\DestinationModels\\DestinationDetail.cs",
+              "ViewState": "AQIAAC8AAAAAAAAAAAAUwDkAAABsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-24T04:04:31.925Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Destination.cs",
+              "DocumentMoniker": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\Models\\DestinationModels\\Destination.cs",
+              "RelativeDocumentMoniker": "DaNangTourism.Server\\Models\\DestinationModels\\Destination.cs",
+              "ToolTip": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\Models\\DestinationModels\\Destination.cs",
+              "RelativeToolTip": "DaNangTourism.Server\\Models\\DestinationModels\\Destination.cs",
+              "ViewState": "AQIAABkAAAAAAAAAAAAwwDAAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-24T04:04:10.102Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
@@ -66,145 +77,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "DestinationBLL.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\BLL\\DestinationBLL.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\BLL\\DestinationBLL.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\BLL\\DestinationBLL.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\BLL\\DestinationBLL.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:16:21.519Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "AccountDAO.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\DAL\\AccountDAO.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\DAL\\AccountDAO.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\DAL\\AccountDAO.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\DAL\\AccountDAO.cs",
-              "ViewState": "AQIAAFQAAAAAAAAAAAAnwGEAAAAiAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:06:54.968Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Account.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Models\\Account.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\Models\\Account.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Models\\Account.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\Models\\Account.cs",
-              "ViewState": "AQIAAGcAAAAAAAAAAIA0wG0AAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:04:54.151Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAAAYBAAAAAAAAAAAQwDsBAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:04:28.85Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "AccountBLL.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\BLL\\AccountBLL.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\BLL\\AccountBLL.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\BLL\\AccountBLL.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\BLL\\AccountBLL.cs",
-              "ViewState": "AQIAADUAAAAAAAAAAAAgwGwAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:03:28.037Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\Controllers\\AccountController.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\Controllers\\AccountController.cs",
-              "ViewState": "AQIAAC0BAAAAAAAAAAAgwDkBAABRAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:02:52.554Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "DestinationController.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\DestinationController.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\Controllers\\DestinationController.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\DestinationController.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\Controllers\\DestinationController.cs",
-              "ViewState": "AQIAAKAAAAAAAAAAAAAwwKgAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:02:52.569Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BlogController.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\BlogController.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\Controllers\\BlogController.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Controllers\\BlogController.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\Controllers\\BlogController.cs",
-              "ViewState": "AQIAAFgAAAAAAAAAAAAnwGEAAAAUAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:02:52.571Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BlogBLL.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\BLL\\BlogBLL.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\BLL\\BlogBLL.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\BLL\\BlogBLL.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\BLL\\BlogBLL.cs",
-              "ViewState": "AQIAACMAAAAAAAAAAAAIwDoAAAA4AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:02:52.619Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Blog.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Models\\Blog.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\Models\\Blog.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\Models\\Blog.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\Models\\Blog.cs",
-              "ViewState": "AQIAABQAAAAAAAAAAIA4wCAAAAAgAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:02:52.76Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BlogDAO.cs",
-              "DocumentMoniker": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\DAL\\BlogDAO.cs",
-              "RelativeDocumentMoniker": "DaNangTourism.Server\\DAL\\BlogDAO.cs",
-              "ToolTip": "D:\\T\u00E0i Li\u1EC7u\\PBL3\\Code\\NewMain\\DaNangTourism\\DaNangTourism.Server\\DAL\\BlogDAO.cs",
-              "RelativeToolTip": "DaNangTourism.Server\\DAL\\BlogDAO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAGcAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T16:02:52.761Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\appsettings.json",
+              "RelativeDocumentMoniker": "DaNangTourism.Server\\appsettings.json",
+              "ToolTip": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\appsettings.json",
+              "RelativeToolTip": "DaNangTourism.Server\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-05-24T03:26:46.649Z",
               "EditorCaption": ""
             }
           ]

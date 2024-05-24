@@ -14,14 +14,14 @@ namespace DaNangTourism.Server.Models
         [JsonPropertyName("image")]
         public string Image { get; set; }
         [JsonPropertyName("rating")]
-        public double Rating { get; set; }
+        public float Rating { get; set; }
         public HomeDestination(MySqlDataReader reader)
         {
-            Id = reader.GetInt32("DestinationId");
-            Name = reader.GetString("Name");
-            Address = reader.GetString("Address");
-            Image = reader.GetString("Images").Split(';').FirstOrDefault();
-            Rating = reader.GetFloat("Rating");
+            Id = reader.GetInt32(reader.GetOrdinal("DestinationId")); ;
+            Name = reader.GetString(reader.GetOrdinal("Name"));
+            Address = reader.GetString(reader.GetOrdinal("Address"));
+            Image = reader.GetString(reader.GetOrdinal("Images")).Split(';').First();
+            Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
         }
     }
 }

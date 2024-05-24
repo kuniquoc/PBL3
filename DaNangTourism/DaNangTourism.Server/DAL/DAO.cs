@@ -5,34 +5,36 @@ namespace DaNangTourism.Server.DAL
 {
     internal class DAO
     {
-        private MySqlConnection? _con;
-        private MySqlCommand? _command;
-        private static  DAO? _instance;
+        private MySqlConnection _connection;
+        private MySqlCommand _command;
+        private static DAO? _instance;
         public static DAO Instance
         {
             get
             {
-                if (_instance == null)
-                {
-                    string s = "server=127.0.0.1;database=pbl3;uid=root;password=";
-                    _instance = new DAO(s);
-                }
+                _instance ??= new DAO("server=127.0.0.1;database=pbl3;uid=root;password=");
                 return _instance;
             }
             private set { }
         }
         private DAO(string s)
         {
-            _con = new MySqlConnection(s);
-            _command = new MySqlCommand { Connection = _con };
+            _connection = new MySqlConnection(s);
+            _command = new MySqlCommand { Connection = _connection };
         }
         public void OpenConnection()
         {
-            _con.Open();
+            if (_connection.State != ConnectionState.Open)
+            {
+                _connection.Open();
+            }
         }
         public void CloseConnection()
         {
-            _con.Close();
+            if (_connection.State != ConnectionState.Closed)
+            {
+                _connection.Close();
+            }   
         }
         public MySqlDataReader ExecuteQuery(string query,params MySqlParameter[]? parameters)
         {
