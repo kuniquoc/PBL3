@@ -10,7 +10,17 @@ namespace DaNangTourism.Server.Helper
 
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return DateTime.Parse(reader.GetString());
+            if (reader.TokenType != JsonTokenType.String)
+            {
+                throw new JsonException($"Unexpected token parsing date. Expected String, got {reader.TokenType}.");
+            }
+
+            if (!DateTime.TryParseExact(reader.GetString(), Iso8601Format, null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
+            {
+                throw new JsonException($"Invalid date format: '{reader.GetString()}'.");
+            }
+
+            return dateTime;
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)

@@ -2,6 +2,9 @@
 
 namespace DaNangTourism.Server.Helper
 {
+    /// <summary>
+    ///  bỏ khỏi Helper vì không đúng nên chuyển sang IAccountService
+    /// </summary>
     public interface IAuthenticationHelper
     {
         int GetUserIdFromToken();

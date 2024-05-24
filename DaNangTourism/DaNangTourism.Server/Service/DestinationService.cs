@@ -1,5 +1,6 @@
 ﻿using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
+using DaNangTourism.Server.Middleware;
 using Microsoft.AspNetCore.Components.Web;
 using System.Collections.Generic;
 using MySqlConnector;
@@ -34,8 +35,22 @@ namespace DaNangTourism.Server.Service
         {
             return _destinationRepository.GetNewestDestinations();
         }
+
+
+        
+
+        // hàm khử điều kiện lọc destinationFilter 
+        private DestinationFilter destinationationSanitization(DestinationFilter destinationFilter)
+        {
+            destinationFilter.Search = DataSanitization.RemoveSpecialCharacters(destinationFilter.Search);
+            destinationFilter.Location = DataSanitization.RemoveSpecialCharacters(destinationFilter.Location);
+            return destinationFilter;
+        }
         public IEnumerable<ListDestination> GetListDestinations(int userId, DestinationFilter destinationFilter)
         {
+            // khử điều kiện lọc
+            destinationFilter = destinationationSanitization(destinationFilter);
+
             // xử lý query để có điều kiện lọc
             StringBuilder filter = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();
