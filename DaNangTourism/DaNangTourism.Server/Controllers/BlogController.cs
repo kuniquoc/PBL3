@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MySqlConnector;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
@@ -27,8 +28,9 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                List<BlogHome> blogHomes = BlogBLL.Instance.get5MostView();
-                if (blogHomes.Count == 0)
+                List<BlogHome>? blogHomes = BlogBLL.Instance.get5MostView();
+
+                if (blogHomes == null ||blogHomes.Count == 0)
                 {
                     return NotFound();
                 }
@@ -42,11 +44,11 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpGet("blogPage")]
-        public IActionResult getAllBlog(IQueryCollection query)
+        public IActionResult getAllBlog([FromQuery] BlogPageFilter blogPageFilter)
         {
             try
             {
-                List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(query);
+                List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(blogPageFilter);
                 if (blogPages.Count == 0)
                 {
                     return NotFound();
@@ -60,11 +62,11 @@ namespace DaNangTourism.Server.Controllers
             }
         }
         [HttpGet("random")]
-        public IActionResult getRandomBlog(IQueryCollection query)
+        public IActionResult getRandomBlog([FromQuery] BlogRandomFilter blogRandomFilter)
         {
             try
             {
-                List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(query);
+                List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(blogRandomFilter);
                 if (blogRandoms.Count == 0)
                 {
                     return NotFound();
@@ -78,7 +80,7 @@ namespace DaNangTourism.Server.Controllers
             }
         }
         [HttpGet("blogDetail/{id}")]
-        public IActionResult getBlogDetail([FromRoute] int id)
+        public IActionResult getBlogDetail([FromRoute]int id)
         {
             try
             {
@@ -195,7 +197,7 @@ namespace DaNangTourism.Server.Controllers
             }
         }
         [HttpGet("blogList")]
-        public IActionResult getBlogList(IQueryCollection query)
+        public IActionResult getBlogList([FromQuery] BlogListAdminFilter blogListAdminFilter)
         {
             if(!HttpContext.Request.Cookies.ContainsKey("token"))
             {
@@ -210,7 +212,7 @@ namespace DaNangTourism.Server.Controllers
                     var account = AccountDAO.Instance.GetAccountById(uid);
                     if(account.Permission == Permission.admin)
                     {
-                        List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(query);
+                        List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(blogListAdminFilter);
                         return Ok(blogLists);
                     }
                     else

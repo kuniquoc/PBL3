@@ -165,4 +165,4 @@ D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\ne
 D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTo.EE5FF0D3.Up2Date
 D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.genruntimeconfig.cache
 D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\ref\DaNangTourism.Server.dll
-D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTo.EE5FF0D3.Up2Date
+D:\PBL3\DaNangTourism\DaNangTourism.Server\obj\Debug\net8.0\DaNangTourism.Server.csproj.CopyComplete
