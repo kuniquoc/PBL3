@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { ScheduleType } from '../../types/schedule.types'
+import { ScheduleDetailProps } from '../../types/schedule'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Button, Loader } from '../../components'
@@ -13,7 +13,7 @@ import SetupModal from './SetupModal'
 
 const Schedule: React.FC = () => {
 	const { id } = useParams()
-	const [schedule, setSchedule] = useState<ScheduleType | undefined>(undefined)
+	const [schedule, setSchedule] = useState<ScheduleDetailProps>()
 	const [loading, setLoading] = useState(true)
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 	const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
@@ -51,15 +51,11 @@ const Schedule: React.FC = () => {
 				<div className="flex w-full flex-col items-start justify-start gap-2">
 					<h2 className="my-2 text-3xl font-bold">{schedule.title}</h2>
 					<div className="flex items-center gap-2 text-base">
-						<img
-							className="h-6 w-6 rounded-full object-cover"
-							src={schedule.author.avatar}
-							alt="author-avatar"
-						/>
-						<p>by {schedule.author.name}</p>
+						<h4 className="font-semibold">Creator:</h4>
+						<p>by {schedule.creator}</p>
 						<span className="mx-1 h-[6px] w-[6px] rounded-full bg-txtCol-2"></span>
 						<h4 className="font-semibold">Last updated:</h4>
-						<p>{timeAgo(schedule.updated_at)}</p>
+						<p>{timeAgo(schedule.updatedAt)}</p>
 					</div>
 					<p className="text-base">{schedule.description}</p>
 				</div>
@@ -72,7 +68,7 @@ const Schedule: React.FC = () => {
 							<PiMapPinLineFill className="text-lg" />
 							Add destination
 						</Button>
-						{schedule.details.map((day, index) => (
+						{schedule.days.map((day, index) => (
 							<ScheduleDay
 								className="mb-2 w-full"
 								key={index}
@@ -90,19 +86,9 @@ const Schedule: React.FC = () => {
 						</Button>
 						<ScheduleOverview
 							className="w-full"
-							numbOfDes={schedule.details.reduce((total, detail) => {
-								return total + detail.destinations.length
-							}, 0)}
-							totalTime={schedule.details.length}
-							totalBudget={schedule.details.reduce((totalBudget, detail) => {
-								return (
-									totalBudget +
-									detail.destinations.reduce(
-										(total, destination) => total + destination.budget,
-										0,
-									)
-								)
-							}, 0)}
+							numbOfDes={schedule.numbOfDes}
+							totalTime={schedule.totalDays}
+							totalBudget={schedule.totalBudget}
 						/>
 					</div>
 				</div>

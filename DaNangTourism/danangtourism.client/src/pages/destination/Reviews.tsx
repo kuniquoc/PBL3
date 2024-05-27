@@ -1,28 +1,32 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import {
-	ReviewSummaryType,
-	ReviewType,
-	ReviewsType,
-} from '../../types/destination.types'
+import { GeneralReviewProps, ReviewProps } from '../../types/destination'
 import axios from 'axios'
 import { PiDotsThreeVerticalBold, PiStarFill } from 'react-icons/pi'
-import { Button, DropdownSelect, Stars } from '../../components'
+import { Button, DropdownSelect, Pagination, Stars } from '../../components'
 import { twMerge } from 'tailwind-merge'
+import { NumberFormat } from '../../utils/Format'
+import { timeAgo } from '../../utils/TimeFormatters'
 
-const SortOptions = ['Sort by', 'Newest', 'Oldest']
+const SortOptions = ['Newest', 'Oldest', 'Highest rating', 'Lowest rating']
 
-const Reviews: React.FC<{ destinationId: number; className?: string }> = ({
-	destinationId,
-	className,
-}) => {
-	const [reviews, setReviews] = useState<ReviewsType>()
+const Reviews: React.FC<{
+	destinationId: number
+	className?: string
+	general: GeneralReviewProps
+}> = ({ destinationId, className, general }) => {
+	const [reviews, setReviews] = useState<ReviewProps[]>()
 	const [sortOption, setSortOption] = useState(0)
 	const fetchReviews = async (destinationId: number) => {
 		const response = await axios.get(
 			`/api/destination/reviews-${destinationId}.json`,
 		)
-		setReviews(response.data.data)
+		const data = response.data.data
+		setReviews(data.items)
+		setNumbOfPages(Math.ceil(data.total / data.limit))
+		setCurrentPage(data.page)
 	}
+	const [currentPage, setCurrentPage] = useState(1)
+	const [numbOfPages, setNumbOfPages] = useState(1)
 
 	useEffect(() => {
 		fetchReviews(destinationId)
@@ -43,29 +47,32 @@ const Reviews: React.FC<{ destinationId: number; className?: string }> = ({
 						}}
 					/>
 				</div>
-				{reviews &&
-					reviews.list.map((review) => <Review key={review.id} {...review} />)}
-				<Button
-					className="rounded-full border-2 border-borderCol-1 hover:border-primary-3 active:bg-bgCol-1"
-					onClick={() => console.log('View more')}
-				>
-					View more
-				</Button>
+				{reviews.map((review) => (
+					<Review key={review.id} {...review} />
+				))}
+				<Pagination
+					className="mt-2"
+					numbOfPages={numbOfPages}
+					currentPage={currentPage}
+					setCurrentPage={(numb) => {
+						setCurrentPage(numb)
+					}}
+				/>
 			</div>
 			<div className="item-center flex w-[380px] flex-col gap-5">
-				<GeneralReview summary={reviews.summary} />
+				<GeneralReview general={general} />
 				<ReviewForm destinationid={destinationId} />
 			</div>
 		</div>
 	)
 }
 
-const Review: React.FC<ReviewType> = ({
-	name,
+const Review: React.FC<ReviewProps> = ({
+	author,
 	avatar,
 	rating,
-	time,
-	content,
+	createdAt,
+	comment,
 }) => {
 	return (
 		<div className="w-full rounded-xl border bg-gray-50 p-3 shadow">
@@ -74,18 +81,18 @@ const Review: React.FC<ReviewType> = ({
 					<img
 						className="h-5 w-5 rounded-full object-cover"
 						src={avatar}
-						alt={name + ' avatar'}
+						alt={author + ' avatar'}
 					/>
-					<h3 className=" text-sm font-semibold">{name}</h3>
+					<h3 className=" text-sm font-semibold">{author}</h3>
 					<Stars rating={rating} className="" />
 				</div>
 				<button className="flex h-5 w-5 items-center justify-center rounded-full">
 					<PiDotsThreeVerticalBold />
 				</button>
 			</div>
-			<p className="mb-1 mt-2 text-sm leading-5">{content}</p>
+			<p className="mb-1 mt-2 text-sm leading-5">{comment}</p>
 			<div className="flex w-full items-center justify-end">
-				<p className=" text-xs text-txtCol-2">{time}</p>
+				<p className=" text-xs text-txtCol-2">{timeAgo(createdAt)}</p>
 			</div>
 		</div>
 	)
@@ -93,8 +100,8 @@ const Review: React.FC<ReviewType> = ({
 
 const GeneralReview: React.FC<{
 	className?: string
-	summary: ReviewSummaryType
-}> = ({ className, summary }) => {
+	general: GeneralReviewProps
+}> = ({ className, general }) => {
 	return (
 		<div
 			className={twMerge(
@@ -111,7 +118,7 @@ const GeneralReview: React.FC<{
 								<div className="relative h-2 flex-1 rounded-full bg-[#F1F3F4]">
 									<span
 										className="absolute left-0 top-0 h-full rounded-full bg-[#FFC70D]"
-										style={{ width: `${summary.chart[star] * 100}%` }}
+										style={{ width: `${general.detail[star] * 100}%` }}
 									></span>
 								</div>
 							</div>
@@ -120,10 +127,12 @@ const GeneralReview: React.FC<{
 				</div>
 				<div className="flex w-[120px] flex-col items-center justify-center">
 					<span className=" mb-2 text-5xl font-semibold">
-						{summary.average}
+						{general.rating.toFixed(1)}
 					</span>
-					<Stars rating={summary.average} />
-					<p className="text-sm">{summary.count + ' reviews'}</p>
+					<Stars rating={general.rating} />
+					<p className="text-sm">
+						{NumberFormat(general.totalReview) + ' reviews'}
+					</p>
 				</div>
 			</div>
 		</div>

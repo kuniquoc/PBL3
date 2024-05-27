@@ -4,7 +4,8 @@ const Loader: React.FC<{ className?: string }> = ({ className }) => {
 		<svg
 			aria-hidden="true"
 			className={twMerge(
-				`h-20 w-20 animate-spin fill-primary-1 text-gray-200 dark:text-gray-600 ${className}`,
+				`h-20 w-20 animate-spin fill-primary-1 text-gray-200 dark:text-gray-600`,
+				className,
 			)}
 			viewBox="0 0 100 101"
 			fill="none"

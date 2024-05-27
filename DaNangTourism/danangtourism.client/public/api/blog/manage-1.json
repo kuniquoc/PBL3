@@ -1,0 +1,119 @@
+{
+	"status": 200,
+	"message": "Success",
+	"data": {
+		"total": 100,
+		"page": 1,
+		"limit": 12,
+		"items": [
+			{
+				"id": 20000001,
+				"title": "Top 10 best destinations in Vietnam",
+				"type": "places",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "pending",
+				"view": 0
+			},
+			{
+				"id": 20000002,
+				"title": "First time traveling to Da Nang - Things you need to know",
+				"type": "tips",
+				"author": "Jane Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "published",
+				"view": 900
+			},
+			{
+				"id": 20000003,
+				"title": "Ultimate guide to travel to Da Nang",
+				"type": "all",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "rejected",
+				"view": 0
+			},
+			{
+				"id": 20000004,
+				"title": "Top 10 best destinations in Vietnam",
+				"type": "places",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "pending",
+				"view": 0
+			},
+			{
+				"id": 20000005,
+				"title": "First time traveling to Da Nang - Things you need to know",
+				"type": "tips",
+				"author": "Jane Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "published",
+				"view": 851
+			},
+			{
+				"id": 20000006,
+				"title": "Ultimate guide to travel to Da Nang",
+				"type": "all",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "rejected",
+				"view": 0
+			},
+			{
+				"id": 20000007,
+				"title": "Top 10 best destinations in Vietnam",
+				"type": "places",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "pending",
+				"view": 0
+			},
+			{
+				"id": 20000008,
+				"title": "First time traveling to Da Nang - Things you need to know",
+				"type": "tips",
+				"author": "Jane Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "published",
+				"view": 1000
+			},
+			{
+				"id": 20000009,
+				"title": "Ultimate guide to travel to Da Nang",
+				"type": "all",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "rejected",
+				"view": 0
+			},
+			{
+				"id": 20000010,
+				"title": "Top 10 best destinations in Vietnam",
+				"type": "places",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "pending",
+				"view": 0
+			},
+			{
+				"id": 20000011,
+				"title": "First time traveling to Da Nang - Things you need to know",
+				"type": "tips",
+				"author": "Jane Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "published",
+				"view": 1200
+			},
+			{
+				"id": 20000012,
+				"title": "Ultimate guide to travel to Da Nang",
+				"type": "all",
+				"author": "John Doe",
+				"createdAt": "2024-05-19T03:31:09.229Z",
+				"status": "rejected",
+				"view": 0
+			}
+		]
+	}
+}

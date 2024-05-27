@@ -6,19 +6,10 @@ import { Button } from '../../components/Buttons'
 import { useNavigate } from 'react-router-dom'
 import { timeAgo } from '../../utils/TimeFormatters'
 import { motion } from 'framer-motion'
-
-type BlogType = {
-	id: number
-	title: string
-	type: string
-	image: string
-	description: string
-	author: string
-	created_at: string
-}
+import { HomeBlogProps } from '../../types/blog'
 
 const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
-	const [blogs, setBlogs] = useState<BlogType[]>([])
+	const [blogs, setBlogs] = useState<HomeBlogProps[]>([])
 
 	const getBlogs = async () => {
 		try {
@@ -58,7 +49,7 @@ const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
 	)
 }
 
-const FirstBlog: React.FC<{ blog: BlogType; className?: string }> = ({
+const FirstBlog: React.FC<{ blog: HomeBlogProps; className?: string }> = ({
 	blog,
 	className,
 }) => {
@@ -100,7 +91,7 @@ const FirstBlog: React.FC<{ blog: BlogType; className?: string }> = ({
 									{blog?.type}
 								</span>
 								<span className="text-xs text-txtCol-2">
-									{timeAgo(blog?.created_at)}
+									{timeAgo(blog?.createdAt)}
 								</span>
 							</motion.div>
 						)}
@@ -140,7 +131,7 @@ const FirstBlog: React.FC<{ blog: BlogType; className?: string }> = ({
 	)
 }
 
-const BlogCard: React.FC<{ blog: BlogType; className?: string }> = ({
+const BlogCard: React.FC<{ blog: HomeBlogProps; className?: string }> = ({
 	blog,
 	className,
 }) => {
@@ -160,8 +151,6 @@ const BlogCard: React.FC<{ blog: BlogType; className?: string }> = ({
 			>
 				<motion.div
 					className="my-auto text-center text-xl font-semibold text-white"
-					initial={{ opacity: 0, y: 40 }}
-					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.2 }}
 					layoutId={`blog-title-${blog?.id}`}
 				>

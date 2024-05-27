@@ -1,18 +1,10 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Stars } from '../../components'
-
-type RandomItem = {
-	id: number
-	name: string
-	address: string
-	tags: string[]
-	rating: number
-	img: string
-}
+import { SortDesProps } from '../../types/destination'
 
 const RandomExplore: React.FC = () => {
-	const [randomDess, setRandomDess] = useState<RandomItem[]>([])
+	const [randomDess, setRandomDess] = useState<SortDesProps[]>([])
 
 	const getRandomDestination = async () => {
 		try {
@@ -32,34 +24,26 @@ const RandomExplore: React.FC = () => {
 				Random Explore
 			</div>
 			{randomDess.map((des) => (
-				<RandomCard
-					key={des.id}
-					id={des.id}
-					name={des.name}
-					address={des.address}
-					tags={des.tags}
-					rating={des.rating}
-					img={des.img}
-				/>
+				<RandomCard key={des.id} {...des} />
 			))}
 		</div>
 	)
 }
 
-const RandomCard: React.FC<RandomItem> = ({
+const RandomCard: React.FC<SortDesProps> = ({
 	id,
 	name,
 	address,
 	tags,
 	rating,
-	img,
+	image,
 }) => {
 	return (
 		<div
 			className=" flex cursor-pointer items-center gap-3 rounded-lg border border-borderCol-1 bg-white p-3 transition-colors hover:bg-[#52cbff0e]"
 			onClick={() => console.log('Go to des', id)}
 		>
-			<img className="h-20 w-20 rounded" src={img} />
+			<img className="h-20 w-20 rounded" src={image} />
 			<div className="flex shrink grow basis-0 flex-col items-center justify-between self-stretch">
 				<div className="font-['Open Sans'] self-stretch text-sm font-semibold text-slate-950">
 					{name}

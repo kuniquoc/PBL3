@@ -1,20 +1,20 @@
 {
   "Version": 1,
-  "Hash": "tNx5RZue0gvG/80LOrE6iYA9EJCdiM6fssSNUzLz5h8=",
+  "Hash": "HYPkDpH7w3LPh3iwfQ2UnPzFZp6D2XFIrN7B7Ng1DjQ=",
   "Source": "DaNangTourism.Server",
   "BasePath": "_content/DaNangTourism.Server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [
     {
-      "Identity": "D:\\PBL3\\DaNangTourism\\danangtourism.client\\danangtourism.client.esproj",
+      "Identity": "E:\\New Course\\PBL3\\DaNangTourism\\danangtourism.client\\danangtourism.client.esproj",
       "Version": 2,
       "Source": "danangtourism.client",
       "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishProperties": "",
       "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
       "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildProperties": "",
       "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
     }
   ],

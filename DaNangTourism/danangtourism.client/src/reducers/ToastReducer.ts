@@ -1,4 +1,4 @@
-import { ToastProps } from '../types/global.types'
+import { ToastProps } from '../types/global'
 
 interface State {
 	toasts: ToastProps[]

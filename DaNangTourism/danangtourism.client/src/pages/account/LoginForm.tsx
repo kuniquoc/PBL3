@@ -1,23 +1,29 @@
 /* eslint-disable no-useless-escape */
 import { twMerge } from 'tailwind-merge'
 import { Button } from '../../components'
-import { useEffect, useState } from 'react'
-// import { UserContext } from '../../context/UserContext'
+import { useContext, useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { variantsDefault, variantsY } from '../../styles/variants'
+import axios from 'axios'
+import { useToast } from '../../hook/useToast'
+import { UserContext } from '../../context/UserContext'
 
-const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
-	className = '',
-	onClose,
-}) => {
+const LoginForm: React.FC<{
+	className?: string
+	onClose: () => void
+	onSwitch: () => void
+}> = ({ className = '', onClose, onSwitch }) => {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
-		remember: false,
+		rememberMe: false,
 	})
 	const [warnings, setWarnings] = useState({
 		email: '',
 		password: '',
 	})
 	const [firstMount, setFirstMount] = useState(true)
+	const toast = useToast()
 
 	const validateData = () => {
 		let isValid = true
@@ -45,21 +51,30 @@ const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
 
 		return isValid
 	}
-	// const { setUser } = useContext(UserContext)
+	const { setUser } = useContext(UserContext)
 	const handleLogin = async () => {
 		setFirstMount(false)
-		const UserData = {
-			id: 40000001,
-			username: 'Admin Account',
-			email: 'adminaccount@email.con',
-			avatar:
-				'https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745',
-			roleId: 1,
-		}
-		if (validateData()) {
-			// setUser(UserData)
-			sessionStorage.setItem('user', JSON.stringify(UserData))
-			window.location.reload()
+		if (!validateData()) return
+
+		try {
+			const res = await axios.post('/api/auth/login', formData)
+			if (res.status === 200) {
+				toast.success('Success', 'Login successfully')
+				setUser({
+					...res.data.data,
+					isRemember: formData.rememberMe,
+				})
+				onClose()
+			} else {
+				toast.error('Login failed', res.data.message)
+			}
+		} catch (err: any) {
+			if (err.response) {
+				toast.error('Login failed', err.response.data.message)
+			} else {
+				toast.error('Error', 'Something went wrong')
+			}
+			console.error(err)
 		}
 	}
 
@@ -68,17 +83,29 @@ const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
 	}, [formData])
 
 	return (
-		<div
+		<motion.div
 			className={twMerge(
-				`flex items-center justify-center bg-[#0000004b] ${className} fixed left-0 top-0 z-10 h-screen w-screen`,
+				'fixed left-0 top-0 z-10 flex h-screen w-screen items-center justify-center bg-[#0000004b]',
+				className,
 			)}
 			onMouseDown={(e) => {
 				if (e.target === e.currentTarget) {
 					onClose()
 				}
 			}}
+			variants={variantsDefault}
+			initial="hidden"
+			animate="visible"
+			exit="hidden"
 		>
-			<div className="flex w-[560px] items-center p-5">
+			<motion.div
+				className="flex w-[560px] items-center p-5"
+				variants={variantsY}
+				initial="top"
+				animate="visible"
+				exit="bottom"
+				custom={100}
+			>
 				<div className="flex w-[520px] flex-col items-center gap-4 rounded-xl bg-white px-14 py-10">
 					<h1 className="inline-block bg-gradient-to-br from-primary-1 to-secondary-2 bg-clip-text text-3xl font-bold text-transparent">
 						Welcome back !
@@ -97,6 +124,9 @@ const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
 							onChange={(e) =>
 								setFormData({ ...formData, email: e.target.value })
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') handleLogin()
+							}}
 						/>
 						<p className="text-sm text-tertiary-1">{warnings.email}</p>
 					</div>
@@ -113,6 +143,9 @@ const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
 							onChange={(e) =>
 								setFormData({ ...formData, password: e.target.value })
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') handleLogin()
+							}}
 						/>
 						<p className="text-sm text-tertiary-1">{warnings.password}</p>
 					</div>
@@ -122,9 +155,9 @@ const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
 								className="large"
 								type="checkbox"
 								id="login-remember"
-								checked={formData.remember}
+								checked={formData.rememberMe}
 								onChange={(e) =>
-									setFormData({ ...formData, remember: e.target.checked })
+									setFormData({ ...formData, rememberMe: e.target.checked })
 								}
 							/>
 							<label htmlFor="login-remember">Remember me</label>
@@ -143,13 +176,16 @@ const LoginForm: React.FC<{ className?: string; onClose: () => void }> = ({
 					</div>
 					<div className="mt-2 flex w-full items-center justify-center gap-2 text-sm">
 						<p className="text-txtCol-2">Don't have account?</p>
-						<button className="text-primary-1 hover:underline">
+						<button
+							className="text-primary-1 hover:underline"
+							onClick={onSwitch}
+						>
 							Sign up here
 						</button>
 					</div>
 				</div>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	)
 }
 

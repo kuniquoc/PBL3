@@ -11,11 +11,13 @@ builder.Services.AddControllers();
 // Register CORS service
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:5173");
-                      });
+  options.AddPolicy(name: MyAllowSpecificOrigins,
+                    policy =>
+                    {
+                      policy.WithOrigins("http://localhost:5173")
+                              .AllowAnyHeader() // Allow all headers
+                              .AllowAnyMethod(); // Allow all methods
+                    });
 });
 
 // Register API Explorer service
@@ -28,46 +30,46 @@ builder.Services.AddSwaggerGen();
 // Register connection string here
 builder.Services.AddScoped<IDestinationRepository>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
-    }
-    return new DestinationRepository(connectionString);
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new DestinationRepository(connectionString);
 });
 
 builder.Services.AddScoped<IFavoriteDestinationRepository>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
-    }
-    return new FavoriteDestinationRepository(connectionString);
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new FavoriteDestinationRepository(connectionString);
 });
 
 builder.Services.AddScoped<IReviewRepository>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
-    }
-    return new ReviewRepository(connectionString);
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new ReviewRepository(connectionString);
 });
 
 builder.Services.AddScoped<IScheduleRepository>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
-    }
-    return new ScheduleRepository(connectionString);
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new ScheduleRepository(connectionString);
 });
 
 // Register scoped services here
@@ -98,9 +100,9 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // Enable Swagger UI and JSON endpoint in development environment
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  // Enable Swagger UI and JSON endpoint in development environment
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 // Enable CORS

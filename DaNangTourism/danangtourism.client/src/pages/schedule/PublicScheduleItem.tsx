@@ -1,10 +1,10 @@
 import { twMerge } from 'tailwind-merge'
-import { PublicScheduleItemType } from '../../types/schedule.types'
+import { PublicScheduleItemProps } from '../../types/schedule'
 import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
 
 const PublicScheduleItem: React.FC<{
-	schedule: PublicScheduleItemType
+	schedule: PublicScheduleItemProps
 	className?: string
 }> = ({ schedule, className }) => {
 	const navigate = useNavigate()
@@ -21,11 +21,9 @@ const PublicScheduleItem: React.FC<{
 					<span className="h-[5px] w-[5px] rounded-full bg-white"></span>
 					Shared
 				</div>
-				<h3 className="line-clamp-1 text-xl font-semibold">
-					{schedule.general.title}
-				</h3>
+				<h3 className="line-clamp-1 text-xl font-semibold">{schedule.title}</h3>
 			</div>
-			<p className=" line-clamp-2 text-sm">{schedule.general.description}</p>
+			<p className=" line-clamp-2 text-sm">{schedule.description}</p>
 			<div className="flex w-full items-end gap-4">
 				<div className="flex flex-1  flex-col gap-1">
 					<div className="flex w-full items-center gap-2 overflow-hidden">
@@ -44,25 +42,25 @@ const PublicScheduleItem: React.FC<{
 					<div className="flex w-full items-center gap-5 overflow-hidden text-sm">
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Start date: </h5>
-							<p className="">{schedule.general.start_date}</p>
+							<p className="">{schedule.startDate}</p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Total time: </h5>
-							<p className="">{schedule.general.total_time}</p>
+							<p className="">{schedule.totalDays} days</p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Total budget: </h5>
-							<p className="">${schedule.general.total_budget}</p>
+							<p className="">${schedule.totalBudget}</p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Shared by: </h5>
-							<p className="">{schedule.author}</p>
+							<p className="">{schedule.creator}</p>
 						</div>
 					</div>
 				</div>
 				<Button
 					className="h-8 w-[112px] rounded-full bg-primary-3 text-white hover:bg-primary-2"
-					onClick={() => navigate(`/schedule/${schedule.general.id}`)}
+					onClick={() => navigate(`/schedule/${schedule.id}`)}
 				>
 					View detail
 				</Button>
