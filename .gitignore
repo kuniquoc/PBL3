@@ -1,0 +1,143 @@
+
+# Tập tin tạm thời của Windows
+######################
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.old
+*.orig
+
+# Node.js
+######################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Các thư mục build
+######################
+dist/
+build/
+lib-cov/
+coverage/
+bower_components/
+
+# Logs
+######################
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Static files
+######################
+*.cache
+.cache-loader
+*.css.map
+*.js.map
+
+# Next.js build output
+.next/
+
+# SvelteKit build output
+.svelte-kit/
+
+# React Native
+######################
+*.react.js
+*.react.ts
+*.react.tsx
+*.react.js.map
+*.react.ts.map
+*.react.tsx.map
+
+# .NET
+######################
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.config
+*.json
+*.so
+*.dylib
+
+# User-specific files
+######################
+*.csproj.user
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.ide.*
+
+# Mono Auto Generated Files
+######################
+mono_crash.*
+
+# ASP.NET Scaffolding
+######################
+ScaffoldingReadMe.txt
+
+# ASP.NET Core
+######################
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Entity Framework
+######################
+Migrations/
+
+# Visual Studio Code
+######################
+.vscode/
+*.code-workspace
+
+# Visual Studio
+######################
+.vs/
+*.csproj.user
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.sln.ide.*
+.resharper
+_ReSharper.Caches/
+packages/
+*.ncrunch*
+*.ncrunchsolution*
+*.ncrunchproject*
+
+# Tập tin backup & báo cáo
+######################
+*.bak
+*.report
+*.chktls
+*.xrej
+
+# Local History
+######################
+.history/
+.localhistory/
+
+# Temp Files
+######################
+*.tmp
+*.temp
+
+# Webpack
+######################
+*.cache
+.cache-loader
+
+# IDEs và công cụ khác
+######################
+.idea/
+.idea/*
+
+# End of File
