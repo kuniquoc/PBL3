@@ -1,10 +1,9 @@
 ﻿using DaNangTourism.Server.DAL;
-using DaNangTourism.Server.Models;
-using DaNangTourism.Server.Middleware;
-using Microsoft.AspNetCore.Components.Web;
-using System.Collections.Generic;
 using MySqlConnector;
 using System.Text;
+using DaNangTourism.Server.Models.DestinationModels;
+using DaNangTourism.Server.Validation;
+using Microsoft.AspNetCore.Mvc;
 namespace DaNangTourism.Server.Service
 {
     public interface IDestinationService
@@ -12,13 +11,12 @@ namespace DaNangTourism.Server.Service
         IEnumerable<HomeDestination> GetHomeDestinations();
         IEnumerable<ListDestination> GetListDestinations(int userId, DestinationFilter destinationFilter);
         DestinationDetail? GetDestinationDetail(int id);
-        IEnumerable<DestinationReview> GetDestinationReviews(int destinationId);
-        int AddReview(int userId, int destinationId, Review review);
         void UpdateFavDes(int userId, int favDesId, bool favorite);
-        IEnumerable<HomeDestination> GetRandomDestinations(IQueryCollection query);
-        AdminDestinations GetDestinationElements(IQueryCollection query);
-        IEnumerable<DestinationReview> GetReviewsByDesId(int destinationId, IQueryCollection query);
+        IEnumerable<HomeDestination> GetRandomDestinations(int limit = 3);
+        AdminDestinations GetDestinationElements(AdminDestinationFilter adminDestinationFilter);
         int AddDestination(InputDestinationModel destination);
+        int UpdateDestination(int id, InputDestinationModel destination);
+        int DeleteDestination(int id);
     }
     public class DestinationService : IDestinationService
     {
@@ -31,175 +29,156 @@ namespace DaNangTourism.Server.Service
             _favoriteDestinationRepository = favoriteDestinationRepository;
             _reviewRepository = reviewRepository;
         }
+
+        /// <summary>
+        /// Get list of newest destinations
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<HomeDestination> GetHomeDestinations()
         {
             return _destinationRepository.GetNewestDestinations();
         }
 
 
-        
-
-        // hàm khử điều kiện lọc destinationFilter 
-        private DestinationFilter destinationationSanitization(DestinationFilter destinationFilter)
-        {
-            destinationFilter.Search = DataSanitization.RemoveSpecialCharacters(destinationFilter.Search);
-            destinationFilter.Location = DataSanitization.RemoveSpecialCharacters(destinationFilter.Location);
-            return destinationFilter;
-        }
+        /// <summary>
+        /// Get list of destinations
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="destinationFilter"></param>
+        /// <returns></returns>
         public IEnumerable<ListDestination> GetListDestinations(int userId, DestinationFilter destinationFilter)
         {
-            // khử điều kiện lọc
-            destinationFilter = destinationationSanitization(destinationFilter);
-
             // xử lý query để có điều kiện lọc
-            StringBuilder filter = new StringBuilder();
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT DestinationId, Name, Address, Images, Rating, Cost, OpenTime, CloseTime, Tags");
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
             // xử lý favorite Des
             if (destinationFilter.IsFavorite != null)
             {
-                filter.Append(" LEFT JOIN FavoriteDestinations ON FavoriteDestinations.DestinationId = Destinations.Id");
+                sql.Append(", IF(UserId = @userId, TRUE, FALSE) as Favorite  FROM Destinations LEFT JOIN FavoriteDestinations ON FavoriteDestinations.DestinationId = Destinations.Id");
             }
+            else sql.Append(" FROM Destinations");
 
             // xử lý các bộ lọc dùng where
             if (!string.IsNullOrEmpty(destinationFilter.Search))
             {
-                filter.Append(" WHERE Name = @search");
+                sql.Append(" WHERE Name = @search");
                 parameters.Add(new MySqlParameter("@search", destinationFilter.Search));
             }
 
             if (!string.IsNullOrEmpty(destinationFilter.Location))
             {
-                if (filter.ToString().Contains("WHERE"))
+                if (sql.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Location LIKE @location");
+                    sql.Append(" AND Location LIKE @location");
                 }
                 else
                 {
-                    filter.Append(" WHERE Location LIKE @location");
+                    sql.Append(" WHERE Location LIKE @location");
                 }
                 parameters.Add(new MySqlParameter("@location", "%" + destinationFilter.Location + "%"));
             }
 
             if (destinationFilter.CostFrom != -1)
             {
-                if (filter.ToString().Contains("WHERE"))
+                if (sql.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Cost >= @costFrom");
+                    sql.Append(" AND Cost >= @costFrom");
                 }
                 else
                 {
-                    filter.Append(" WHERE Cost >= @costFrom");
+                    sql.Append(" WHERE Cost >= @costFrom");
                 }
                 parameters.Add(new MySqlParameter("@costFrom", destinationFilter.CostFrom));
             }
 
             if (destinationFilter.CostTo != -1)
             {
-                if (filter.ToString().Contains("WHERE"))
+                if (sql.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Cost <= @costTo");
+                    sql.Append(" AND Cost <= @costTo");
                 }
                 else
                 {
-                    filter.Append(" WHERE Cost <= @costTo");
+                    sql.Append(" WHERE Cost <= @costTo");
                 }
                 parameters.Add(new MySqlParameter("@costTo", destinationFilter.CostTo));
             }
 
             if (destinationFilter.RatingFrom != -1)
             {
-                if (filter.ToString().Contains("WHERE"))
+                if (sql.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Rating >= @ratingFrom");
+                    sql.Append(" AND Rating >= @ratingFrom");
                 }
                 else
                 {
-                    filter.Append(" WHERE Rating >= @ratingFrom");
+                    sql.Append(" WHERE Rating >= @ratingFrom");
                 }
                 parameters.Add(new MySqlParameter("@ratingFrom", destinationFilter.RatingFrom));
             }
 
             if (destinationFilter.RatingTo != -1)
             {
-                if (filter.ToString().Contains("WHERE"))
+                if (sql.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Rating <= @ratingTo");
+                    sql.Append(" AND Rating <= @ratingTo");
                 }
                 else
                 {
-                    filter.Append(" WHERE Rating <= @ratingTo");
+                    sql.Append(" WHERE Rating <= @ratingTo");
                 }
                 parameters.Add(new MySqlParameter("@ratingTo", destinationFilter.RatingTo));
             }
 
             if (destinationFilter.IsFavorite != null)
             {
-                if (filter.ToString().Contains("WHERE"))
+                if (sql.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND UserId = @userId");
+                    sql.Append(" AND UserId = @userId");
                 }
                 else
                 {
-                    filter.Append(" WHERE UserId = @userId");
+                    sql.Append(" WHERE UserId = @userId");
                 }
                 parameters.Add(new MySqlParameter("@userId", userId));
             }
 
             // xử lý order by
-            if (!string.IsNullOrEmpty(destinationFilter.SortBy))
-            {
-                filter.Append(" ORDER BY " + destinationFilter.SortBy);
-            }
-            else
-            {
-                filter.Append(" ORDER BY created_at");
-            }
-
-            if (!string.IsNullOrEmpty(destinationFilter.SortType))
-            {
-                filter.Append(" " + destinationFilter.SortType);
-            }
-            else
-            {
-                filter.Append(" ASC");
-            }
+            sql.Append(" ORDER BY " + destinationFilter.SortBy + " " + destinationFilter.SortType);
 
 
-            return _destinationRepository.GetListDestination(filter.ToString(), parameters);
+            return _destinationRepository.GetListDestination(sql.ToString(), parameters);
         }
 
+        /// <summary>
+        /// Get destination detail by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DestinationDetail? GetDestinationDetail(int id)
         {
             DestinationDetail? destinationDetail = _destinationRepository.GetDestinationById(id);
             if (destinationDetail == null) return null;
             // xử lý để nhận thông tin cho GeneralReview
-            destinationDetail.GeneralReview.TotalReview = _reviewRepository.GetReviewsCountByDesId(id);
-            for (int i = 5; i >= 1; i--)
+            var reviewsCount = _reviewRepository.GetReviewsCountByDesIdGroupedByRating(id);
+
+            foreach (var review in reviewsCount)
             {
-                int countOfRating = _reviewRepository.GetReviewsCountByDesId(id, i);
-                destinationDetail.GeneralReview.AddRatingPercent(i, countOfRating);
-            }    
+                destinationDetail.GeneralReview.TotalReview += review.Value;
+                destinationDetail.GeneralReview.AddRatingPercent(review.Key, review.Value);
+            }
+            
             return destinationDetail;
         }
 
-        public IEnumerable<DestinationReview> GetDestinationReviews(int destinationId)
-        {
-            return null;
-        }
-
         /// <summary>
-        /// Add review to DataBase
+        /// Update favorite destination (add or remove) 
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="destinationId"></param>
-        /// <param name="review"></param>
-        /// <returns> Return id of added review</returns>
-        public int AddReview(int userId, int destinationId, Review review)
-        {
-            return _reviewRepository.AddReview(userId, destinationId, review);
-        }
-
+        /// <param name="favDesId"></param>
+        /// <param name="favorite"></param>
         public void UpdateFavDes(int userId, int favDesId, bool favorite)
         {
             if (favorite)
@@ -211,108 +190,112 @@ namespace DaNangTourism.Server.Service
                 _favoriteDestinationRepository.DeleteFavDes(userId, favDesId);
             }
         }
-        public IEnumerable<HomeDestination> GetRandomDestinations(IQueryCollection query)
+        
+        /// <summary>
+        /// Get random destinations
+        /// </summary>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public IEnumerable<HomeDestination> GetRandomDestinations(int limit = 3)
         {
-            int limit = 3;
-            if (query.ContainsKey("limit"))
-            {
-                string? limitStr = query["limit"];
-                // Kiểm tra null trước khi Parse
-                if (!string.IsNullOrEmpty(limitStr))
-                {
-                    limit = Int32.Parse(limitStr);
-                }
-            }    
-              
             return _destinationRepository.GetRandomDestinations(limit);
         }
 
-        public AdminDestinations GetDestinationElements(IQueryCollection query)
+        /// <summary>
+        /// Get destination elements for admin
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public AdminDestinations GetDestinationElements(AdminDestinationFilter adminDestinationFilter)
         {
-            AdminDestinations adminDestinations = new();
-            //mặc định limit là 12
-            adminDestinations.Limit = 12;
-            //mặc định page là 1
-            adminDestinations.Page = 1;
+            // Khởi tạo đối tượng AdminDestinations
+            AdminDestinations adminDestinations = new AdminDestinations();
 
-            //Lấy item của adminDestinations
-            string sql = "Select d.DestinationId, d.Name, d.Address, d.Rating, d.Created_At, " +
-                "(Select count(*) from Reviews r where r.DestinationId = d.DestinationId) as Review, " +
-                "(Select count(*) from FavoriteDestinations where f.DestinationId = d.DestinationId) as Favourite, " +
-                "d.Created_At from Destination d";
+            // Khởi tạo StringBuilder để xây dựng câu truy vấn SQL
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT d.DestinationId AS DestinationId, d.Name AS Name, d.Address AS Address, d.Rating AS Rating, ");
+            sql.Append("(SELECT COUNT(*) FROM Reviews r WHERE r.DestinationId = d.DestinationId) AS CounfOfReview, ");
+            sql.Append("(SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.DestinationId = d.DestinationId) AS CountOfFavorite, ");
+            sql.Append("d.Created_At AS Created_At FROM Destination d");
 
-            // điều kiện lọc (nếu có)
-            string filter = "";
-            //xử lý lọc dùng where
-            if (query.ContainsKey("search"))
+            List<MySqlParameter> parameters = new List<MySqlParameter>();
+
+
+            // Xử lý lọc dùng WHERE
+            if (!string.IsNullOrEmpty(adminDestinationFilter.Search))
             {
-                filter += " where d.Name = '" + query["search"] + "'";
+                sql.Append(" WHERE Name = @name");
+                parameters.Add(new MySqlParameter("@name", adminDestinationFilter.Search));
             }
 
-            // xử lý bộ lọc dùng order by
-            filter += " order by ";
-            if (query.ContainsKey("sortBy"))
+            // Xử lý bộ lọc dùng ORDER BY
+            sql.Append(" ORDER BY ");
+            if (!string.IsNullOrEmpty(adminDestinationFilter.SortBy))
             {
-                if (query.ContainsKey("created_at") || query.ContainsKey("rating"))
-                {
-                    filter += "d.";
-                }
-                filter += query["sortBy"];
+                sql.Append(adminDestinationFilter.SortBy);
             }
-            else filter += "d.created_at";
-            if (query.ContainsKey("sortType"))
+            else
             {
-                filter += " " + query["sortType"];
+                sql.Append("created_at");
             }
 
-            //xử lý trang hiển thị và số lượng tương ứng
-            filter += " limit";
-                
-            // kiểm tra limit
-            if (query.ContainsKey("limit"))
+            if (!string.IsNullOrEmpty(adminDestinationFilter.SortType))
             {
-                string? limitStr = query["limit"];
-                if (!String.IsNullOrEmpty(limitStr))
-                {
-                    adminDestinations.Limit = Int32.Parse(limitStr);
-                }
+                sql.Append(" ").Append(adminDestinationFilter.SortType);
             }
-            filter += " " + adminDestinations.Limit;
 
-            // kiểm tra page
-                
-            if (query.ContainsKey("page"))
-            {
-                string? pageStr = query["page"];
-                if (!String.IsNullOrEmpty(pageStr))
-                {
-                    adminDestinations.Page = Int32.Parse(pageStr);
-                }
-            }
-            filter += "offset " + (adminDestinations.Page - 1) * adminDestinations.Limit;                
+            // Lấy tổng kết quả có được
+            StringBuilder countSql = new StringBuilder();
+            countSql.Append("SELECT COUNT(*) FROM (" + sql + ") AS subquery");
+            adminDestinations.Total = _destinationRepository.GetDestinationCount(countSql.ToString(), parameters.ToArray());
+
+            // Xử lý trang hiển thị và số lượng tương ứng
+
+            // Kiểm tra 
+            sql.Append(" LIMIT @limit OFFSET @offset");
+            adminDestinations.Limit = adminDestinationFilter.Limit;
+            parameters.Add(new MySqlParameter("@limit", adminDestinations.Limit));
+
+            // Kiểm tra page
+            adminDestinations.Page = adminDestinationFilter.Page;
+            parameters.Add(new MySqlParameter("@offset", (adminDestinations.Page - 1) * adminDestinations.Limit));
+
+            // Lấy dữ liệu từ cơ sở dữ liệu
+            adminDestinations.Items = _destinationRepository.GetDestinationElements(sql.ToString(), parameters.ToArray()).ToList();
+
             
-            adminDestinations.Items = _destinationRepository.GetDestinationElements(sql + filter).ToList();
-            //Lấy tổng kết quả có được
-            string countMySql = (sql + filter).Insert(7, "count(*) ");
-            countMySql = countMySql.Remove(countMySql.IndexOf("limit"));
-            adminDestinations.Total = _destinationRepository.GetDestinationCount(countMySql);
 
             return adminDestinations;
         }
 
-        //hụt phần user
-        public IEnumerable<DestinationReview> GetReviewsByDesId(int destinationId, IQueryCollection query)
-        {
-            //string filter;
-            if (query.ContainsKey("sortBy"))
-            {
-
-            }
-            return null;
-        }
+        /// <summary>
+        /// Add new destination
+        /// </summary>
+        /// <param name="destination"></param>
+        /// <returns></returns>
         public int AddDestination (InputDestinationModel destination)
         {
             return _destinationRepository.AddDestination(destination);
         }
+        /// <summary>
+        /// Update destination
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="destination"></param>
+        /// <returns></returns>
+        public int UpdateDestination(int id, InputDestinationModel destination)
+        {
+            return _destinationRepository.UpdateDestination(id, destination);
+        }
+        /// <summary>
+        /// Delete destination
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int DeleteDestination(int id)
+        {
+            return _destinationRepository.DeleteDestination(id);
+        }
+
     }
 }

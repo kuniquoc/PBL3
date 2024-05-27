@@ -59,9 +59,22 @@ builder.Services.AddScoped<IReviewRepository>(provider =>
     return new ReviewRepository(connectionString);
 });
 
+builder.Services.AddScoped<IScheduleRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+    }
+    return new ScheduleRepository(connectionString);
+});
+
 // Register scoped services here
 
 builder.Services.AddScoped<IDestinationService, DestinationService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 // Register helper services here
 

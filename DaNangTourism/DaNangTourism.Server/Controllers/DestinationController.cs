@@ -1,7 +1,7 @@
-﻿using DaNangTourism.Server.Models;
-using DaNangTourism.Server.Service;
+﻿using DaNangTourism.Server.Service;
 using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
+using DaNangTourism.Server.Models.DestinationModels;
 
 namespace DaNangTourism.Server.Controllers
 {
@@ -16,6 +16,7 @@ namespace DaNangTourism.Server.Controllers
             _destinationService = destinationService;
             _authenticationHelper = authenticationHelper;
         }
+        
         [HttpGet("home")]
         public IActionResult GetHomeDestinations()
         {
@@ -26,16 +27,20 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                else return Ok(destinations);
+                else return StatusCode(200, new { message = "Success", data = destinations });
             }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+        
         [HttpGet("list")]
         public IActionResult GetListDestinations([FromQuery] DestinationFilter destinationFilter)
         {
+            // Lọc dữ liệu
+            destinationFilter.Sanitization();
+
             try
             {
                 int userId = _authenticationHelper.GetUserIdFromToken();
@@ -44,7 +49,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                else return Ok(destinations);
+                else return StatusCode(200, new { message = "Success", data = destinations });
             }
             catch (UnauthorizedAccessException)
             {
@@ -55,6 +60,7 @@ namespace DaNangTourism.Server.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        
         [HttpGet("detail/{id}")]
         public IActionResult GetDestinationById([FromRoute] int id)
         {
@@ -65,7 +71,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                else return Ok(destination);
+                else return StatusCode(200, new { message = "Success", data = destination });
             }
             catch (Exception e)
             {
@@ -73,128 +79,121 @@ namespace DaNangTourism.Server.Controllers
             }
 
         }
-        [HttpGet("review/{id}")]
-        public IActionResult GetReviewsByDestinationId([FromRoute] int id)
-        {
-            // chờ phần user
-            return Ok();
-        }
-        [HttpPost("review")]
-        public IActionResult AddReview([FromBody] Review review)
-        {
-            review.Created_At = DateTime.Now;
-            int userId = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("token"))
-            {
-                //xác thực token và nhận id
-                userId = 0;
-                return Unauthorized();
-            }
-            else
-            {
-                int destinationId = 0;
-                if (!Request.Form.ContainsKey("destinationId"))
-                {
-                    return BadRequest();
-                }
-                else
-                {
-                    destinationId = Int32.Parse(Request.Form["destinationId"].ToString());
-                    try
-                    {
-                        int reviewId = _destinationService.AddReview(userId, destinationId, review);
-                        return CreatedAtAction("Review created", new { id = reviewId }, review);
-                    }
-                    catch (Exception e)
-                    {
-                        return StatusCode(500, e.Message);
-                    }
-                }
-            }
-        }
+        
         [HttpPut("favorite/{destinationId}")]
         public IActionResult UpdateFavDes([FromRoute] int destinationId, [FromBody] bool favorite)
         {
-            int userId = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("token"))
+            try
             {
-                //xác thực token và nhận id
-                userId = 0;
+                int userId = _authenticationHelper.GetUserIdFromToken();
+                _destinationService.UpdateFavDes(userId, destinationId, favorite);
+                return StatusCode(200, "Favorite updated");
+            }
+            catch (UnauthorizedAccessException)
+            {
                 return Unauthorized();
             }
-            else
+            catch (Exception e)
             {
-                try
-                {
-                    _destinationService.UpdateFavDes(userId, destinationId, favorite);
-                    return Ok("Favorite updated");
-                }
-                catch (Exception e)
-                {
-                    return StatusCode(500, e.Message);
-                }
+                return StatusCode(500, e.Message);
             }
         }
+        
         [HttpGet("random")]
-        public IActionResult GetRandomDestinations([FromQuery] IQueryCollection query)
+        public IActionResult GetRandomDestinations([FromQuery] int limit = 3)
         {
             try
             {
-                var destinations = _destinationService.GetRandomDestinations(query);
+                var destinations = _destinationService.GetRandomDestinations(limit);
                 if (destinations.Count() == 0)
                 {
                     return NotFound();
                 }
-                else return Ok(destinations);
+                else return StatusCode(200, new { message = "Success", data = destinations});
             }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+       
         [HttpGet("managelist")]
-        public IActionResult GetAdminList([FromQuery] IQueryCollection query)
+        public IActionResult GetAdminList([FromQuery] AdminDestinationFilter adminDestinationFilter)
         {
-            // xác thực admin
+            // Lọc dữ liệu
+            adminDestinationFilter.Sanitization();
 
-
-            //
             try
             {
-                AdminDestinations adminDestinations = _destinationService.GetDestinationElements(query);
+                // xác thực admin
+
+
+                //
+                AdminDestinations adminDestinations = _destinationService.GetDestinationElements(adminDestinationFilter);
                 if (adminDestinations.Items.Count == 0)
                 {
                     return NotFound();
                 }
-                else return Ok(adminDestinations);
+                else return StatusCode(200, new { message = "Success", data = adminDestinations});
             }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+        
         [HttpPost("create")]
         public IActionResult CreateNewDestination([FromBody] InputDestinationModel destination)
         {
             try
             {
-                int destinationId = _destinationService.AddDestination(destination);
-                return CreatedAtAction("Destination created", new { id = destinationId }, destination);
+                // xác thực admin
+
+
+                //
+                _destinationService.AddDestination(destination);
+                return StatusCode(201, new { message = "Destination created" });
             }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
             }
         }
+        
         [HttpPut("update/{id}")]
-        public IActionResult UpdateDestination([FromRoute] int id)
+        public IActionResult UpdateDestination([FromRoute] int id, [FromBody] InputDestinationModel destination)
         {
-            return Ok();
+            try
+            {
+                // xác thực admin
+
+
+                //
+                _destinationService.UpdateDestination(id, destination);
+                return StatusCode(200, new { message = "Destination updated" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
+        
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteDestination([FromRoute] int id)
         {
-            return Ok();
+            try
+            {
+                // xác thực admin
+
+
+                //
+                _destinationService.DeleteDestination(id);
+                return StatusCode(200, new { message = "Destination deleted" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

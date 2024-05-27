@@ -1,10 +1,10 @@
-﻿using DaNangTourism.Server.Helper;
+﻿using DaNangTourism.Server.ModelBindingConverter;
 using MySqlConnector;
 using System.ComponentModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DaNangTourism.Server.Models
+namespace DaNangTourism.Server.Models.DestinationModels
 {
     public class AdminDestinations
     {
@@ -37,8 +37,8 @@ namespace DaNangTourism.Server.Models
         public int CountOfFavorite { get; set; }
         [JsonPropertyName("created_at")]
         [JsonConverter(typeof(ConvertToISO8061DateTime))]
-        public DateTime Created_At { get; set; } 
-        public DestinationElement ()
+        public DateTime Created_At { get; set; }
+        public DestinationElement()
         {
             Name = string.Empty;
             Address = string.Empty;

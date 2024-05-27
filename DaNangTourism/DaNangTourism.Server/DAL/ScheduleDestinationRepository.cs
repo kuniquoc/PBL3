@@ -1,24 +1,24 @@
 ﻿using MySqlConnector;
-using DaNangTourism.Server.Models;
+using DaNangTourism.Server.Models.ScheduleModels;
 
 namespace DaNangTourism.Server.DAL
 {
-    public class ScheduleDestinationDAO
+    public class ScheduleDestinationRepository
     {
         private readonly DAO _dao;
-        private static ScheduleDestinationDAO _instance;
-        public static ScheduleDestinationDAO Instance
+        private static ScheduleDestinationRepository _instance;
+        public static ScheduleDestinationRepository Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new ScheduleDestinationDAO(DAO.Instance);
+                    _instance = new ScheduleDestinationRepository(DAO.Instance);
                 }
                 return _instance;
             }
         }
-        private ScheduleDestinationDAO(DAO dao)
+        private ScheduleDestinationRepository(DAO dao)
         {
             _dao = dao;
         }

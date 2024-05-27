@@ -1,6 +1,6 @@
 ﻿using MySqlConnector;
 
-namespace DaNangTourism.Server.Models
+namespace DaNangTourism.Server.Models.ScheduleModels
 {
     public class ScheduleDestination
     {

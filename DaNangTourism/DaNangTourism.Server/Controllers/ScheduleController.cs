@@ -1,7 +1,9 @@
 ﻿using DaNangTourism.Server.DAL;
+using DaNangTourism.Server.Service;
+using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
-using DaNangTourism.Server.Models;
 using System.Diagnostics.Eventing.Reader;
+using DaNangTourism.Server.Models.ScheduleModels;
 
 namespace DaNangTourism.Server.Controllers
 {
@@ -10,64 +12,40 @@ namespace DaNangTourism.Server.Controllers
 
     public class ScheduleController : Controller
     {
-        [HttpGet("get/all")]
-        public IActionResult GetAllSchedules(string userId)
+        private readonly IScheduleService _scheduleService;
+        private readonly IAuthenticationHelper _authenticationHelper;
+        public ScheduleController(IScheduleService scheduleService, IAuthenticationHelper authenticationHelper)
         {
-            ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            List<Schedule> schedules = scheduleDAO.GetAllSchedule();
-            if (schedules.Count == 0)
-            {
-                return NotFound();
-            }
-            return Ok(schedules);
+            _scheduleService = scheduleService;
+            _authenticationHelper = authenticationHelper;
         }
-        [HttpGet("get/userId")]
-        public IActionResult GetSchedulesByUserId([FromBody] int userId) { 
-            ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            List<Schedule> schedules = scheduleDAO.GetSchedulesByUserId(userId);
-            if (schedules.Count == 0)
-            {
-                return NotFound();
-            }
-            return Ok(schedules);
-        }
-        [HttpGet("get/{id}")]
-        public IActionResult GetScheduleById([FromRoute] int id)
+        [HttpGet("myschedule")]
+        public IActionResult GetAllSchedules([FromQuery] ScheduleFilter scheduleFilter)
         {
-            ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            Schedule? schedule = scheduleDAO.GetScheduleById(id);
-            if (schedule == null)
+            // khử dữ liệu lọc
+            scheduleFilter.Sanitization();
+            try
             {
-                return NotFound();
+                int userId = _authenticationHelper.GetUserIdFromToken();
+                var schedules = _scheduleService.GetListSchedule(userId, scheduleFilter);
+                if (schedules.Items.Count() == 0)
+                {
+                    return NotFound();
+                }
+                else
+                return StatusCode(200, new {message = "Success", data = schedules});
             }
-            return Ok(schedule);
-        }
-        [HttpPost("add")]
-        public IActionResult AddSchedule()
-        {
-            return BadRequest();
-        }
-        [HttpPut("update")]
-        public IActionResult UpdateSchedule([FromBody] Schedule schedule)
-        {
-            ScheduleDAO scheduleDAO= ScheduleDAO.Instance;
-            bool check = scheduleDAO.UpdateSchedule(schedule) > 0;
-            if (check)
+            catch (UnauthorizedAccessException)
             {
-                return Ok();
+                return Unauthorized();
             }
-            return BadRequest();
-        }
-        [HttpDelete("delete/{id}")]
-        public IActionResult DeleteSchedule([FromRoute] int id)
-        {
-            ScheduleDAO scheduleDAO = ScheduleDAO.Instance;
-            bool check = scheduleDAO.DeleteSchedule(id) > 0;
-            if (check)
+            catch (Exception e)
             {
-                return Ok();
+                return StatusCode(500, e.Message);
             }
-            return BadRequest();
         }
+
+        //[HttpGet("sharedlist")]
+        
     }
 }

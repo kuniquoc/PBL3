@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace DaNangTourism.Server.Helper
+namespace DaNangTourism.Server.ModelBindingConverter
 {
     public class ConvertToISO8061DateTime : JsonConverter<DateTime>
     {

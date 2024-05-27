@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DaNangTourism.Server.Validation;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
-namespace DaNangTourism.Server.Models
+namespace DaNangTourism.Server.Models.DestinationModels
 {
     public class DestinationFilter
     {
@@ -37,5 +38,20 @@ namespace DaNangTourism.Server.Models
 
         [FromQuery(Name = "sortType")]
         public string SortType { get; set; } = "asc";
+
+        // Function to sanitize the input data
+        public void Sanitization()
+        {
+            if (Page < 1) Page = 1;
+            if (Limit < 1) Limit = 12;
+            if (CostFrom < -1) CostFrom = -1;
+            if (CostTo < -1) CostTo = -1;
+            if (RatingFrom < -1) RatingFrom = -1;
+            if (RatingTo < -1) RatingTo = -1;
+            if (SortBy != "created_at" && SortBy != "name" && SortBy != "cost" && SortBy != "rating") SortBy = "created_at";
+            if (SortType != "asc" && SortType != "desc") SortType = "asc";
+            Search = DataSanitization.RemoveSpecialCharacters(Search);
+            Location = DataSanitization.RemoveSpecialCharacters(Location);
+        }
     }
 }

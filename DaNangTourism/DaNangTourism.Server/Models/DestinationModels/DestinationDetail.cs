@@ -5,7 +5,7 @@ using System.Net;
 using System.Xml.Linq;
 using System.Text.Json.Serialization;
 
-namespace DaNangTourism.Server.Models
+namespace DaNangTourism.Server.Models.DestinationModels
 {
     public class DestinationDetail
     {
@@ -22,6 +22,7 @@ namespace DaNangTourism.Server.Models
         public DestinationDetail(MySqlDataReader reader)
         {
             Id = reader.GetInt32(reader.GetOrdinal("DestinationId"));
+
             string Name = reader.GetString(reader.GetOrdinal("Name"));
             string LocalName = reader.GetString(reader.GetOrdinal("LocalName"));
             string Address = reader.GetString(reader.GetOrdinal("Address"));
@@ -31,8 +32,11 @@ namespace DaNangTourism.Server.Models
             TimeOnly CloseTime = reader.GetTimeOnly(reader.GetOrdinal("CloseTime"));
             string[] Tags = reader.GetString(reader.GetOrdinal("Tags")).Split(';');
             Information = new DesInfo(Name, LocalName, Address, Images, Cost, OpenTime, CloseTime, Tags);
+
             Introduction = reader.GetString(reader.GetOrdinal("Introduction"));
+
             GoogleMapUrl = reader.GetString(reader.GetOrdinal("GoogleMapUrl"));
+
             GeneralReview = new DesGeneralReview();
             GeneralReview.Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
         }
@@ -77,6 +81,7 @@ namespace DaNangTourism.Server.Models
         public Dictionary<int, float> Detail { get; set; }
         public DesGeneralReview()
         {
+            TotalReview = 0;
             Detail = new Dictionary<int, float>();
         }
         /// <summary>
@@ -84,7 +89,7 @@ namespace DaNangTourism.Server.Models
         /// </summary>
         /// <param name="rating"></param>
         /// <param name="countOfRating"></param>
-        public void AddRatingPercent (int rating, int countOfRating)
+        public void AddRatingPercent(int rating, int countOfRating)
         {
             float percent = (float)countOfRating / TotalReview;
             Detail.Add(rating, percent);

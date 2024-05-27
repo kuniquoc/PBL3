@@ -1,7 +1,7 @@
 ﻿using MySqlConnector;
 using System.Text.Json.Serialization;
 
-namespace DaNangTourism.Server.Models
+namespace DaNangTourism.Server.Models.DestinationModels
 {
     public class HomeDestination
     {

@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace DaNangTourism.Server.Models
+namespace DaNangTourism.Server.Models.DestinationModels
 {
     public class ListDestination
     {
@@ -14,14 +14,14 @@ namespace DaNangTourism.Server.Models
         public string Address { get; set; }
         [JsonPropertyName("image")]
         public string Image { get; set; }
-        [JsonPropertyName("cost")]
-        public double Cost { get; set; }
         [JsonPropertyName("rating")]
         public double Rating { get; set; }
+        [JsonPropertyName("cost")]
+        public double Cost { get; set; }
         [JsonPropertyName("openTime")]
-        public TimeSpan OpenTime { get; set; }
+        public TimeOnly OpenTime { get; set; }
         [JsonPropertyName("closeTime")]
-        public TimeSpan CloseTime { get; set; }
+        public TimeOnly CloseTime { get; set; }
         [JsonPropertyName("tags")]
         public string[] Tags { get; set; }
         [JsonPropertyName("favorite")]
@@ -35,11 +35,10 @@ namespace DaNangTourism.Server.Models
             Image = reader.GetString(reader.GetOrdinal("Images")).Split(';').First();
             Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
             Cost = reader.GetDouble(reader.GetOrdinal("Cost"));
-            OpenTime = reader.GetTimeSpan(reader.GetOrdinal("OpenTime"));
-            CloseTime = reader.GetTimeSpan(reader.GetOrdinal("CloseTime"));
+            OpenTime = reader.GetTimeOnly(reader.GetOrdinal("OpenTime"));
+            CloseTime = reader.GetTimeOnly(reader.GetOrdinal("CloseTime"));
             Tags = reader.GetString(reader.GetOrdinal("Tags")).Split(';');
-            // giá trị mặc định là không phải yêu thích
-            Favourite = false;
+            Favourite = reader.GetBoolean(reader.GetOrdinal("Favorite"));
         }
     }
 }

@@ -28,7 +28,7 @@ namespace DaNangTourism.Server.Helper
             {
                 throw new UnauthorizedAccessException("HttpContext is missing");
             }
-            if (httpContext.Request.Cookies.ContainsKey("token"))
+            if (httpContext.Request.Cookies.ContainsKey("jwtToken"))
             {
                 var claims = accountBLL.GetClaimsByCookie(httpContext);
                 if (claims.ContainsKey("id"))
