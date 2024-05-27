@@ -1,0 +1,2 @@
+E:\New Course\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
+D:\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
