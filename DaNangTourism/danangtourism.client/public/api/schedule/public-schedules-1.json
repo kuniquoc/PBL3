@@ -1,0 +1,74 @@
+{
+	"status": 200,
+	"message": "success",
+	"data": {
+		"total": 120,
+		"page": 1,
+		"limit": 4,
+		"items": [
+			{
+				"id": 30000001,
+				"title": "5-Day Itinerary: Unveiling the Coastal Charm of Central Vietnam",
+				"description": "Nestled along the vibrant coast of central Vietnam, Da Nang is a captivating city that seamlessly blends modern attractions with ancient wonders. From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers",
+				"destinations": [
+					"My Khe Beach",
+					"Son Tra Peninsula",
+					"Marble Mountains",
+					"Hoi An Ancient Town",
+					"Hue Imperial City"
+				],
+				"startDate": "2024-06-21",
+				"totalDays": 5,
+				"totalBudget": 500,
+				"creator": "John Doe"
+			},
+			{
+				"id": 30000002,
+				"title": "Cultural Highlights and Hiking Adventures in Da Nang",
+				"description": "From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers an unforgettable travel experience for every type of adventurer. Embark on a 5-day journey to discover the captivating beauty and allure of this coastal gem, where memories are made and cherished forever.",
+				"destinations": [
+					"Ba Na Hills",
+					"Dragon Bridge",
+					"Cham Museum",
+					"Da Nang Cathedral",
+					"Con Market"
+				],
+				"startDate": "2024-05-12T13:01:09.229Z",
+				"totalDays": 3,
+				"totalBudget": 200,
+				"creator": "Jane Doe"
+			},
+			{
+				"id": 30000003,
+				"title": "Backpacking and Beach Bumming in Da Nang",
+				"description": "Nestled along the vibrant coast of central Vietnam, Da Nang is a captivating city that seamlessly blends modern attractions with ancient wonders. From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers",
+				"destinations": [
+					"My Khe Beach",
+					"Marble Mountains",
+					"Hoi An Ancient Town",
+					"Hue Imperial City"
+				],
+				"startDate": "2024-03-13",
+				"totalDays": 3,
+				"totalBudget": 240,
+				"creator": "Alec Benjamin"
+			},
+			{
+				"id": 30000004,
+				"title": "Wildlife Safari and Serene Sunsets",
+				"description": "From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers an unforgettable travel experience for every type of adventurer. Embark on a 5-day journey to discover the captivating beauty and allure of this coastal gem, where memories are made and cherished forever.",
+				"destinations": [
+					"Son Tra Peninsula",
+					"Ba Na Hills",
+					"Marble Mountains",
+					"Hoi An Ancient Town",
+					"Hue Imperial City"
+				],
+				"startDate": "2024-03-13",
+				"totalDays": 3,
+				"totalBudget": 300,
+				"creator": "Alan Williams"
+			}
+		]
+	}
+}
