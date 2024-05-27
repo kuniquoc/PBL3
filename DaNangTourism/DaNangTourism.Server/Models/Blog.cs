@@ -71,6 +71,21 @@ namespace DaNangTourism.Server.Models
             introduction = reader.GetString("introduction");
         }
     }
+    public class BlogPageData
+    {
+        public int total { get; set; }
+        public int page { get; set; } = 1;
+        public int limit { get; set; } = 5;
+        public List<BlogPage>? items { get; set; }
+        public BlogPageData() { }
+        public BlogPageData(List<BlogPage> blogPages, BlogPageFilter blogPageFilter)
+        {
+            total = blogPages.Count;
+            this.page = blogPageFilter.page;
+            this.limit = blogPageFilter.limit;
+            this.items = blogPages;
+        }
+    }
     public class BlogRandom
     {
         public int id { get; set; }
@@ -133,6 +148,20 @@ namespace DaNangTourism.Server.Models
             type = reader.GetString("type");
             created_at = reader.GetDateTime("created_at");
             status = Enum.Parse<Status>(reader.GetString("status"));
+        }
+    }
+    public class BLogListData
+    {
+        public int total { get; set; }
+        public int page { get; set; } = 1;
+        public int limit { get; set; } = 12;
+        public List<BlogList>? items { get; set; }
+        public BLogListData(List<BlogList> blogLists, BlogListAdminFilter blogLAF)
+        {
+            this.total = blogLists.Count;
+            this.page = blogLAF.page;
+            this.limit = blogLAF.limit;
+            this.items = blogLists;
         }
     }
 }

@@ -53,7 +53,8 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(blogPages);
+                BlogPageData blogPageData = new BlogPageData(blogPages, blogPageFilter);
+                return Ok(blogPageData);
             }
             catch (Exception ex)
             {
@@ -213,7 +214,8 @@ namespace DaNangTourism.Server.Controllers
                     if(account.Permission == Permission.admin)
                     {
                         List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(blogListAdminFilter);
-                        return Ok(blogLists);
+                        BLogListData blogListData = new BLogListData(blogLists, blogListAdminFilter);
+                        return Ok(blogListData);
                     }
                     else
                     {
