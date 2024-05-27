@@ -1,5 +1,7 @@
 ﻿using DaNangTourism.Server.DAL;
+using DaNangTourism.Server.ModelBindingConverter;
 using MySqlConnector;
+using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models
 {
@@ -38,6 +40,8 @@ namespace DaNangTourism.Server.Models
         public string? title { get; set; } = "";
         public string? image { get; set; } = "";
         public string? author { get; set; } = "";
+        [JsonPropertyName("createdAt")]
+        [JsonConverter(typeof(ConvertToISO8061DateTime))]
         public DateTime createdAt { get; set; } = DateTime.Now;
         public BlogHome() { }
         public BlogHome(MySqlDataReader reader)
@@ -56,6 +60,8 @@ namespace DaNangTourism.Server.Models
         public string? image { get; set; } = "";
         public string? type { get; set; } = "";
         public Author? author { get; set; }
+        [JsonPropertyName("createdAt")]
+        [JsonConverter(typeof(ConvertToISO8061DateTime))]
         public DateTime createdAt { get; set; } = DateTime.Now;
         public int views { get; set; } = 0;
         public string? introduction { get; set; } = "";
@@ -93,6 +99,8 @@ namespace DaNangTourism.Server.Models
         public string? type { get; set; } = "";
         public string? image { get; set; } = "";
         public string? author { get; set; } = "";
+        [JsonPropertyName("createdAt")]
+        [JsonConverter(typeof(ConvertToISO8061DateTime))]
         public DateTime createdAt { get; set; } = DateTime.Now;
         public BlogRandom() { }
         public BlogRandom(MySqlDataReader reader)
@@ -110,7 +118,9 @@ namespace DaNangTourism.Server.Models
         public string? title { get; set; } = "";
         public string? type { get; set; } = "";
         public Author? author { get; set; }
-        public DateTime createdAt { get; set; } = DateTime.Now;    
+        [JsonPropertyName("createdAt")]
+        [JsonConverter(typeof(ConvertToISO8061DateTime))]
+        public DateTime createdAt { get; set; } = DateTime.Now;
         public int views { get; set; }
         public string? content { get; set; } = "";
         public BlogDetail() { }
@@ -137,7 +147,9 @@ namespace DaNangTourism.Server.Models
         public int id { get; set; }
         public string title { get; set; } = "";
         public string? type { get; set; } = "";
-        public string? author { get; set; } 
+        public string? author { get; set; }
+        [JsonPropertyName("createdAt")]
+        [JsonConverter(typeof(ConvertToISO8061DateTime))]
         public DateTime createdAt { get; set; } = DateTime.Now;
         public Status status { get; set;}
         public BlogList() { }

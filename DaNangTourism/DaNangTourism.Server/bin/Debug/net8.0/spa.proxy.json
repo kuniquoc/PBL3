@@ -1,10 +1,10 @@
 {
-  "SpaProxyServer": {
-    "ServerUrl": "http://localhost:5173",
-    "RedirectUrl": "",
-    "LaunchCommand": "npm run dev",
-    "WorkingDirectory": "E:\\New Course\\PBL3\\DaNangTourism\\DaNangTourism.Server\\..\\danangtourism.client",
-    "MaxTimeoutInSeconds": "120",
-    "KeepRunning": "false"
-  }
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:5173",
+"RedirectUrl": "",
+"LaunchCommand": "npm run dev",
+"WorkingDirectory": "D:\\PBL3\\DaNangTourism\\DaNangTourism.Server\\..\\danangtourism.client",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
 }
