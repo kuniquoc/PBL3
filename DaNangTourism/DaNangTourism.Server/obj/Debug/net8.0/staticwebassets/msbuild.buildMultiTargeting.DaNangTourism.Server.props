@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\DaNangTourism.Server.props" />
+</Project>

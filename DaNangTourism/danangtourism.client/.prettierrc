@@ -1,0 +1,13 @@
+{
+	"plugins": ["prettier-plugin-tailwindcss", "prettier"],
+	"semi": false,
+	"singleQuote": true,
+	"tabWidth": 2,
+	"useTabs": true,
+	"prettier/prettier": [
+		"error",
+		{
+			"endOfLine": "auto"
+		}
+	]
+}
