@@ -34,7 +34,8 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(blogHomes);
+                BlogReturn<List<BlogHome>> blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
+                return Ok(blogReturn);
             }
             catch (Exception ex)
             {
@@ -54,7 +55,8 @@ namespace DaNangTourism.Server.Controllers
                     return NotFound();
                 }
                 BlogPageData blogPageData = new BlogPageData(blogPages, blogPageFilter);
-                return Ok(blogPageData);
+                BlogReturn<BlogPageData> blogReturn = new BlogReturn<BlogPageData>(blogPageData);
+                return Ok(blogReturn);
             }
             catch (Exception ex)
             {
@@ -72,6 +74,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
+                BlogReturn<List<BlogRandom>> blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
                 return Ok(blogRandoms);
             }
             catch (Exception ex)
@@ -91,9 +94,10 @@ namespace DaNangTourism.Server.Controllers
                     return NotFound();
                 }
                 else
-                {
+                {                    
                     BlogBLL.Instance.increaseView(id);
-                    return Ok(blogDetail);
+                    BlogReturn<BlogDetail> blogReturn = new BlogReturn<BlogDetail>(blogDetail);
+                    return Ok(blogReturn);
                 }
             }
             catch (Exception ex)
@@ -215,7 +219,8 @@ namespace DaNangTourism.Server.Controllers
                     {
                         List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(blogListAdminFilter);
                         BLogListData blogListData = new BLogListData(blogLists, blogListAdminFilter);
-                        return Ok(blogListData);
+                        BlogReturn<BLogListData> blogReturn = new BlogReturn<BLogListData>(blogListData);
+                        return Ok(blogReturn);
                     }
                     else
                     {

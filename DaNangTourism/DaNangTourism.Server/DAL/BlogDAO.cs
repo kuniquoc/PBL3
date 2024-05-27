@@ -47,7 +47,7 @@ namespace DaNangTourism.Server.DAL
                 }
                 for(int i = 0; i < uid.Count; i++)
                 {
-                    blogHomes[i].authorName = AccountDAO.Instance.GetAccountById(uid[i]).Name;
+                    blogHomes[i].author = AccountDAO.Instance.GetAccountById(uid[i]).Name;
                 }
                 return blogHomes;
             }
@@ -110,7 +110,7 @@ namespace DaNangTourism.Server.DAL
 
                 for(int i = 0; i < uid.Count; i ++)
                 {
-                    blogLists[i].authorName = AccountDAO.Instance.GetAccountById(uid[i]).Name;
+                    blogLists[i].author = AccountDAO.Instance.GetAccountById(uid[i]).Name;
                 }
                 return blogLists;
             }
@@ -179,7 +179,7 @@ namespace DaNangTourism.Server.DAL
 
                 for (int i = 0; i < uid.Count; i++)
                 {
-                    blogRandoms[i].authorName = AccountDAO.Instance.GetAccountById(uid[i]).Name;
+                    blogRandoms[i].author = AccountDAO.Instance.GetAccountById(uid[i]).Name;
                 }
                 return blogRandoms;
             }
