@@ -3,7 +3,7 @@ using DaNangTourism.Server.Models.ScheduleModels;
 using MySqlConnector;
 using System.Text;
 
-namespace DaNangTourism.Server.Service
+namespace DaNangTourism.Server.Services
 {
     public interface IScheduleService
     {

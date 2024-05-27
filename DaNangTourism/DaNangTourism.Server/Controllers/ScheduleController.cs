@@ -1,10 +1,9 @@
 ﻿using DaNangTourism.Server.DAL;
-using DaNangTourism.Server.Service;
+using DaNangTourism.Server.Services;
 using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
 using DaNangTourism.Server.Models.ScheduleModels;
-using DaNangTourism.Server.Services;
 
 namespace DaNangTourism.Server.Controllers
 {

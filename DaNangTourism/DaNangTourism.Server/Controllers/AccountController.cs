@@ -1,5 +1,4 @@
-﻿using DaNangTourism.Server.BLL;
-using DaNangTourism.Server.DAL;
+﻿using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,9 +6,8 @@ using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using DaNangTourism.Server.Service;
-using System.Text;
 using DaNangTourism.Server.Services;
+using System.Text;
 
 
 namespace DaNangTourism.Server.Controllers

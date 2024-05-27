@@ -3,7 +3,7 @@ using MySqlConnector;
 using System.Text;
 using DaNangTourism.Server.Models.DestinationModels;
 using Microsoft.AspNetCore.Mvc;
-namespace DaNangTourism.Server.Service
+namespace DaNangTourism.Server.Services
 {
     public interface IDestinationService
     {
