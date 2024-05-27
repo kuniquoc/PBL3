@@ -3,6 +3,7 @@ using DaNangTourism.Server.Models;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using System.Reflection.Metadata.Ecma335;
+using System.Text;
 
 namespace DaNangTourism.Server.BLL
 {
@@ -36,20 +37,20 @@ namespace DaNangTourism.Server.BLL
             return BlogDAO.Instance.getBlogDetail(parameters);
         }
         // random blog
-        public List<BlogRandom> getRandomBlog(IQueryCollection query)
+        public List<BlogRandom> getRandomBlog(BlogRandomFilter blogRF)
         {
-            string filter = "";
+            StringBuilder filter = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();   
-            if (!query["limit"].IsNullOrEmpty())
+            if (blogRF.limit != 5)
             {
-                filter += " limit @limit";
-                parameters.Add(new MySqlParameter("@limit", Convert.ToInt32(query["limit"])));
+                filter.Append(" limit @limit");
+                parameters.Add(new MySqlParameter("@limit", blogRF.limit));
             }
             else
             {
-                filter += " limit 5";
+                filter.Append(" limit 5");
             }
-            return BlogDAO.Instance.getRandomBlog(filter, parameters);
+            return BlogDAO.Instance.getRandomBlog(filter.ToString(), parameters);
         }
         // cập nhật trạng thái Blog
         public int updateStatus(int blogID, Status status) 
@@ -110,192 +111,166 @@ namespace DaNangTourism.Server.BLL
             return BlogDAO.Instance.addBlog(parameters);
         }
         // lấy blog list dành cho admin
-        public List<BlogList> GetBlogList(IQueryCollection query)
+        public List<BlogList> GetBlogList(BlogListAdminFilter blogLAF)
         {
-            string filter = "";
+            StringBuilder filter = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();
-            if (!query["page"].IsNullOrEmpty() || !query["limit"].IsNullOrEmpty() 
-                || !query["search"].IsNullOrEmpty() || !query["type"].IsNullOrEmpty()
-                || !query["status"].IsNullOrEmpty() || !query["sortBy"].IsNullOrEmpty()
-                || !query["sortType"].IsNullOrEmpty())
+
+            if (!blogLAF.search.IsNullOrEmpty())
             {
-                if (!query["search"].IsNullOrEmpty())
+                filter.Append(" where title = @title");
+                parameters.Add(new MySqlParameter("@title", blogLAF.search));
+                if(!blogLAF.type.IsNullOrEmpty())
                 {
-                    filter += " where title = @title";
-                    parameters.Add(new MySqlParameter("@title", query["search"]));
-                    if(!query["type"].IsNullOrEmpty())
+                    filter.Append(" and type = @type");
+                    parameters.Add(new MySqlParameter("@type", blogLAF.type));
+
+                    if (!blogLAF.status.ToString().IsNullOrEmpty())
                     {
-                        filter += " and type = @type";
-                        parameters.Add(new MySqlParameter("@type", query["type"]));
-                    }
-                    else
-                    {
-                        if(!query["status"].IsNullOrEmpty())
-                        {
-                            filter += " and status = @status";
-                            parameters.Add(new MySqlParameter("@type", Enum.Parse<Status>(query["type"])));
-                        }
+                        filter.Append(" and status = @status");
+                        parameters.Add(new MySqlParameter("@type", blogLAF.status));
                     }
                 }
                 else
                 {
-                    if (!query["type"].IsNullOrEmpty())
+                    if(!blogLAF.status.ToString().IsNullOrEmpty())
                     {
-                        filter += " where type = @type";
-                        parameters.Add(new MySqlParameter("@type", query["type"]));
-                        if (!query["status"].IsNullOrEmpty())
-                        {
-                            filter += " and status = @status";
-                            parameters.Add(new MySqlParameter("@type", Enum.Parse<Status>(query["type"])));
-                        }
-                    }
-                    else
-                    {
-                        if (!query["status"].IsNullOrEmpty())
-                        {
-                            filter += " where status = @status";
-                            parameters.Add(new MySqlParameter("@type", Enum.Parse<Status>(query["type"])));
-                        }
+                        filter.Append(" and status = @status");
+                        parameters.Add(new MySqlParameter("@type", blogLAF.status));
                     }
                 }
-
-                if (!query["type"].IsNullOrEmpty() && query["search"].IsNullOrEmpty())
-                {
-                    filter += " where type = @type";
-                    parameters.Add(new MySqlParameter("@type", query["type"]));
-                }
-                else if(!query["type"].IsNullOrEmpty() && !query["search"].IsNullOrEmpty())
-                {
-                    filter += " And title = @title";
-                    parameters.Add(new MySqlParameter("@title", query["search"]));
-                }
-
-                if (!query["sortBy"].IsNullOrEmpty())
-                {
-                    filter += " order by @sortBy";
-                    parameters.Add(new MySqlParameter("@sortBy", query["sortBy"]));
-                }
-                else
-                {
-                    filter += " order by created_at";
-                }
-
-                if (!query["sortType"].IsNullOrEmpty())
-                {
-                    filter += " @sortType";
-                    parameters.Add(new MySqlParameter("@sortType", query["sortType"]));
-                }
-                else
-                {
-                    filter += " desc";
-                }
-
-                if (!query["limit"].IsNullOrEmpty())
-                {
-                    filter += " limit @limit";
-                    parameters.Add(new MySqlParameter("@limit", Convert.ToInt32(query["limit"])));
-                }
-                else
-                {
-                    filter += " limit 5";
-                }
-
-                if (!query["page"].IsNullOrEmpty())
-                {
-                    if (query["limit"].IsNullOrEmpty())
-                    {
-                        filter += " offset @offset";
-                        parameters.Add(new MySqlParameter("@offset", (Convert.ToInt32(query["page"]) - 1) * 5));
-                    }
-                    else
-                    {
-                        int page = (Convert.ToInt32(query["page"]) - 1) * Convert.ToInt32(query["limit"]);
-                        filter += " offset @offset";
-                        parameters.Add(new MySqlParameter("@offset", page));
-                    }
-                }
-                else
-                {
-                    filter += " offset 0";
-                }
-                return BlogDAO.Instance.getBlogList(filter, parameters);
             }
             else
             {
-                filter += " order by created_at desc limit 12 offset 0";
-                return BlogDAO.Instance.getBlogList(filter, parameters);
+                if (!blogLAF.type.IsNullOrEmpty())
+                {
+                    filter.Append(" where type = @type");
+                    parameters.Add(new MySqlParameter("@type", blogLAF.type));
+
+                    if (!blogLAF.status.ToString().IsNullOrEmpty())
+                    {
+                        filter.Append(" and status = @status");
+                        parameters.Add(new MySqlParameter("@type", blogLAF.status));
+                    }
+                }
+                else
+                {
+                    if (!blogLAF.status.ToString().IsNullOrEmpty())
+                    {
+                        filter.Append(" where status = @status");
+                        parameters.Add(new MySqlParameter("@type", blogLAF.status));
+                    }
+                }
             }
+
+            if (!blogLAF.sortBy.IsNullOrEmpty())
+            {
+                filter.Append(" order by @sortBy");
+                parameters.Add(new MySqlParameter("@sortBy", blogLAF.sortBy));
+            }
+            else
+            {
+                filter.Append(" order by created_at");
+            }
+
+            if (!blogLAF.sortType.IsNullOrEmpty())
+            {
+                filter.Append(" @sortType");
+                parameters.Add(new MySqlParameter("@sortType", blogLAF.sortType));
+            }
+            else
+            {
+                filter.Append(" desc");
+            }
+
+            if (blogLAF.limit != 12)
+            {
+                filter.Append(" limit @limit");
+                parameters.Add(new MySqlParameter("@limit", blogLAF.limit));
+            }
+            else
+            {
+                filter.Append(" limit 12");
+            }
+
+            if (blogLAF.page != 1)
+            {
+                filter.Append(" offset @offset");
+                if (blogLAF.limit == 12)
+                {
+                    parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * 12));
+                }
+                else
+                {
+                    parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * blogLAF.limit));
+                }
+            }
+            else
+            {
+                filter.Append(" offset 0");
+            }
+            return BlogDAO.Instance.getBlogList(filter.ToString(), parameters);
+            
         }
         // lấy Blog đặt vào giao diện chính
-        public List<BlogPage> getBlogPage(IQueryCollection query)
+        public List<BlogPage> getBlogPage(BlogPageFilter blogPF)
         {
-            string filter = "";
+            StringBuilder filter = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();
-            if (!query["page"].IsNullOrEmpty() || !query["limit"].IsNullOrEmpty()
-             || !query["search"].IsNullOrEmpty() || !query["sortBy"].IsNullOrEmpty()
-             || !query["sortType"].IsNullOrEmpty())
+
+            if (!blogPF.search.IsNullOrEmpty())
             {
-                if (!query["search"].IsNullOrEmpty())
-                {
-                    filter += " where title like @title";
-                    parameters.Add(new MySqlParameter("@title", "'%" + query["search"] + "%'"));
-                }
+                filter.Append(" where title like @title");
+                parameters.Add(new MySqlParameter("@title", "'%" + blogPF.search + "%'"));
+            }
 
-                if (!query["sortBy"].IsNullOrEmpty())
-                {
-                    filter += " order by @sortBy";
-                    parameters.Add(new MySqlParameter("@sortBy", query["sortBy"]));
-                }
-                else
-                {
-                    filter += " order by created_at";
-                }
-
-                if (!query["sortType"].IsNullOrEmpty())
-                {
-                    filter += " @sortType";
-                    parameters.Add(new MySqlParameter("@sortType", query["sortType"]));
-                }
-                else
-                {
-                    filter += " desc";
-                }
-
-                if (!query["limit"].IsNullOrEmpty())
-                {
-                    filter += " limit @limit";
-                    parameters.Add(new MySqlParameter("@limit", Convert.ToInt32(query["limit"])));
-                }
-                else
-                {
-                    filter += " limit 5";
-                }
-
-                if (!query["page"].IsNullOrEmpty())
-                {
-                    if (query["limit"].IsNullOrEmpty())
-                    {
-                        filter += " offset @offset";
-                        parameters.Add(new MySqlParameter("@offset", (Convert.ToInt32(query["page"]) - 1) * 5));
-                    }
-                    else
-                    {
-                        int page = (Convert.ToInt32(query["page"]) - 1) * Convert.ToInt32(query["limit"]);
-                        filter += " offset @offset";
-                        parameters.Add(new MySqlParameter("@offset", page));
-                    }
-                }
-                else
-                {
-                    filter += " offset 0";
-                }
-                return BlogDAO.Instance.getBlogPage(filter, parameters);
+            if (!blogPF.sortBy.IsNullOrEmpty())
+            {
+                filter.Append(" order by @sortBy");
+                parameters.Add(new MySqlParameter("@sortBy", blogPF.sortBy));
             }
             else
             {
-                filter += " order by created_at desc limit 5 offset 0";
-                return BlogDAO.Instance.getBlogPage(filter, parameters);
+                filter.Append(" order by created_at");
             }
+
+            if (!blogPF.sortType.IsNullOrEmpty())
+            {
+                filter.Append(" @sortType");
+                parameters.Add(new MySqlParameter("@sortType", blogPF.sortType));
+            }
+            else
+            {
+                filter.Append(" desc");
+            }
+
+            if (blogPF.limit != 5)
+            {
+                filter.Append(" limit @limit");
+                parameters.Add(new MySqlParameter("@limit", blogPF.limit));
+            }
+            else
+            {
+                filter.Append(" limit 5");
+            }
+
+            if (blogPF.page != 1)
+            {
+                filter.Append(" offset @offset");
+                if (blogPF.limit == 5)
+                {                        
+                    parameters.Add(new MySqlParameter("@offset", (blogPF.page - 1) * 5));
+                }
+                else
+                {
+                    parameters.Add(new MySqlParameter("@offset", (blogPF.page - 1) * blogPF.limit));
+                }
+            }
+            else
+            {
+                filter.Append(" offset 0");
+            }
+            return BlogDAO.Instance.getBlogPage(filter.ToString(), parameters);
         }
     }
 }

@@ -1,0 +1,27 @@
+# Bỏ qua các tệp log
+*.log
+
+# Bỏ qua thư mục tạm thời
+temp/
+
+# Bỏ qua tất cả các tệp .exe và .dll
+*.exe
+*.dll
+
+# Bỏ qua thư mục bin và obj
+bin/
+obj/
+
+# Bỏ qua tệp cấu hình địa phương
+appsettings.Development.json
+
+# Bỏ qua thư mục node_modules
+node_modules/
+
+# Bỏ qua tất cả các tệp .vscode
+.vscode/
+
+# Bỏ qua các tệp .sln và .suo của Visual Studio
+*.sln
+*.suo
+
