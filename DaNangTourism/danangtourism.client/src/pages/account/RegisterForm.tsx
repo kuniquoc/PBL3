@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { useToast } from '../../hook/useToast'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { variantsDefault, variantsY } from '../../styles/variants'
-// import { UserContext } from '../../context/UserContext'
+import axios from 'axios'
 // 6LcV0uYpAAAAABNE0DW6qJ8fPNjoydVhG_HYKo7u
 const RegisterForm: React.FC<{
 	className?: string
@@ -64,8 +64,8 @@ const RegisterForm: React.FC<{
 		}
 		return isValid
 	}
-	// const { setUser } = useContext(UserContext)
 	const toast = useToast()
+
 	const handleSignUp = async () => {
 		setFirstMount(false)
 		if (!capVal) {
@@ -73,8 +73,18 @@ const RegisterForm: React.FC<{
 			return
 		}
 		if (validateData()) {
-			toast.success('Sign up success', 'You have successfully signed up')
-			onClose()
+			try {
+				const response = await axios.post('/api/auth/register', {
+					email: formData.email,
+					password: formData.password,
+				})
+				if (response.status === 201) {
+					toast.success('Sign up success', 'Please check your email to verify')
+					onSwitch()
+				}
+			} catch (error: any) {
+				toast.error('Sign up failed', error.response.data.message)
+			}
 		} else {
 			toast.error('Sign up failed', 'Please check your input')
 		}

@@ -33,6 +33,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				onChange={(event) => {
 					onChangeValue(event)
 				}}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter') {
+						onClickSearch()
+					}
+				}}
 			/>
 			<button
 				className="rounded-full p-1.5 text-txtCol-3 hover:bg-slate-100 hover:text-primary-1"

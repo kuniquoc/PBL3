@@ -48,10 +48,12 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 	const [editInfo, setEditInfo] = useState(false)
 	const [changePwd, setChangePwd] = useState(false)
 	const [passwords, setPasswords] = useState(initPwd)
+	const [isUpdating, setIsUpdating] = useState(false)
 
 	const handleUpdateInfo = async () => {
 		try {
 			toast.info('Updating', 'Please wait while we update your information...')
+			setIsUpdating(true)
 			let avatarUrl = userDetails.avatar
 			if (imgFile) {
 				avatarUrl = await uploadToCloudinary(imgFile)
@@ -69,6 +71,7 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 			console.error(error)
 			toast.error('Error', 'Failed to update information')
 		}
+		setIsUpdating(false)
 	}
 
 	const handleOpenChangePwd = () => {
@@ -169,8 +172,9 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 						<Button
 							className="h-9 w-[120px] bg-secondary-2 text-white transition-all hover:bg-secondary-1"
 							onClick={handleUpdateInfo}
+							disabled={isUpdating}
 						>
-							Save
+							{isUpdating ? 'Updating...' : 'Save'}
 						</Button>
 					)}
 					<Button

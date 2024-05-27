@@ -60,3 +60,10 @@ packages/
 .cache-loader
 
 # End of File
+
+.fake
+DaNangTourism/DaNangTourism.Server/obj/DaNangTourism.Server.csproj.nuget.dgspec.json
+DaNangTourism/DaNangTourism.Server/obj/DaNangTourism.Server.csproj.nuget.g.props
+DaNangTourism/DaNangTourism.Server/obj/project.assets.json
+DaNangTourism/DaNangTourism.Server/obj/Debug/net8.0/DaNangTourism.Server.AssemblyInfo.cs
+DaNangTourism/DaNangTourism.Server/obj/Debug/net8.0/DaNangTourism.Server.GeneratedMSBuildEditorConfig.editorconfig

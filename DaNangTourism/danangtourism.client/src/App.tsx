@@ -22,15 +22,17 @@ import { useContext, useEffect, useState } from 'react'
 import { UserContext, defaultUser } from './context/UserContext'
 import ScrollToTop from './utils/ScrollToTop'
 import { AnimatePresence } from 'framer-motion'
-import Cookies from 'js-cookie'
 import axios from 'axios'
 import { useToast } from './hook/useToast'
+import { Loader } from './components'
 
 function App() {
 	const [accountModal, setAccountModal] = useState(0)
 	const { user, setUser } = useContext(UserContext)
+	const [loading, setLoading] = useState(true)
 	const toast = useToast()
 	const auth = async () => {
+		setLoading(true)
 		try {
 			const res = await axios.get('/api/auth/authenticated')
 			const resData = await res.data.data
@@ -43,6 +45,8 @@ function App() {
 			setUser(defaultUser.user)
 			toast.info('Welcome, guess!', 'Please login to access all our features.')
 		}
+		await new Promise((resolve) => setTimeout(resolve, 100))
+		setLoading(false)
 	}
 
 	useEffect(() => {
@@ -53,6 +57,11 @@ function App() {
 		<>
 			<BrowserRouter>
 				<ScrollToTop />
+				{loading && (
+					<div className="fixed left-0 top-0 z-20 flex h-screen w-screen items-center justify-center bg-bgCol-1">
+						<Loader />
+					</div>
+				)}
 				<Navbar
 					onLogin={() => setAccountModal(1)}
 					onSignUp={() => setAccountModal(2)}

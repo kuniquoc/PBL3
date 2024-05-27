@@ -86,8 +86,8 @@ const datetimeDecay = (date: string) => {
 		month: monthOfYear(dateObj.getMonth()),
 		monthNumber: (dateObj.getMonth() + 1).toString().padStart(2, '0'),
 		year: dateObj.getFullYear(),
-		hour: dateObj.getHours(),
-		minute: dateObj.getMinutes(),
+		hour: dateObj.getHours().toString().padStart(2, '0'),
+		minute: dateObj.getMinutes().toString().padStart(2, '0'),
 	}
 }
 

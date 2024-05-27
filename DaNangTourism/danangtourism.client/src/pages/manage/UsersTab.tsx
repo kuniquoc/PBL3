@@ -18,7 +18,7 @@ const sortBy = [
 		label: 'Create time',
 	},
 	{
-		value: 'name',
+		value: 'full_name',
 		label: 'Name',
 	},
 ]
@@ -50,15 +50,24 @@ const UsersTab: React.FC<{ className?: string }> = ({ className }) => {
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
 	const [users, setUsers] = useState<ManageUserProps[]>()
+
 	const handleSearch = () => {
-		console.log(searchValue, sortBy[sort.by].value, sort.type)
+		handleGetUsers()
 	}
 
-	const handleGetDestinations = async () => {
+	const handleGetUsers = async () => {
 		setUsers(undefined)
 		try {
-			const response = await axios.get(`api/user/manage-${currentPage}.json`)
-			await new Promise((resolve) => setTimeout(resolve, 1000))
+			const response = await axios.get('/api/account/get/list', {
+				params: {
+					search: searchValue,
+					page: currentPage,
+					limit: limit,
+					role: roles[viewRole].value,
+					sortBy: sortBy[sort.by].value,
+					sortType: sort.type,
+				},
+			})
 			const res = response.data.data
 			setUsers(res.items)
 			setTotal(res.total)
@@ -69,8 +78,8 @@ const UsersTab: React.FC<{ className?: string }> = ({ className }) => {
 	}
 
 	useEffect(() => {
-		handleGetDestinations()
-	}, [currentPage, sort])
+		handleGetUsers()
+	}, [currentPage, sort, viewRole, searchValue])
 
 	return (
 		<div
@@ -124,7 +133,7 @@ const UsersTab: React.FC<{ className?: string }> = ({ className }) => {
 			</div>
 			<div className="mb-3 flex w-full flex-col items-center border border-borderCol-1">
 				{users ? (
-					<UserTable users={users} />
+					<UserTable users={users} onReload={handleGetUsers} />
 				) : (
 					<div className="flex h-[512.4px] w-full items-center justify-center bg-gray-50">
 						<Loader className="h-16 w-16" />
@@ -149,8 +158,41 @@ const UsersTab: React.FC<{ className?: string }> = ({ className }) => {
 	)
 }
 
-const UserTable: React.FC<{ users: ManageUserProps[] }> = ({ users }) => {
+const UserTable: React.FC<{
+	users: ManageUserProps[]
+	onReload: () => void
+}> = ({ users, onReload }) => {
 	const toast = useToast()
+	const handleSwitchRole = async (id: number) => {
+		try {
+			const response = await axios.put(`/api/account/update/role/${id}`)
+			if (response.status === 200) {
+				toast.success('Success', 'Role updated')
+				onReload()
+			} else {
+				toast.error('Error', 'Failed to update role')
+			}
+		} catch (error) {
+			toast.error('Error', 'Failed to update role')
+			console.log(error)
+		}
+	}
+
+	const handleDeleteUser = async (id: number) => {
+		try {
+			const response = await axios.delete(`/api/account/delete/${id}`)
+			if (response.status === 200) {
+				toast.success('Success', 'User deleted')
+				onReload()
+			} else {
+				toast.error('Error', 'Failed to delete user')
+			}
+		} catch (error) {
+			toast.error('Error', 'Failed to delete user')
+			console.log(error)
+		}
+	}
+
 	return (
 		<table className="w-full border-spacing-2">
 			<thead className="border-b border-borderCol-1">
@@ -176,12 +218,7 @@ const UserTable: React.FC<{ users: ManageUserProps[] }> = ({ users }) => {
 								<CircleButton
 									className="border-secondary-1 bg-[#76C8933f] text-secondary-1"
 									title="Switch to user"
-									onClick={() =>
-										toast.info(
-											'Call API',
-											`Call API set user role, id ${usr.id}`,
-										)
-									}
+									onClick={() => handleSwitchRole(usr.id)}
 								>
 									<PiUserFill />
 								</CircleButton>
@@ -189,12 +226,7 @@ const UserTable: React.FC<{ users: ManageUserProps[] }> = ({ users }) => {
 								<CircleButton
 									className="border-primary-2 bg-[#64B8DC3f] text-primary-2"
 									title="Set as admin"
-									onClick={() =>
-										toast.info(
-											'Call API',
-											`Call API set admin role, id ${usr.id}`,
-										)
-									}
+									onClick={() => handleSwitchRole(usr.id)}
 								>
 									<PiShieldCheckFill />
 								</CircleButton>
@@ -202,9 +234,7 @@ const UserTable: React.FC<{ users: ManageUserProps[] }> = ({ users }) => {
 							{usr.role !== 'admin' && (
 								<CircleButton
 									className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
-									onClick={() =>
-										toast.info('Call API', `Call delete API with id ${usr.id}`)
-									}
+									onClick={() => handleDeleteUser(usr.id)}
 								>
 									<PiTrashSimpleFill />
 								</CircleButton>
