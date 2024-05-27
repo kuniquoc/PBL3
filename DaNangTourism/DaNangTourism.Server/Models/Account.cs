@@ -106,7 +106,7 @@ namespace DaNangTourism.Server.Models
     public string? name { get; set; }
     public string? avatar { get; set; }
     public Author() { }
-    public Author(Account? account)
+    public Author(Account account)
     {
       id = account.Id;
       name = account.Name;

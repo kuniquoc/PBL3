@@ -174,7 +174,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     var claims = accountBLL.GetClaimsByCookie(HttpContext);
                     int uid = Convert.ToInt32(claims["id"]);
-                    var account = AccountDAO.Instance.GetAccountById(uid);
+                    var account = AccountRepository.Instance.GetAccountById(uid);
 
                     if (account.Permission == Permission.admin)
                     {
@@ -214,7 +214,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     var claims = accountBLL.GetClaimsByCookie(HttpContext);
                     var uid = Convert.ToInt32(claims["id"]);
-                    var account = AccountDAO.Instance.GetAccountById(uid);
+                    var account = AccountRepository.Instance.GetAccountById(uid);
                     if(account.Permission == Permission.admin)
                     {
                         List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(blogListAdminFilter);
@@ -248,7 +248,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     var claims = accountBLL.GetClaimsByCookie(HttpContext);
                     var uid = Convert.ToInt32(claims["id"]);
-                    var account = AccountDAO.Instance.GetAccountById(uid);
+                    var account = AccountRepository.Instance.GetAccountById(uid);
                     if(account.Permission == Permission.admin)
                     {
                         BlogBLL.Instance.updateStatus(id, status);

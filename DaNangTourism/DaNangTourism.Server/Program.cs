@@ -1,6 +1,7 @@
 using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Service;
 using DaNangTourism.Server.Helper;
+using DaNangTourism.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -83,15 +84,23 @@ builder.Services.AddScoped<IScheduleDestinationRepository>(provider =>
     return new ScheduleDestinationRepository(connectionString);
 });
 
+builder.Services.AddScoped<IAccountRepository> (provider =>
+{
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new AccountRepository(connectionString);
+});
 // Register scoped services here
 
 builder.Services.AddScoped<IDestinationService, DestinationService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
-// Register helper services here
-
-builder.Services.AddScoped<IAuthenticationHelper, AuthenticationHelper>();
 
 // Register IHttpContextAccessor services here
 

@@ -16,6 +16,7 @@ namespace DaNangTourism.Server.Service
         int AddScheduleDestination(ScheduleDestination scheduleDestination);    
         void DeleteScheduleDestination(int userId, int scheduleDestinationId);
         void UpdateScheduleDestination(int userId, int scheduleDestinationId, ScheduleDestination scheduleDestination);
+        void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
     }
     public class ScheduleService: IScheduleService
     {
@@ -196,12 +197,26 @@ namespace DaNangTourism.Server.Service
             _scheduleDestinationRepository.DeleteScheduleDestination(scheduleDestinationId);
         }
 
+        /// <summary>
+        /// Update schedule destination
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="scheduleDestinationId"></param>
+        /// <param name="scheduleDestination"></param>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="UnauthorizedAccessException"></exception>
         public void UpdateScheduleDestination(int userId, int scheduleDestinationId, ScheduleDestination scheduleDestination)
         {
             int scheduleId = _scheduleDestinationRepository.GetScheduleId(scheduleDestinationId);
             if (scheduleId == 0) throw new Exception("Schedule destination not found");
             if (!_scheduleRepository.IsCreator(userId, scheduleId)) throw new UnauthorizedAccessException("You are not the creator of this schedule");
             _scheduleDestinationRepository.UpdateScheduleDestination(scheduleDestinationId, scheduleDestination);
+        }
+
+        public void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule)
+        {
+            if (!_scheduleRepository.IsCreator(userId, scheduleId)) throw new UnauthorizedAccessException("You are not the creator of this schedule");
+            _scheduleRepository.UpdateSchedule(userId, scheduleId, schedule);
         }
     }
 }
