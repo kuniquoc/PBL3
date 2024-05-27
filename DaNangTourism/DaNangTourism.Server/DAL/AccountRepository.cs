@@ -12,6 +12,7 @@ namespace DaNangTourism.Server.DAL
         Account? GetAccountById(int id);
         Account? GetAccountByEmail(string email);
         Dictionary<int, Account> SearchAccount(string? search, int page = 1, int limit = 15, string role = "user", string sortBy = "created_at", string sortType = "desc");
+        int GetTotalAccounts(string? search, string role = "user");
         Permission GetRoleById(int id);
         string GetUserNameById(int id);
     }
@@ -226,6 +227,40 @@ namespace DaNangTourism.Server.DAL
                         }
                         return accounts;
                     }
+                }
+            }
+        }
+
+        //Lấy tổng số tài khoản khi tìm kiếm
+        public int GetTotalAccounts(string? search, string role = "user")
+        {
+            string sql = "SELECT COUNT(*) FROM users WHERE full_name LIKE @name";
+
+            // Apply role filter if specified
+            if (role.ToLower() != "all")
+            {
+                sql += " AND permission = @role";
+            }
+
+            // Define the parameters
+            MySqlParameter[] parameters =
+            {
+                new MySqlParameter("@name", "%" + search + "%")
+            };
+
+            // Include role parameter only if role filter is applied
+            if (role.ToLower() != "all")
+            {
+                parameters = parameters.Append(new MySqlParameter("@role", role)).ToArray();
+            }
+
+            using (var connection = new MySqlConnection(_connectionstring))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
             }
         }

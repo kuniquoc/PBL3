@@ -197,7 +197,7 @@ namespace DaNangTourism.Server.Controllers
 
                 // Search for accounts
                 var result = _accountService.SearchAccount(search, page, limit, role, sortBy, sortType);
-                int total = result.Count;
+                int total = _accountService.GetTotalAccounts(search, role);
 
                 // Convert accounts to anonymous objects
                 var items = result.Select(account =>

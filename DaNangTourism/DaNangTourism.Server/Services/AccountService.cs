@@ -20,6 +20,7 @@ namespace DaNangTourism.Server.Services
         Account? GetAccountById(int id);
         void UpdateAccount(Account account);
         Dictionary<int, Account> SearchAccount(string? search, int page, int limit, string role, string sortBy, string sortType);
+        int GetTotalAccounts(string? search, string role = "user");
         void DeleteAccount(int id);
         Account? GetAccountByEmail(string email);
         void AddAccount(Account account);
@@ -170,6 +171,11 @@ namespace DaNangTourism.Server.Services
         public void AddAccount(Account account)
         {
             _accountRepository.AddAccount(account);
+        }
+
+        public int GetTotalAccounts(string? search, string role = "user")
+        {
+            return _accountRepository.GetTotalAccounts(search, role);
         }
     }
 }
