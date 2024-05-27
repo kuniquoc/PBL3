@@ -67,9 +67,39 @@ const monthOfYear = (month: number) => {
 const dateDecay = (date: string) => {
 	const dateObj = new Date(date)
 	return {
-		day: dateObj.getDate(),
+		day: dateObj.getDate().toString().padStart(2, '0'),
 		month: monthOfYear(dateObj.getMonth()),
+		monthNumber: (dateObj.getMonth() + 1).toString().padStart(2, '0'),
 		year: dateObj.getFullYear(),
 	}
 }
-export { timeAgo, dayOfWeek, dateDecay }
+
+const toDisplayDate = (date: string) => {
+	const dateDecayed = dateDecay(date)
+	return `${dateDecayed.day}-${dateDecayed.monthNumber}-${dateDecayed.year}`
+}
+
+const datetimeDecay = (date: string) => {
+	const dateObj = new Date(date)
+	return {
+		day: dateObj.getDate().toString().padStart(2, '0'),
+		month: monthOfYear(dateObj.getMonth()),
+		monthNumber: (dateObj.getMonth() + 1).toString().padStart(2, '0'),
+		year: dateObj.getFullYear(),
+		hour: dateObj.getHours(),
+		minute: dateObj.getMinutes(),
+	}
+}
+
+const toDisplayDateTime = (date: string) => {
+	const dateDecayed = datetimeDecay(date)
+	return `${dateDecayed.day}-${dateDecayed.monthNumber}-${dateDecayed.year} ${dateDecayed.hour}:${dateDecayed.minute}`
+}
+export {
+	timeAgo,
+	dayOfWeek,
+	dateDecay,
+	toDisplayDate,
+	datetimeDecay,
+	toDisplayDateTime,
+}

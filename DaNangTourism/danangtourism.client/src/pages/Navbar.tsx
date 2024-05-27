@@ -1,15 +1,22 @@
 import { useLocation, Link } from 'react-router-dom'
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import {
+	motion,
+	useScroll,
+	useMotionValueEvent,
+	AnimatePresence,
+} from 'framer-motion'
 import {
 	PiCaretDownBold,
 	PiHouseBold,
 	PiCompassBold,
 	PiArticleBold,
 	PiCalendarBlankBold,
+	PiTableBold,
 } from 'react-icons/pi'
 import { useContext, useState } from 'react'
 import { UserContext } from '../context/UserContext'
 import { Button } from '../components'
+import AccountMenu from './account/AccountMenu'
 
 const NavItems = [
 	{
@@ -32,7 +39,13 @@ const NavItems = [
 		icon: PiCalendarBlankBold,
 		path: '/schedule',
 	},
+	{
+		name: 'Manage',
+		icon: PiTableBold,
+		path: '/manage',
+	},
 ]
+
 interface NavbarProps {
 	onSignUp: () => void
 	onLogin: () => void
@@ -41,10 +54,10 @@ const Navbar: React.FC<NavbarProps> = ({ onSignUp, onLogin }) => {
 	const location = useLocation()
 	const firstPath = '/' + location.pathname.split('/')[1]
 	const [hidden, setHidden] = useState(false)
+	const [showMenu, setShowMenu] = useState(false)
 	const { scrollY } = useScroll()
 	const windowHeight = window.innerHeight
 	const scrolledOnePage = scrollY.get() >= windowHeight
-
 	const isHome = scrolledOnePage ? false : firstPath === '/'
 
 	useMotionValueEvent(scrollY, 'change', (latest) => {
@@ -76,50 +89,61 @@ const Navbar: React.FC<NavbarProps> = ({ onSignUp, onLogin }) => {
 				</div>
 				<div className="h-full">
 					<ul className="flex h-full gap-1">
-						{NavItems.map((item, index) => (
-							<li key={index}>
-								<Link
-									to={item.path}
-									className={`relative flex min-w-[120px] items-center justify-center gap-2 px-3 text-base ${
-										firstPath === item.path
-											? isHome
-												? 'text-primary-3'
-												: 'text-primary-1'
-											: isHome
-												? 'text-txtCol-4'
-												: 'text-txtCol-3'
-									} rounded-lg transition-all ${isHome ? 'hover:bg-[#00000040]' : 'hover:bg-[#00000015]'}`}
-								>
-									<item.icon />
-									<p
-										className={`${
-											firstPath === item.path
-												? isHome
-													? 'text-white'
-													: 'text-txtCol-1'
-												: isHome
-													? 'text-txtCol-4'
-													: 'text-txtCol-3'
-										} text-sm font-semibold leading-10`}
-									>
-										{item.name}
-									</p>
-									<span
-										className={`absolute bottom-[-4px] h-[2px] w-full bg-primary-2 ${firstPath === item.path ? 'block' : 'hidden'}`}
-									></span>
-								</Link>
-							</li>
-						))}
+						{NavItems.map(
+							(item, index) =>
+								(item.name !== 'Manage' ||
+									(item.name === 'Manage' && user.role === 'admin')) && (
+									<li key={index}>
+										<Link
+											to={item.path}
+											className={`relative flex min-w-[120px] items-center justify-center gap-2 px-3 text-base ${
+												firstPath === item.path
+													? isHome
+														? 'text-primary-3'
+														: 'text-primary-1'
+													: isHome
+														? 'text-txtCol-4'
+														: 'text-txtCol-3'
+											} rounded-lg transition-all ${isHome ? 'hover:bg-[#00000040]' : 'hover:bg-[#00000015]'}`}
+										>
+											<item.icon />
+											<p
+												className={`${
+													firstPath === item.path
+														? isHome
+															? 'text-white'
+															: 'text-txtCol-1'
+														: isHome
+															? 'text-txtCol-4'
+															: 'text-txtCol-3'
+												} text-sm font-semibold leading-10`}
+											>
+												{item.name}
+											</p>
+											{firstPath === item.path && (
+												<motion.span
+													className="absolute bottom-[-4px] h-[2px] w-full bg-primary-2"
+													layoutId="underline"
+													transition={{ duration: 0.2 }}
+												></motion.span>
+											)}
+										</Link>
+									</li>
+								),
+						)}
 					</ul>
 				</div>
 				{user.id !== 0 ? (
-					<div className="flex w-[200px] items-center justify-end gap-4">
+					<div className="relative flex w-[200px] items-center justify-end gap-4">
 						<p
 							className={`text-sm font-semibold ${isHome ? 'text-txtCol-4' : ''}`}
 						>
-							{user.username}
+							{user.name}
 						</p>
-						<button className="relative h-8 w-8 rounded-full">
+						<button
+							className="relative h-8 w-8 rounded-full"
+							onClick={() => setShowMenu(!showMenu)}
+						>
 							<img
 								className="h-full w-full rounded-full object-cover"
 								src={user.avatar}
@@ -133,6 +157,16 @@ const Navbar: React.FC<NavbarProps> = ({ onSignUp, onLogin }) => {
 								</div>
 							</span>
 						</button>
+						<AnimatePresence>
+							{showMenu && (
+								<AccountMenu
+									className="absolute bottom-[-10px] right-0"
+									onClose={() => {
+										setShowMenu(false)
+									}}
+								/>
+							)}
+						</AnimatePresence>
 					</div>
 				) : (
 					<div className="flex items-center justify-end gap-4">

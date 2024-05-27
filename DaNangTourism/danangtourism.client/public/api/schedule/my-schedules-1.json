@@ -1,81 +1,78 @@
 {
 	"status": 200,
 	"message": "success",
-	"data": [
-		{
-			"general": {
+	"data": {
+		"total": 12,
+		"page": 1,
+		"limit": 4,
+		"items": [
+			{
 				"id": 30000001,
+				"status": "Planning",
 				"title": "5-Day Itinerary: Unveiling the Coastal Charm of Central Vietnam",
 				"description": "Nestled along the vibrant coast of central Vietnam, Da Nang is a captivating city that seamlessly blends modern attractions with ancient wonders. From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers",
-				"start_date": "2024-06-21",
-				"total_time": "5 days",
-				"total_budget": 500
+				"destinations": [
+					"My Khe Beach",
+					"Son Tra Peninsula",
+					"Marble Mountains",
+					"Hoi An Ancient Town",
+					"Hue Imperial City"
+				],
+				"startDate": "2024-06-21",
+				"totalDays": 5,
+				"totalBudget": 500,
+				"updatedAt": "2024-05-19T03:31:09.229Z"
 			},
-			"status": "Planning",
-			"last_updated": "2024-05-08 12:00:00",
-			"destinations": [
-				"My Khe Beach",
-				"Son Tra Peninsula",
-				"Marble Mountains",
-				"Hoi An Ancient Town",
-				"Hue Imperial City"
-			]
-		},
-		{
-			"general": {
+			{
 				"id": 30000002,
+				"status": "Ongoing",
 				"title": "Cultural Highlights and Hiking Adventures in Da Nang",
 				"description": "From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers an unforgettable travel experience for every type of adventurer. Embark on a 5-day journey to discover the captivating beauty and allure of this coastal gem, where memories are made and cherished forever.",
-				"start_date": "2024-05-21",
-				"total_time": "3 days",
-				"total_budget": 200
+				"destinations": [
+					"Ba Na Hills",
+					"Dragon Bridge",
+					"Cham Museum",
+					"Da Nang Cathedral",
+					"Con Market"
+				],
+				"startDate": "2024-05-12T13:01:09.229Z",
+				"totalDays": 3,
+				"totalBudget": 200,
+				"updatedAt": "2024-04-14 11:32:00"
 			},
-			"status": "Ongoing",
-			"last_updated": "2024-04-14 11:32:00",
-			"destinations": [
-				"Ba Na Hills",
-				"Dragon Bridge",
-				"Cham Museum",
-				"Da Nang Cathedral",
-				"Con Market"
-			]
-		},
-		{
-			"general": {
+			{
 				"id": 30000003,
+				"status": "Completed",
 				"title": "Backpacking and Beach Bumming in Da Nang",
 				"description": "Nestled along the vibrant coast of central Vietnam, Da Nang is a captivating city that seamlessly blends modern attractions with ancient wonders. From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers",
-				"start_date": "2024-03-13",
-				"total_time": "4 days",
-				"total_budget": 240
+				"destinations": [
+					"My Khe Beach",
+					"Marble Mountains",
+					"Hoi An Ancient Town",
+					"Hue Imperial City"
+				],
+				"startDate": "2024-03-13",
+				"totalDays": 4,
+				"totalBudget": 240,
+				"updatedAt": "2024-02-29 21:13:00"
 			},
-			"status": "Completed",
-			"last_updated": "2024-02-29 21:13:00",
-			"destinations": [
-				"My Khe Beach",
-				"Marble Mountains",
-				"Hoi An Ancient Town",
-				"Hue Imperial City"
-			]
-		},
-		{
-			"general": {
+			{
 				"id": 30000004,
+				"status": "Cancelled",
 				"title": "Wildlife Safari and Serene Sunsets",
 				"description": "From its pristine beaches and lush mountains to its rich cultural heritage and delectable cuisine, Da Nang offers an unforgettable travel experience for every type of adventurer. Embark on a 5-day journey to discover the captivating beauty and allure of this coastal gem, where memories are made and cherished forever.",
-				"start_date": "2024-03-13",
-				"total_time": "3 days",
-				"total_budget": 300
-			},
-			"status": "Cancelled",
-			"last_updated": "2024-02-29 08:23:00",
-			"destinations": [
-				"Son Tra Peninsula",
-				"Ba Na Hills",
-				"Marble Mountains",
-				"Hoi An Ancient Town",
-				"Hue Imperial City"
-			]
-		}
-	]
+				"destinations": [
+					"Son Tra Peninsula",
+					"Ba Na Hills",
+					"Marble Mountains",
+					"Hoi An Ancient Town",
+					"Hue Imperial City"
+				],
+				"startDate": "2024-03-13",
+				"totalDays": 3,
+				"totalBudget": 300,
+				"updatedAt": "2024-02-29 08:23:00"
+			}
+		]
+	}
 }

@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import ReactQuill from 'react-quill'
 import { uploadToCloudinary } from '../utils/Cloundinary'
 import { twMerge } from 'tailwind-merge'
+import { useToast } from '../hook/useToast'
 
 const TextEditor: React.FC<{
 	className?: string
@@ -10,7 +11,7 @@ const TextEditor: React.FC<{
 	onChange: (value: string) => void
 }> = ({ className = '', placeholder = 'Enter text ...', value, onChange }) => {
 	const reactQuillRef = useRef<ReactQuill>(null)
-
+	const toast = useToast()
 	const imageHandler = useCallback(() => {
 		const input = document.createElement('input')
 		input.setAttribute('type', 'file')
@@ -19,12 +20,14 @@ const TextEditor: React.FC<{
 		input.onchange = async () => {
 			if (input !== null && input.files !== null) {
 				const file = input.files[0]
+				toast.info('Uploading', 'Please wait while we upload your image...')
 				const url = await uploadToCloudinary(file)
 				const quill = reactQuillRef.current
 				if (quill) {
 					const range = quill.getEditorSelection()
 					range && quill.getEditor().insertEmbed(range.index, 'image', url)
 				}
+				toast.success('Success', 'Image uploaded successfully')
 			}
 		}
 	}, [])

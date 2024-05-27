@@ -19,7 +19,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	return (
 		<div
 			className={twMerge(
-				`flex items-center rounded-md border border-borderCol-1 bg-bgCol-2 px-2 py-[6px]  ${searchFocus ? 'border-primary-2' : ''} ${className ?? ''}`,
+				`flex items-center rounded-md border border-borderCol-1 bg-bgCol-2 px-2 py-[6px]  ${searchFocus ? 'border-primary-2' : ''}`,
+				className,
 			)}
 			id={id}
 		>

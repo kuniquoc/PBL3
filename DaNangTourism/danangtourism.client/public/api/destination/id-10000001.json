@@ -2,23 +2,35 @@
 	"status": 200,
 	"message": "success",
 	"data": {
-		"imgs": [
-			"https://lp-cms-production.imgix.net/news/2018/08/Cau-Vang.jpg",
-			"https://girleatworld.net/wp-content/uploads/2020/01/ba-na-hills-01.jpeg",
-			"https://gadttravel.com/uploads/vietnam/da-nang/Danang-Golden-Bridge.jpg",
-			"https://d13jio720g7qcs.cloudfront.net/images/guides/origin/647db554e2daa.jpg"
-		],
-		"general": {
-			"id": 10000001,
+		"id": 10000001,
+		"information": {
 			"name": "Golden Bridge",
 			"localName": "Cầu Vàng",
 			"address": "Ba Na Hills, Hoa Vang, Da Nang, Vietnam",
-			"rating": 4.7,
+			"images": [
+				"https://lp-cms-production.imgix.net/news/2018/08/Cau-Vang.jpg",
+				"https://girleatworld.net/wp-content/uploads/2020/01/ba-na-hills-01.jpeg",
+				"https://gadttravel.com/uploads/vietnam/da-nang/Danang-Golden-Bridge.jpg",
+				"https://d13jio720g7qcs.cloudfront.net/images/guides/origin/647db554e2daa.jpg"
+			],
 			"cost": 20,
 			"openTime": "07:00",
 			"closeTime": "22:00",
 			"tags": ["bridge", "tourist", "sightseeing"]
 		},
-		"introduction": "<p>Golden Bridge (Cầu Vàng)&nbsp;is a&nbsp;150-meter-long&nbsp;pedestrian bridge located in the&nbsp;Bà Nà Hills resort, near&nbsp;Da Nang, Vietnam.&nbsp;It is designed to connect the cable car station with the gardens, avoiding a steep incline, while also providing a&nbsp;scenic overlook&nbsp;and serving as a tourist attraction12. Here are some key details about the Golden Bridge:</p><h2>Design and Features:</h2><ul><li>The bridge loops nearly back around to itself, creating a unique visual effect.</li><li>It features&nbsp;two giant hands&nbsp;that appear to support the structure. These hands are constructed of&nbsp;fiberglass and wire mesh, designed to resemble stone hands.</li><li>The hands add an artistic and mystical touch to the bridge, making it a captivating sight for visitors.</li><li>The bridge is made of&nbsp;steel painted gold&nbsp;and has a total width of&nbsp;5 meters.</li><li>It is situated at an elevation of approximately&nbsp;1,414 meters&nbsp;above sea level on Bà Nà Mountain.</li><li>The bridge was designed by&nbsp;TA Landscape Architecture, with Vu Viet Anh as the principal designer, Trần Quang Hùng as the bridge designer, and Nguyen Quang Huu Tuan as the design manager.</li><li>Construction began in&nbsp;July 2017&nbsp;and was completed in&nbsp;April 2018; the bridge officially opened in&nbsp;June 2018.</li></ul><h2>Scenic Views:</h2><ul><li>Visitors can enjoy breathtaking views of the surrounding landscape, including lush greenery, mountains, and the cable car system.</li><li>The Golden Bridge provides an excellent vantage point for capturing stunning photos.</li></ul><h2>Tourist Attraction:</h2><ul><li>The bridge has become an iconic symbol of Da Nang and attracts both domestic and international tourists.</li><li>Its unique design and picturesque location make it a must-visit spot for travelers exploring the Bà Nà Hills area.</li></ul><p>The Golden Bridge has garnered attention worldwide for its innovative design and captivating beauty.&nbsp;Whether you’re an architecture enthusiast or simply seeking a memorable experience, this bridge offers a magical journey above the clouds in the heart of Vietnam</p>"
+		"favorite": true,
+		"introduction": "<p>Golden Bridge (Cầu Vàng)&nbsp;is a&nbsp;150-meter-long&nbsp;pedestrian bridge located in the&nbsp;Bà Nà Hills resort, near&nbsp;Da Nang, Vietnam.&nbsp;It is designed to connect the cable car station with the gardens, avoiding a steep incline, while also providing a&nbsp;scenic overlook&nbsp;and serving as a tourist attraction12. Here are some key details about the Golden Bridge:</p><h2>Design and Features:</h2><ul><li>The bridge loops nearly back around to itself, creating a unique visual effect.</li><li>It features&nbsp;two giant hands&nbsp;that appear to support the structure. These hands are constructed of&nbsp;fiberglass and wire mesh, designed to resemble stone hands.</li><li>The hands add an artistic and mystical touch to the bridge, making it a captivating sight for visitors.</li><li>The bridge is made of&nbsp;steel painted gold&nbsp;and has a total width of&nbsp;5 meters.</li><li>It is situated at an elevation of approximately&nbsp;1,414 meters&nbsp;above sea level on Bà Nà Mountain.</li><li>The bridge was designed by&nbsp;TA Landscape Architecture, with Vu Viet Anh as the principal designer, Trần Quang Hùng as the bridge designer, and Nguyen Quang Huu Tuan as the design manager.</li><li>Construction began in&nbsp;July 2017&nbsp;and was completed in&nbsp;April 2018; the bridge officially opened in&nbsp;June 2018.</li></ul><h2>Scenic Views:</h2><ul><li>Visitors can enjoy breathtaking views of the surrounding landscape, including lush greenery, mountains, and the cable car system.</li><li>The Golden Bridge provides an excellent vantage point for capturing stunning photos.</li></ul><h2>Tourist Attraction:</h2><ul><li>The bridge has become an iconic symbol of Da Nang and attracts both domestic and international tourists.</li><li>Its unique design and picturesque location make it a must-visit spot for travelers exploring the Bà Nà Hills area.</li></ul><p>The Golden Bridge has garnered attention worldwide for its innovative design and captivating beauty.&nbsp;Whether you’re an architecture enthusiast or simply seeking a memorable experience, this bridge offers a magical journey above the clouds in the heart of Vietnam</p>",
+		"googleMapUrl": "https://www.google.com/maps/place/C%E1%BA%A7u+V%C3%A0ng/@15.9947036,107.9939472,17z/data=!4m6!3m5!1s0x3141f73d19c5d38f:0x63766c11470ab50d!8m2!3d15.994892!4d107.9965831!16s%2Fg%2F11twkcb7z2?entry=ttu",
+		"generalReview": {
+			"rating": 4.5,
+			"totalReview": 1000,
+			"detail": {
+				"5": 0.8,
+				"4": 0.1,
+				"3": 0.05,
+				"2": 0.03,
+				"1": 0.02
+			}
+		}
 	}
 }

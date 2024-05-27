@@ -1,8 +1,8 @@
 import { twMerge } from 'tailwind-merge'
 import {
-	ScheduleDayType,
-	ScheduleDestinationType,
-} from '../../types/schedule.types'
+	ScheduleDayProps,
+	ScheduleDestinationProps,
+} from '../../types/schedule'
 import { dateDecay, dayOfWeek } from '../../utils/TimeFormatters'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -14,9 +14,10 @@ import {
 	PiTrashSimpleFill,
 	PiXBold,
 } from 'react-icons/pi'
+import { useToast } from '../../hook/useToast'
 
 const ScheduleDay: React.FC<{
-	scheduleDay: ScheduleDayType
+	scheduleDay: ScheduleDayProps
 	className?: string
 }> = ({ scheduleDay, className = '' }) => {
 	const date = dateDecay(scheduleDay.date)
@@ -61,20 +62,29 @@ const ScheduleDay: React.FC<{
 
 const ScheduleDestination: React.FC<{
 	className?: string
-	destination: ScheduleDestinationType
+	destination: ScheduleDestinationProps
 }> = ({ className = '', destination }) => {
 	const [editable, setEditable] = useState(false)
-	const [des, setDes] = useState<ScheduleDestinationType>(destination)
+	const [des, setDes] = useState<ScheduleDestinationProps>(destination)
 	const [isHovered, setIsHovered] = useState(false)
-
+	const toast = useToast()
 	const handleSave = () => {
 		setEditable(false)
-		console.log('Save destination:', des)
+		toast.success('Success', 'Destination saved')
 	}
 
 	const handleCancel = () => {
 		setDes(destination)
 		setEditable(false)
+	}
+
+	const handleRemove = (id: number) => {
+		const confirm = window.confirm(
+			'Are you sure you want to remove this destination?',
+		)
+		if (confirm) {
+			toast.success('Success', `Destination removed ${id}`)
+		}
 	}
 
 	return (
@@ -89,9 +99,9 @@ const ScheduleDestination: React.FC<{
 				<div className="relative w-full">
 					<input
 						type="time"
-						value={des.arrival_time}
+						value={des.arrivalTime}
 						onChange={(event) =>
-							setDes({ ...des, arrival_time: event.target.value })
+							setDes({ ...des, arrivalTime: event.target.value })
 						}
 						className={`w-full border-2 pb-[2px] pt-1 font-oxygenMono ${editable ? 'focus:border-2' : 'border-secondary-1 bg-[#f9f9f9]'}`}
 					/>
@@ -106,9 +116,9 @@ const ScheduleDestination: React.FC<{
 				<div className="relative w-full">
 					<input
 						type="time"
-						value={des.departure_time}
+						value={des.leaveTime}
 						onChange={(event) =>
-							setDes({ ...des, departure_time: event.target.value })
+							setDes({ ...des, leaveTime: event.target.value })
 						}
 						className={`w-full border-2 pb-[2px] pt-1 font-oxygenMono focus:border-2  ${editable ? 'focus:border-2' : 'border-tertiary-2 bg-[#f9f9f9]'}`}
 					/>
@@ -129,7 +139,7 @@ const ScheduleDestination: React.FC<{
 				</div>
 				<a
 					className="absolute right-1 top-0 p-1.5 hover:text-primary-1"
-					href={`/destination/${des.id}`}
+					href={`/destination/${des.desId}`}
 					target="_blank"
 					title="View destination"
 				>
@@ -186,11 +196,7 @@ const ScheduleDestination: React.FC<{
 								</Button>
 								<Button
 									className="rounded-full bg-tertiary-1 p-2 text-white shadow-custom"
-									onClick={() =>
-										window.confirm(
-											'Are you sure you want to delete this destination?',
-										)
-									}
+									onClick={() => handleRemove(des.id)}
 								>
 									<PiTrashSimpleFill className="text-lg" />
 								</Button>
