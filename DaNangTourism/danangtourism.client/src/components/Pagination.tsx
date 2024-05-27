@@ -22,7 +22,7 @@ const Pagination: React.FC<PaginationProps> = ({
 			if (currentPage <= 4) setDisplayPages([1, 2, 3, 4, 5, -1, numbOfPages])
 			else if (currentPage == 5) {
 				if (numbOfPages == 8) setDisplayPages([1, -1, 4, 5, 6, 7, 8])
-				else setDisplayPages([1, -1, 4, 5, 6, -1, numbOfPages])
+				else setDisplayPages([1, -1, 4, 5, 6, -2, numbOfPages])
 			} else if (currentPage >= numbOfPages - 3)
 				setDisplayPages([
 					1,
@@ -40,14 +40,14 @@ const Pagination: React.FC<PaginationProps> = ({
 					currentPage - 1,
 					currentPage,
 					currentPage + 1,
-					-1,
+					-2,
 					numbOfPages,
 				])
 		}
 	}, [currentPage, numbOfPages])
 
 	return (
-		<div className={twMerge(`flex items-center gap-2 ${className ?? ''}`)}>
+		<div className={twMerge(`flex items-center gap-2`, className)}>
 			<button
 				className="pagination-node flex gap-2 border border-borderCol-1 pl-2 pr-3 hover:border-primary-2"
 				onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
@@ -61,13 +61,13 @@ const Pagination: React.FC<PaginationProps> = ({
 						key={page}
 						className={`pagination-node flex gap-2 pl-3 pr-3 hover:border-primary-2 
             ${currentPage === page ? 'bg-primary-1 text-bgCol-1' : ''}
-            ${page === -1 ? 'cursor-default bg-transparent' : 'cursor-pointer border border-borderCol-1'}
+            ${page <= 0 ? 'cursor-default bg-transparent' : 'cursor-pointer border border-borderCol-1'}
             `}
 						onClick={() => {
 							if (page !== -1) setCurrentPage(page)
 						}}
 					>
-						{page === -1 ? '...' : page}
+						{page <= 0 ? '...' : page}
 					</button>
 				))}
 			<button

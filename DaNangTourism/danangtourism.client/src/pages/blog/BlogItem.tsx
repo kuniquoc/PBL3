@@ -1,14 +1,15 @@
 import { twMerge } from 'tailwind-merge'
-import { BlogType } from '../../types/blog.types'
+import { BlogLineProps } from '../../types/blog'
 import { timeAgo } from '../../utils/TimeFormatters'
 import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { BlogTypeColors } from '../../styles/Styles'
+import { NumberFormat } from '../../utils/Format'
 
 const BlogItem: React.FC<{
 	className?: string
-	blog: BlogType
+	blog: BlogLineProps
 }> = ({ className, blog }) => {
 	const navigate = useNavigate()
 	const [imgLoaded, setImgLoaded] = useState(false)
@@ -26,9 +27,9 @@ const BlogItem: React.FC<{
 						>
 							{blog.type}
 						</span>
-						<div className="text-xs">{blog.author}</div>
+						<div className="text-xs">{NumberFormat(blog.views)} views</div>
 						<span className="h-1 w-1 rounded-full bg-txtCol-2"></span>
-						<div className="text-xs">{timeAgo(blog.created_at)}</div>
+						<div className="text-xs">{timeAgo(blog.createdAt)}</div>
 					</div>
 					<h4
 						className=" my-[5px] line-clamp-1 text-xl font-bold"
@@ -36,15 +37,22 @@ const BlogItem: React.FC<{
 					>
 						{blog.title}
 					</h4>
-					<p className="line-clamp-3 text-sm">{blog.description}</p>
+					<p className="line-clamp-3 text-sm">{blog.introduction}</p>
 				</div>
-
-				<Button
-					className="w-[120px] rounded-full bg-primary-2 font-semibold text-white hover:bg-primary-1"
-					onClick={() => navigate(`/blog/${blog.id}`)}
-				>
-					Read full blog
-				</Button>
+				<div className="flex items-center gap-2">
+					<Button
+						className="h-8 w-[120px] rounded-full bg-primary-2 font-semibold text-white hover:bg-primary-1"
+						onClick={() => navigate(`/blog/${blog.id}`)}
+					>
+						Read full blog
+					</Button>
+					<img
+						className="ml-2 h-8 w-8 rounded-full"
+						src={blog.author.avatar}
+						alt={blog.author.name + ' avatar'}
+					/>
+					<h4 className=" text-sm font-semibold">{blog.author.name}</h4>
+				</div>
 			</div>
 			<div className="aspect-square h-full overflow-hidden rounded">
 				{!imgLoaded && <span className="skeleton h-full w-full"></span>}

@@ -1,11 +1,11 @@
 import { twMerge } from 'tailwind-merge'
-import { MyScheduleItemType } from '../../types/schedule.types'
+import { MyScheduleItemProps } from '../../types/schedule'
 import { timeAgo } from '../../utils/TimeFormatters'
 import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
 
 const MyScheduleItem: React.FC<{
-	schedule: MyScheduleItemType
+	schedule: MyScheduleItemProps
 	className?: string
 	statusColor?: string
 }> = ({ schedule, className, statusColor = 'bg-[#d4d4d4]' }) => {
@@ -23,11 +23,9 @@ const MyScheduleItem: React.FC<{
 					<span className="h-[5px] w-[5px] rounded-full bg-white"></span>
 					{schedule.status}
 				</div>
-				<h3 className="line-clamp-1 text-xl font-semibold">
-					{schedule.general.title}
-				</h3>
+				<h3 className="line-clamp-1 text-xl font-semibold">{schedule.title}</h3>
 			</div>
-			<p className=" line-clamp-2 text-sm">{schedule.general.description}</p>
+			<p className=" line-clamp-2 text-sm">{schedule.description}</p>
 			<div className="flex w-full items-end gap-4">
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="flex w-full items-center gap-2 overflow-hidden">
@@ -46,25 +44,25 @@ const MyScheduleItem: React.FC<{
 					<div className="flex w-full items-center gap-5 overflow-hidden text-sm">
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Start date: </h5>
-							<p className="">{schedule.general.start_date}</p>
+							<p className="">{schedule.startDate}</p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Total time: </h5>
-							<p className="">{schedule.general.total_time}</p>
+							<p className="">{schedule.totalDays} days</p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Total budget: </h5>
-							<p className="">${schedule.general.total_budget}</p>
+							<p className="">${schedule.totalBudget} </p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Last updated: </h5>
-							<p className="">{timeAgo(schedule.last_updated)}</p>
+							<p className="">{timeAgo(schedule.updatedAt)}</p>
 						</div>
 					</div>
 				</div>
 				<Button
 					className="h-8 w-[112px] rounded-full bg-primary-3 text-white hover:bg-primary-2"
-					onClick={() => navigate(`/schedule/${schedule.general.id}`)}
+					onClick={() => navigate(`/schedule/${schedule.id}`)}
 				>
 					View detail
 				</Button>

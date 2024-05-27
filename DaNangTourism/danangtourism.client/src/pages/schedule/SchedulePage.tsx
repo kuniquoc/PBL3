@@ -2,37 +2,15 @@ import { useEffect, useState } from 'react'
 import { Button, DropdownSelect, Pagination, SearchBox } from '../../components'
 import { PiCalendarPlusBold } from 'react-icons/pi'
 import {
-	MyScheduleItemType,
-	PublicScheduleItemType,
-} from '../../types/schedule.types'
+	MyScheduleItemProps,
+	PublicScheduleItemProps,
+	ScheduleStatus,
+} from '../../types/schedule'
 import axios from 'axios'
 import MyScheduleItem from './MyScheduleItem'
 import PublicScheduleItem from './PublicScheduleItem'
 import LoadingScheduleItem from './LoadingScheduleItem'
 import SetupModal from './SetupModal'
-
-const ScheduleStatus = [
-	{
-		status: 'Status',
-		color: undefined,
-	},
-	{
-		status: 'Planning',
-		color: 'bg-[#F1C142]',
-	},
-	{
-		status: 'Ongoing',
-		color: 'bg-primary-2',
-	},
-	{
-		status: 'Completed',
-		color: 'bg-[#8187DC]',
-	},
-	{
-		status: 'Cancelled',
-		color: 'bg-tertiary-1',
-	},
-]
 
 const SortOptions = [
 	'Sort by',
@@ -44,9 +22,9 @@ const SortOptions = [
 const SchedulePage: React.FC = () => {
 	document.title = 'Schedules | Da Nang Explore'
 	const [tabIndex, setTabIndex] = useState(0)
-	const [mySchedules, setMySchedules] = useState<MyScheduleItemType[]>()
+	const [mySchedules, setMySchedules] = useState<MyScheduleItemProps[]>()
 	const [publicSchedules, setPublicSchedules] =
-		useState<PublicScheduleItemType[]>()
+		useState<PublicScheduleItemProps[]>()
 	const StatusArray = ScheduleStatus.map((item) => item.status)
 	const [statusIndex, setStatusIndex] = useState(0)
 	const [sortIndex, setSortIndex] = useState(0)
@@ -65,7 +43,7 @@ const SchedulePage: React.FC = () => {
 			)
 			await new Promise((resolve) => setTimeout(resolve, 1500))
 			if (response.data.status === 200) {
-				setMySchedules(response.data.data)
+				setMySchedules(response.data.data.items)
 				setLoading(false)
 			}
 		} catch (error) {
@@ -82,7 +60,7 @@ const SchedulePage: React.FC = () => {
 			)
 			await new Promise((resolve) => setTimeout(resolve, 3000))
 			if (response.data.status === 200) {
-				setPublicSchedules(response.data.data)
+				setPublicSchedules(response.data.data.items)
 				setLoading(false)
 			}
 			console.log(response.data.data)
@@ -96,7 +74,7 @@ const SchedulePage: React.FC = () => {
 		else getPublicSchedules(currentPage)
 	}, [tabIndex, currentPage])
 	return (
-		<div className="mx-auto flex min-h-screen justify-center gap-4 pb-6 pt-[64px] text-txtCol-1 xl:max-w-screen-xl">
+		<div className="mx-auto flex min-h-screen justify-center gap-4 pb-6 pt-[72px] text-txtCol-1 xl:max-w-screen-xl">
 			<div className="flex w-full items-start justify-center gap-4">
 				<div className="flex w-[200px] flex-col gap-3 pt-[52px]">
 					<button
@@ -167,7 +145,7 @@ const SchedulePage: React.FC = () => {
 							mySchedules.map((schedule) => (
 								<MyScheduleItem
 									className="w-full"
-									key={schedule.general.id}
+									key={schedule.id}
 									schedule={schedule}
 									statusColor={
 										ScheduleStatus.find(
@@ -181,7 +159,7 @@ const SchedulePage: React.FC = () => {
 							publicSchedules.map((schedule) => (
 								<PublicScheduleItem
 									className="w-full"
-									key={schedule.general.id}
+									key={schedule.id}
 									schedule={schedule}
 								/>
 							))}

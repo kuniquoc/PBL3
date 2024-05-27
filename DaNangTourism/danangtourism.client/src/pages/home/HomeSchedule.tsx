@@ -20,7 +20,7 @@ const HomeSchedule: React.FC<{ className?: string }> = ({ className }) => {
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
 				animate={isHovered ? { padding: 20 } : { padding: 12 }}
-				onClick={() => navigate('/schedule/new')}
+				onClick={() => navigate('/schedule')}
 			>
 				<motion.div
 					className="flex h-full w-full items-center justify-center rounded-md border-[2px]"

@@ -27,6 +27,7 @@ export default {
 				bgCol: {
 					1: '#F6FAF9',
 					2: '#FFFFFF',
+					3: '#F8F8F8',
 				},
 				txtCol: {
 					1: '#0C0C20',

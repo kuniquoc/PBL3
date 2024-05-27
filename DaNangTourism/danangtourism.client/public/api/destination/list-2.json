@@ -1,0 +1,107 @@
+{
+	"status": 200,
+	"message": "success",
+	"data": {
+		"total": 100,
+		"page": 2,
+		"limit": 12,
+		"items": [
+			{
+				"id": 10000013,
+				"name": "Con Market",
+				"address": "318 Ong Ich Khiem Street",
+				"image": "https://danangleisure.com/wp-content/uploads/2023/03/Con-Market.jpg",
+				"rating": 4.9,
+				"cost": 30,
+				"openTime": "06:00",
+				"closeTime": "19:00",
+				"tags": ["market", "shopping", "local"],
+				"favorite": true
+			},
+			{
+				"id": 10000014,
+				"name": "Da Nang Cathedral",
+				"address": "156 Tran Phu Street",
+				"image": "https://static.vinwonders.com/2022/12/Danang-Cathedral-thumb.jpg",
+				"rating": 4.3,
+				"cost": 10,
+				"openTime": "05:00",
+				"closeTime": "17:00",
+				"tags": ["cathedral", "religious", "architecture"],
+				"favorite": false
+			},
+			{
+				"id": 10000015,
+				"name": "Han Market",
+				"address": "119 Tran Phu Street",
+				"image": "https://danangleisure.com/wp-content/uploads/2023/02/Han-Market-Da-Nang.jpg",
+				"rating": 4.2,
+				"cost": 30,
+				"openTime": "06:00",
+				"closeTime": "21:00",
+				"tags": ["market", "shopping", "local"],
+				"favorite": true
+			},
+			{
+				"id": 10000016,
+				"name": "Phap Lam Pagoda",
+				"address": "574 Ong Ich Khiem Street",
+				"image": "https://www.holidify.com/images/cmsuploads/compressed/attr_2594_20190814180101.jpg",
+				"rating": 4.0,
+				"openTime": "06:00",
+				"cost": 10,
+				"closeTime": "18:00",
+				"tags": ["pagoda", "religious", "architecture"],
+				"favorite": false
+			},
+			{
+				"id": 10000017,
+				"name": "Da Nang Museum of Fine Arts",
+				"address": "78 Le Duan Street",
+				"image": "https://static.vinwonders.com/2023/02/da-nang-museum-thumb.jpg",
+				"rating": 4.3,
+				"cost": 30,
+				"openTime": "07:00",
+				"closeTime": "17:00",
+				"tags": ["museum", "fine arts", "history"],
+				"favorite": true
+			},
+			{
+				"id": 10000018,
+				"name": "Nam Son Pagoda",
+				"address": "Lac Long Quan Street",
+				"image": "https://heyotour.com/wp-content/uploads/2022/06/image1-37.jpg",
+				"rating": 4.9,
+				"cost": 10,
+				"openTime": "06:00",
+				"closeTime": "18:00",
+				"tags": ["pagoda", "religious", "architecture"],
+				"favorite": true
+			},
+			{
+				"id": 10000019,
+				"name": "Asia Park",
+				"address": "1 Phan Dang Luu Street",
+				"image": "https://duan-sungroup.com/wp-content/uploads/2022/11/cong-vien-chau-a-asia-park-duoc-cai-tao-vao-nam-2020.jpg",
+				"rating": 4.7,
+				"cost": 22,
+				"openTime": "13:00",
+				"closeTime": "22:00",
+				"tags": ["amusement park", "rides", "entertainment"],
+				"favorite": false
+			},
+			{
+				"id": 10000020,
+				"name": "Marble Mountains",
+				"address": "Hoa Hai Ward, Ngu Hanh Son District",
+				"image": "https://www.marmomac.com/wp-content/uploads/2022/07/Marble-Mountains_copertina.jpg",
+				"rating": 4.5,
+				"cost": 50,
+				"openTime": "08:00",
+				"closeTime": "17:30",
+				"tags": ["mountains", "caves", "scenic"],
+				"favorite": true
+			}
+		]
+	}
+}

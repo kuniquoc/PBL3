@@ -1,45 +1,34 @@
 {
 	"status": 200,
-	"message": "success",
+	"message": "Success",
 	"data": {
-		"summary": {
-			"count": 3021,
-			"average": 4.7,
-			"chart": {
-				"5": 0.6,
-				"4": 0.1,
-				"3": 0.2,
-				"2": 0.02,
-				"1": 0.08
-			}
-		},
-		"list": [
+		"total": 10,
+		"page": 1,
+		"limit": 3,
+		"items": [
 			{
-				"id": 1,
-				"name": "John Doe",
-				"avatar": "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745",
+				"id": 10000001,
+				"author": "Gordon Walsh",
+				"avatar": "https://lh3.googleusercontent.com/a-/ALV-UjXoYM50OehEJU7bRi3VayFM1In0R_L38lXpOVDIlUC3Dg3NOXz8SQ=w45-h45-p-rp-mo-ba6-br100",
 				"rating": 5,
-				"time": "just now",
-				"content": "The Golden Bridge is truly a marvel of architecture and design. The views are breathtaking, and the hands add a unique touch to the experience. I highly recommend visiting this attraction!",
-				"like": 12
+				"comment": "Always wanted to add this plus to my must visit places...now completed. Only a short walk but well worth the trip up the Ba Na Hills mountain..the cable car ride was exciting as the day we went up, the cars were getting blown around by an extremely strong wind. 4 seasons in 1 day is a pretty true comment for this place.",
+				"createdAt": "2024-05-19T03:31:09.229Z"
 			},
 			{
-				"id": 2,
-				"name": "Jane Smith",
-				"avatar": "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745",
+				"id": 10000002,
+				"author": "MMBB",
+				"avatar": "https://lh3.googleusercontent.com/a-/ALV-UjUNfkMukUIqNZehwvBEXwMDMJmw2qCKxnvkT2Kxxj2hxAn83MZbGQ=w45-h45-p-rp-mo-ba5-br100",
+				"rating": 5,
+				"comment": "The bridge was so crowded, which was expected as it's a popular spot. If you sleep in their hotel, you will be given access to the bridge before the other people come in for the day and you will get better pictures. But somehow with all that people, you still manage to get some good shots. You just have to be patient.",
+				"createdAt": "2024-05-12T21:31:09.229Z"
+			},
+			{
+				"id": 10000003,
+				"author": "leigh",
+				"avatar": "https://lh3.googleusercontent.com/a-/ALV-UjXv2ofu4uejNtJx6cFjS3lse8dYPG1AOUrg2HXH-EnqvahgMUYlOQ=w45-h45-p-rp-mo-ba5-br100",
 				"rating": 4,
-				"time": "15 hours ago",
-				"content": "The Golden Bridge is a must-see destination in Vietnam. The views are incredible, and the bridge itself is a work of art. I had a great time exploring this attraction!",
-				"like": 8
-			},
-			{
-				"id": 3,
-				"name": "Alice Johnson",
-				"avatar": "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745",
-				"rating": 5,
-				"time": "4 days ago",
-				"content": "I absolutely loved visiting the Golden Bridge. The views were stunning, and the bridge itself is a unique and captivating structure. I would definitely recommend this attraction to others!",
-				"like": 10
+				"comment": "We booked this online the night before as the following day was clear. We had a clear day for our visit and it was such a great place.. It was really busy but was worth the visit. Has lots of places for food we went for the buffet which had a great choice also veggie choice. We did a tour which was fine and the guide gave us ample time on our own to wander around, cable car was fine too wasn't as scary as I thought..",
+				"createdAt": "2024-04-29T07:31:09.229Z"
 			}
 		]
 	}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BlogDetailType } from '../../types/blog.types'
+import { BlogDetailType } from '../../types/blog'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { Button, Loader } from '../../components'
@@ -44,8 +44,8 @@ const Blog: React.FC = () => {
 	else if (!blog) return <PageNotFound />
 	return (
 		<div className="mx-auto min-h-screen xl:max-w-screen-xl">
-			<div className="w-full pb-5 pt-[64px] text-txtCol-1 ">
-				<div className="mx-auto mt-5 flex w-[800px] flex-col items-center">
+			<div className="w-full pb-5 pt-[72px] text-txtCol-1 ">
+				<div className="mx-auto flex w-[800px] flex-col items-center">
 					<span
 						className={`min-w-[72px] rounded px-2 py-1 text-center text-sm font-semibold uppercase text-white ${BlogTypeColors[blog.type]}`}
 					>
@@ -53,7 +53,7 @@ const Blog: React.FC = () => {
 					</span>
 					<h1 className="mt-2 text-center text-4xl font-bold">{blog.title}</h1>
 					<div className="mt-3 flex items-center gap-3">
-						<div className="text-sm">{timeAgo(blog.created_at)}</div>
+						<div className="text-sm">{timeAgo(blog.createdAt)}</div>
 						<span className="h-1 w-1 rounded-full bg-txtCol-2"></span>
 						<img
 							className=" h- w-6 rounded-full object-cover"

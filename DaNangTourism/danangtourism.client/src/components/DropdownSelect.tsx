@@ -20,7 +20,8 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
 	return (
 		<select
 			className={twMerge(
-				`rounded-md border-borderCol-1 bg-bgCol-2 px-3 py-[6px] text-sm ${className ?? ''} `,
+				`rounded-md border-borderCol-1 bg-bgCol-2 px-3 py-[6px] text-sm  `,
+				className,
 			)}
 			title={title}
 			id={id}

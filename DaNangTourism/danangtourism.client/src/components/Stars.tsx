@@ -5,7 +5,7 @@ const Stars: React.FC<{ rating: number; className?: string }> = ({
 	className,
 }) => {
 	return (
-		<div className={twMerge(`item-center flex gap-1 ${className ?? ''}`)}>
+		<div className={twMerge(`item-center flex gap-1`, className)}>
 			{[1, 2, 3, 4, 5].map((star) => {
 				return (
 					<PiStarFill

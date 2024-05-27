@@ -1,5 +1,1 @@
-D:\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
-D:\Tài Liệu\PBL3\Code\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
-D:\PBL3_Clone\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
 E:\New Course\PBL3\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
-D:\Tài Liệu\PBL3\Code\NewMain\DaNangTourism\danangtourism.client\obj\Debug\danangtourism.client.esproj.CoreCompileInputs.cache
