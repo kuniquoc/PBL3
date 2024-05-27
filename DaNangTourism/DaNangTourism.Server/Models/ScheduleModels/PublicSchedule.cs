@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models.ScheduleModels
 {
-    public class ListSchedule
+    public class PublicSchedule
     {
         [JsonPropertyName("total")]
         public int Total { get; set; }
@@ -12,19 +12,16 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         [JsonPropertyName("limit")]
         public int Limit { get; set; }
         [JsonPropertyName("items")]
-        public List<ScheduleElement> Items { get; set; }
-        public ListSchedule()
+        public List<PublicScheduleElement> Items { get; set; }
+        public PublicSchedule()
         {
-            Items = new List<ScheduleElement>();
+            Items = new List<PublicScheduleElement>();
         }
     }
-    public class ScheduleElement
+    public class PublicScheduleElement
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-
-        [JsonPropertyName("status")]
-        public ScheduleStatus Status { get; set; }
 
         [JsonPropertyName("title")]
         public string Title { get; set; }
@@ -35,29 +32,23 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         [JsonPropertyName("destinations")]
         public string[] Destinations { get; set; }
 
-        [JsonPropertyName("startDate")]
-        public DateOnly StartDate { get; set; }
-
         [JsonPropertyName("totalDays")]
         public int TotalDays { get; set; }
 
         [JsonPropertyName("totalBudget")]
         public double TotalBudget { get; set; }
 
-        [JsonPropertyName("updatedAt")]
-        public DateTime UpdatedAt { get; set; }
-        public ScheduleElement (MySqlDataReader reader)
+        [JsonPropertyName("creator")]
+        public string Creator { get; set; }
+        public PublicScheduleElement(MySqlDataReader reader)
         {
             Id = reader.GetInt32(reader.GetOrdinal("SheduleId"));
-            string s = reader.GetString(reader.GetOrdinal("Status"));
-            Status = (ScheduleStatus)Enum.Parse(typeof(ScheduleStatus), s); ;
             Title = reader.GetString(reader.GetOrdinal("Title"));
             Description = reader.GetString(reader.GetOrdinal("Description"));
             Destinations = reader.GetString(reader.GetOrdinal("Destinations")).Split(',');
-            StartDate = reader.GetDateOnly(reader.GetOrdinal("StartDate"));
             TotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
             TotalBudget = reader.GetDouble(reader.GetOrdinal("TotalBudget"));
-            UpdatedAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt"));
+            Creator = reader.GetString(reader.GetOrdinal("Creator"));
         }
 
     }

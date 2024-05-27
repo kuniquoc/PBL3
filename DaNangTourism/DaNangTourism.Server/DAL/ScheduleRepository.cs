@@ -7,6 +7,12 @@ namespace DaNangTourism.Server.DAL
     {
         IEnumerable<ScheduleElement> GeListSchedule(string sql, params MySqlParameter[] parameters);
         int GetScheduleCount(string sql, params MySqlParameter[] parameters);
+        IEnumerable<PublicScheduleElement> GetPublicSchedule(string sql, params MySqlParameter[] parameters);
+        ScheduleDetail? GetScheduleDetail(int userId, int scheduleId);
+        int CreateSchedule(int userId, string creator, InputSchedule schedule);
+        int CloneSchedule(int userId, string creator);
+        bool IsCreator(int userId, int scheduleId);
+        int AddScheduleDestination(int userId, ScheduleDestination destination);
     }
     public class ScheduleRepository: IScheduleRepository
     {
@@ -64,77 +70,140 @@ namespace DaNangTourism.Server.DAL
                 }
             }
         }
-        //public List<ScheduleDetail> GetSchedulesByUserId(int userId)
-        //{
-        //    string sql = "Select * from schedules where user_id = @userId";
-        //    MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@userId", userId) };
-        //    MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-        //    List<ScheduleDetail> schedules = new List<ScheduleDetail>();
-        //    _dao.OpenConnection();
-        //    if (reader.Read())
-        //    {
-        //        ScheduleDetail schedule = new Schedule(reader);
-        //        schedules.Add(schedule);
-        //    }
-        //    _dao.CloseConnection();
-        //    return schedules;
-        //}
+        
+        /// <summary>
+        /// Get public schedule
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public IEnumerable<PublicScheduleElement> GetPublicSchedule(string sql, params MySqlParameter[] parameters)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.CommandText = sql;
+                    command.Parameters.AddRange(parameters);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var schedules = new List<PublicScheduleElement>();
+                        while (reader.Read())
+                        {
+                            schedules.Add(new PublicScheduleElement(reader));
+                        }
+                        return schedules;
+                    }
+                }
+            }
+        }
 
-        //public ScheduleDetail? GetScheduleById(int id)
-        //{
-        //    string sql = "Select * from schedules where schedule_id = @id";
-        //    MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-        //    MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
+        /// <summary>
+        /// Get schedule detail
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
+        public ScheduleDetail? GetScheduleDetail(int userId, int scheduleId)
+        {
+            string sql = "SELECT ScheduleId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, Creator, IsPublic " +
+                "FROM Schedules WHERE ScheduleId = @scheduleId AND UserId = @userId";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@scheduleId", scheduleId),
+                new MySqlParameter("@userId", userId)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new ScheduleDetail(reader);
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
 
-        //    _dao.OpenConnection();
-        //    if (reader.Read())
-        //    {
-        //        ScheduleDetail schedule = new Schedule(reader);
-        //        _dao.CloseConnection();
-        //        return schedule;
-        //    }
-        //    _dao.CloseConnection();
-        //    return null;
-        //}
+        /// <summary>
+        /// Create schedule
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="schedule"></param>
+        /// <returns></returns>
+        public int CreateSchedule(int userId, string creator, InputSchedule schedule)
+        {
+            string sql = "INSERT INTO Schedules (UserId, Title, Description, UpdateAt, Creator, IsPublic) " +
+                "VALUES (@userId, @title, @description, @updateAt, @creator, @isPublic); SELECT LAST_INSERT_ID();";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@userId", userId),
+                new MySqlParameter("@title", schedule.Title),
+                new MySqlParameter("@description", schedule.Description),
+                new MySqlParameter("@updateAt", DateTime.Now),
+                new MySqlParameter("@creator", creator),
+                new MySqlParameter("@isPublic", schedule.IsPublic)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+        }
 
-        //public int AddSchedule(int userId, ScheduleDetail schedule)
-        //{
-        //    string sql = "Insert into schedules(user_id, schedule_name, schedule_describe, status, is_public)" +
-        //        "values (@userId, @scheduleName, @scheduleDescribe, @status, @isPublic)";
-        //    MySqlParameter[] parameters = new MySqlParameter[5];
-        //    parameters[0] = new MySqlParameter("@userId", userId);
-        //    parameters[1] = new MySqlParameter("@scheduleName", schedule.Name);
-        //    parameters[2] = new MySqlParameter("@scheduleDescribe", schedule.Describe);
-        //    parameters[3] = new MySqlParameter("@status", schedule.Status);
-        //    parameters[4] = new MySqlParameter("@isPublic", schedule.IsPublic);
-        //    _dao.OpenConnection();
-        //    int result = _dao.ExecuteNonQuery(sql, parameters);
-        //    _dao.CloseConnection();
-        //    return result;
-        //}
-        //public int UpdateSchedule(ScheduleDetail schedule)
-        //{
-        //    string sql = "Update schedules set schedule_name = @scheduleName, schedule_describe = @scheduleDescribe, " +
-        //        "status = @status, is_public = @isPublic where schedule_id = @scheduleId";
-        //    MySqlParameter[] parameters = new MySqlParameter[5];
-        //    parameters[0] = new MySqlParameter("@scheduleName", schedule.Name);
-        //    parameters[1] = new MySqlParameter("@scheduleDescribe", schedule.Describe);
-        //    parameters[2] = new MySqlParameter("@status", schedule.Status);
-        //    parameters[3] = new MySqlParameter("@isPublic", schedule.IsPublic);
-        //    parameters[4] = new MySqlParameter("@scheduleId", schedule.Id);
-        //    _dao.OpenConnection();
-        //    int result = _dao.ExecuteNonQuery(sql, parameters);
-        //    _dao.CloseConnection();
-        //    return result;
-        //}
-        //public int DeleteSchedule(int id)
-        //{
-        //    string sql = "Delete from schedules where schedule_id = @id";
-        //    MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-        //    _dao.OpenConnection();
-        //    int result = _dao.ExecuteNonQuery(sql, parameters);
-        //    _dao.CloseConnection();
-        //    return result;
-        //}
+
+        /// <summary>
+        /// Clone schedule
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="creator"></param>
+        /// <returns></returns>
+        public int CloneSchedule(int userId, string creator) {
+            string sql = "INSERT INTO Schedules (UserId, Status, Title, Title, Description, StartDate, TotalDays, TotalDays, TotalBudget, UpdateAt, Creator, IsPucblic) " +
+                "SELECT @userId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdateAt, @creator, IsPucblic; SELECT LAST_INSERT_ID();";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@userId", userId),
+                new MySqlParameter("@creator", creator)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+        }
+    
+        /// <summary>
+        /// Check user is creator
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
+        public bool IsCreator(int userId, int scheduleId)
+        {
+            string sql = "SELECT COUNT(*) FROM Schedules WHERE UserId = @userId AND ScheduleId = @scheduleId";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@userId", userId),
+                new MySqlParameter("@scheduleId", scheduleId)
+            };
+            return GetScheduleCount(sql, parameters) > 0;
+        }
+
     }
 }

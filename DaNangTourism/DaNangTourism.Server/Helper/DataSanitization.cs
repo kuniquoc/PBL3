@@ -1,4 +1,4 @@
-﻿namespace DaNangTourism.Server.Validation
+﻿namespace DaNangTourism.Server.Helper
 {
     public class DataSanitization
     {

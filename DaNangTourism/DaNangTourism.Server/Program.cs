@@ -70,6 +70,17 @@ builder.Services.AddScoped<IScheduleRepository>(provider =>
     return new ScheduleRepository(connectionString);
 });
 
+builder.Services.AddScoped<IScheduleDestinationRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+    }
+    return new ScheduleDestinationRepository(connectionString);
+});
+
 // Register scoped services here
 
 builder.Services.AddScoped<IDestinationService, DestinationService>();

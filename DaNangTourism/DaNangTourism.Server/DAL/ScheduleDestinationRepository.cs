@@ -3,97 +3,167 @@ using DaNangTourism.Server.Models.ScheduleModels;
 
 namespace DaNangTourism.Server.DAL
 {
-    public class ScheduleDestinationRepository
+    public interface IScheduleDestinationRepository
     {
-        private readonly DAO _dao;
-        private static ScheduleDestinationRepository _instance;
-        public static ScheduleDestinationRepository Instance
+        IEnumerable<ScheduleDay> GetScheduleDay(int scheduleId);
+        void CloneScheduleDestination(int scheduleId, int newScheduleId);
+        int AddScheduleDestination(ScheduleDestination destination);
+        int GetScheduleId(int ScheduleDestinationId);
+        void DeleteScheduleDestination(int scheduleDestinationId);
+    }
+    public class ScheduleDestinationRepository: IScheduleDestinationRepository
+    {
+        private readonly string _connectionString;
+        public ScheduleDestinationRepository(string connectionString)
         {
-            get
+            _connectionString = connectionString;
+        }
+        /// <summary>
+        /// Get schedule day
+        /// </summary>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
+        public IEnumerable<ScheduleDay> GetScheduleDay(int scheduleId)
+        {
+            var sql = "SELECT ScheduleDestinationId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note " +
+                "FROM ScheduleDestinations WHERE ScheduleId = @scheduleId ORDER BY Date, ArrivalTime";
+            MySqlParameter[] parameters = new MySqlParameter[]
             {
-                if (_instance == null)
+                new MySqlParameter("@scheduleId", scheduleId)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
                 {
-                    _instance = new ScheduleDestinationRepository(DAO.Instance);
+                    command.Parameters.AddRange(parameters);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var scheduleDaysDict = new SortedDictionary<DateOnly, ScheduleDay>();
+                        while (reader.Read())
+                        {
+                            var date = reader.GetDateOnly(reader.GetOrdinal("Date"));
+                            if (!scheduleDaysDict.TryGetValue(date, out var scheduleDay))
+                            {
+                                scheduleDay = new ScheduleDay(date);
+                                scheduleDaysDict[date] = scheduleDay;
+                            }
+                            scheduleDay.Destinations.Add(new DestinationOfDay(reader));
+                        }
+                        return scheduleDaysDict.Values.ToList();
+                    }
                 }
-                return _instance;
             }
         }
-        private ScheduleDestinationRepository(DAO dao)
+
+        /// <summary>
+        /// Clone schedule destination
+        /// </summary>
+        /// <param name="scheduleId"></param>
+        /// <param name="newScheduleId"></param>
+        public void CloneScheduleDestination(int scheduleId, int newScheduleId)
         {
-            _dao = dao;
-        }
-        public List<ScheduleDestination> GetSDsByScheduleID(int scheduleId)
-        {
-            string sql = "Select * from schedule_destinations where schedule_id = @scheduleId";
-            MySqlParameter[] parameters = new MySqlParameter[] {new MySqlParameter("scheduleId", scheduleId)};
-            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            List<ScheduleDestination> sDs = new List<ScheduleDestination>();
-            _dao.OpenConnection();
-            while (reader.Read())
+            var sql = "INSERT INTO ScheduleDestinations (ScheduleId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note) " +
+                "SELECT @newScheduleId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note " +
+                "FROM ScheduleDestinations WHERE ScheduleId = @scheduleId";
+            MySqlParameter[] parameters = new MySqlParameter[]
             {
-                ScheduleDestination sD = new ScheduleDestination(reader);
-                sDs.Add(sD);
-            }
-            _dao.CloseConnection();
-            return sDs;
-        }
-        public ScheduleDestination? GetSDById(int id)
-        {
-            string sql = "Select * from schedule_destinations where sd_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            MySqlDataReader reader = _dao.ExecuteQuery(sql, parameters);
-            
-            _dao.OpenConnection();
-            if (reader.Read())
+                new MySqlParameter("@scheduleId", scheduleId),
+                new MySqlParameter("@newScheduleId", newScheduleId)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
             {
-                ScheduleDestination sD = new ScheduleDestination(reader);
-                _dao.CloseConnection();
-                return sD;
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    command.ExecuteNonQuery();
+                }
             }
-            _dao.CloseConnection();
-            return null;
         }
-        public int AddSD(int scheduleId, int destinationId, ScheduleDestination sD)
+
+
+        /// <summary>
+        /// Add schedule destination
+        /// </summary>
+        /// <param name="destination"></param>
+        /// <returns></returns>
+        public int AddScheduleDestination(ScheduleDestination destination)
         {
-            string sql = "Insert into schedule_destinations(schedule_id, destination_id, arrival_time, leave_time, cost_estimate, note) values(@scheduleId, @destinationId, @arrivalTime, @leaveTime, " +
-                "@costEstimate, @note)";
-            MySqlParameter[] parameters = new MySqlParameter[6];
-            parameters[1] = new MySqlParameter("@scheduleId", scheduleId);
-            parameters[2] = new MySqlParameter("@destinationId", destinationId);
-            parameters[3] = new MySqlParameter("@arrivalTime", sD.ArrivalTime);
-            parameters[4] = new MySqlParameter("@leaveTime", sD.LeaveTime);
-            parameters[5] = new MySqlParameter("@costEstimate", sD.CostEstimate);
-            parameters[6] = new MySqlParameter("@note", sD.Note);
-            
-            _dao.OpenConnection();
-            int result = _dao.ExecuteNonQuery(sql, parameters);
-            _dao.CloseConnection();
-            return result;
+            string sql = "INSERT INTO ScheduleDestinations (ScheduleId, DestinationId, Date, ArrivalTime, LeaveTime, Budget, Note) " +
+                "VALUES (@scheduleId, @destinationId, @date, @arrivalTime, @leaveTime, @budget, @note); SELECT LAST_INSERT_ID();";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@scheduleId", destination.ScheduleId),
+                new MySqlParameter("@destinationId", destination.DestinationId),
+                new MySqlParameter("@date", destination.Date),
+                new MySqlParameter("@arrivalTime", destination.ArrivalTime),
+                new MySqlParameter("@leaveTime", destination.LeaveTime),
+                new MySqlParameter("@budget", destination.Budget),
+                new MySqlParameter("@note", destination.Note)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
         }
-        public int UpdateSD(ScheduleDestination sD)
+
+        /// <summary>
+        /// Get schedule id
+        /// </summary>
+        /// <param name="ScheduleDestinationId"></param>
+        /// <returns></returns>
+        public int GetScheduleId(int ScheduleDestinationId)
         {
-            string sql = "Update schedule_destinations set destination_id = @destinationId, arrival_time = @arrivalTime, leave_time = @leaveTime, " +
-                "cost_estimate = @costEstimate, note = @note where sd_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[6];
-            parameters[0] = new MySqlParameter("@destinationId", sD.DestinationId);
-            parameters[1] = new MySqlParameter("@arrivalTime", sD.ArrivalTime);
-            parameters[2] = new MySqlParameter("@leaveTime", sD.LeaveTime);
-            parameters[3] = new MySqlParameter("@costEstimate", sD.CostEstimate);
-            parameters[4] = new MySqlParameter("@note", sD.Note);
-            parameters[5] = new MySqlParameter("@id", sD.Id);
-            _dao.OpenConnection();
-            int result = _dao.ExecuteNonQuery(sql, parameters);
-            _dao.CloseConnection();
-            return result;
+            string sql = "SELECT ScheduleId FROM ScheduleDestinations WHERE ScheduleDestinationId = @ScheduleDestinationId";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@ScheduleDestinationId", ScheduleDestinationId),
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return reader.GetInt32(reader.GetOrdinal("ScheduleId"));
+                        }
+                        return 0;
+                    }
+                }
+            }
         }
-        public int DeleteSD(int id)
+
+        /// <summary>
+        /// Delete schedule destination
+        /// </summary>
+        /// <param name="scheduleDestinationId"></param>
+        public void DeleteScheduleDestination(int scheduleDestinationId)
         {
-            string sql = "Delete from schedule_destinations where sd_id = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
-            _dao.OpenConnection();
-            int result = _dao.ExecuteNonQuery(sql, parameters);
-            _dao.CloseConnection();
-            return result;
+            string sql = "DELETE FROM ScheduleDestinations WHERE ScheduleDestinationId = @scheduleDestinationId";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@scheduleDestinationId", scheduleDestinationId),
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
+
     }
 }

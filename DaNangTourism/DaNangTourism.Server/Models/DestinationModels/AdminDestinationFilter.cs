@@ -1,4 +1,4 @@
-﻿using DaNangTourism.Server.Validation;
+﻿using DaNangTourism.Server.Helper;
 
 namespace DaNangTourism.Server.Models.DestinationModels
 {

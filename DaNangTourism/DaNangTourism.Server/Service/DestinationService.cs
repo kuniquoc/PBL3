@@ -2,7 +2,6 @@
 using MySqlConnector;
 using System.Text;
 using DaNangTourism.Server.Models.DestinationModels;
-using DaNangTourism.Server.Validation;
 using Microsoft.AspNetCore.Mvc;
 namespace DaNangTourism.Server.Service
 {

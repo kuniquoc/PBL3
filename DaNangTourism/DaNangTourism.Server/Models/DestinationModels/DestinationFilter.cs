@@ -1,4 +1,4 @@
-﻿using DaNangTourism.Server.Validation;
+﻿using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 

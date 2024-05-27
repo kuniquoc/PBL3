@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DaNangTourism.Server.Models.ScheduleModels
 {
-    public class ScheduleFilter
+    public class PublicScheduleFilter
     {
         [FromQuery(Name = "page")]
         public int Page { get; set; } = 1;
@@ -14,11 +14,8 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         [FromQuery(Name = "search")]
         public string Search { get; set; } = "";
 
-        [FromQuery(Name = "status")]
-        public ScheduleStatus Status { get; set; } = ScheduleStatus.all;
-
         [FromQuery(Name = "sortBy")]
-        public string SortBy { get; set; } = "startDate";
+        public string SortBy { get; set; } = "title";
 
         [FromQuery(Name = "sortType")]
         public string SortType { get; set; } = "desc";
@@ -28,8 +25,6 @@ namespace DaNangTourism.Server.Models.ScheduleModels
             if (Page < 1) Page = 1;
             if (Limit < 1) Limit = 1;
             Search = DataSanitization.RemoveSpecialCharacters(Search);
-            if (Status != ScheduleStatus.all && Status != ScheduleStatus.planning && Status != ScheduleStatus.ongoing 
-                && Status != ScheduleStatus.completed && Status != ScheduleStatus.canceled) Status = ScheduleStatus.all;
             if (SortBy != "title" && SortBy != "startDate" && SortBy != "updatedAt") SortBy = "startDate";
             if (SortType != "asc" && SortType != "desc") SortType = "desc";
         }
