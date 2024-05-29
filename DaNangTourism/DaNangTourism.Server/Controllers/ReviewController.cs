@@ -1,7 +1,7 @@
 ﻿using DaNangTourism.Server.Helper;
 using DaNangTourism.Server.Models.DestinationModels;
 using DaNangTourism.Server.Models.ReviewModels;
-using DaNangTourism.Server.Service;
+using DaNangTourism.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaNangTourism.Server.Controllers
@@ -11,12 +11,12 @@ namespace DaNangTourism.Server.Controllers
     public class ReviewController : Controller
     {
         private readonly IReviewService _reviewService;
-        private readonly IAuthenticationHelper _authenticationHelper;
+        private readonly IAccountService _accountService;
 
-        public ReviewController(IReviewService reviewService, IAuthenticationHelper authenticationHelper)
+        public ReviewController(IReviewService reviewService, IAccountService accountService)
         {
             _reviewService = reviewService;
-            _authenticationHelper = authenticationHelper;
+            _accountService = accountService;
         }
 
         [HttpGet("list/{id}")]
@@ -44,7 +44,8 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
                 _reviewService.AddReview(userId, review);
                 return StatusCode(201, "Review created");
             }
@@ -64,6 +65,10 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 // xác thực admin
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized("Only admin can delete!");
+                }
 
                 // xóa review
                 _reviewService.DeleteReview(id);

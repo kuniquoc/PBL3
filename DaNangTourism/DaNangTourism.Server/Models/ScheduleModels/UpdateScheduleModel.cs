@@ -2,7 +2,7 @@
 
 namespace DaNangTourism.Server.Models.ScheduleModels
 {
-    public class InputSchedule
+    public class UpdateScheduleModel
     {
         [JsonPropertyName("title")]
         public string Title { get; set; } = "";
@@ -10,5 +10,7 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public string Description { get; set; } = "";
         [JsonPropertyName("isPublic")]
         public bool IsPublic { get; set; }
+        [JsonPropertyName("status")]
+        public ScheduleStatus Status { get; set; }
     }
 }

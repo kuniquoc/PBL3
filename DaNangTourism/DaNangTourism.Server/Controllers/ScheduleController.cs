@@ -1,5 +1,5 @@
 ﻿using DaNangTourism.Server.DAL;
-using DaNangTourism.Server.Service;
+using DaNangTourism.Server.Services;
 using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
@@ -13,11 +13,11 @@ namespace DaNangTourism.Server.Controllers
     public class ScheduleController : Controller
     {
         private readonly IScheduleService _scheduleService;
-        private readonly IAuthenticationHelper _authenticationHelper;
-        public ScheduleController(IScheduleService scheduleService, IAuthenticationHelper authenticationHelper)
+        private readonly IAccountService _accountService;
+        public ScheduleController(IScheduleService scheduleService, IAccountService accountService)
         {
             _scheduleService = scheduleService;
-            _authenticationHelper = authenticationHelper;
+            _accountService = accountService;
         }
         [HttpGet("myschedule")]
         public IActionResult GetAllSchedules([FromQuery] ScheduleFilter scheduleFilter)
@@ -26,7 +26,8 @@ namespace DaNangTourism.Server.Controllers
             scheduleFilter.Sanitization();
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
                 var schedules = _scheduleService.GetListSchedule(userId, scheduleFilter);
                 if (schedules.Items.Count() == 0)
                 {
@@ -51,7 +52,8 @@ namespace DaNangTourism.Server.Controllers
             scheduleFilter.Sanitization();
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
                 var schedules = _scheduleService.GetPublicSchedule(scheduleFilter, userId);
                 if (schedules.Items.Count() == 0)
                 {
@@ -81,7 +83,8 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
                 var schedule = _scheduleService.GetScheduleDetail(userId, id);
                 if (schedule == null)
                 {
@@ -105,9 +108,10 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
                 // lấy name từ token
-                string name = "";
+                string name = _accountService.GetUserName();
 
                 var id = _scheduleService.CreateSchedule(userId, name, schedule);
                 if (id == 0)
@@ -132,9 +136,9 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
                 // lấy name từ token
-                string name = "";
+                string name = _accountService.GetUserName();
 
                 var id = _scheduleService.CloneSchedule(userId, name, scheduleId);
                 if (id == 0)
@@ -159,7 +163,7 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                _authenticationHelper.GetUserIdFromToken();
+                _accountService.GetUserIdFromToken();
 
                 var id = _scheduleService.AddScheduleDestination(scheduleDestination);
                 if (id == 0)
@@ -184,7 +188,7 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
 
                 _scheduleService.DeleteScheduleDestination(userId, scheduleDestinationId);
                  return StatusCode(200, new { message = "Remove destination from schedule successful" });
@@ -204,7 +208,8 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
                 _scheduleService.UpdateScheduleDestination(userId, id, scheduleDestination);
                 return StatusCode(200, new { message = "Update destination in schedule successful" });
             }
@@ -220,13 +225,15 @@ namespace DaNangTourism.Server.Controllers
 
 
         // chưa xong
-        [HttpPut("update/{id}")]
-        public IActionResult UpdateSchedule([FromRoute] int id, [FromBody] InputSchedule schedule)
+        [HttpPut("update/{scheduleId}")]
+        public IActionResult UpdateSchedule([FromRoute] int scheduleId, [FromBody] UpdateScheduleModel schedule)
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
-                //_scheduleService.UpdateSchedule(userId, id, schedule);
+                int userId = _accountService.GetUserIdFromToken();
+
+                _scheduleService.UpdateSchedule(userId, scheduleId, schedule);
+
                 return StatusCode(200, new { message = "Update schedule successful" });
             }
             catch (UnauthorizedAccessException uae)

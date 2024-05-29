@@ -12,6 +12,7 @@ namespace DaNangTourism.Server.DAL
         int CreateSchedule(int userId, string creator, InputSchedule schedule);
         int CloneSchedule(int userId, string creator);
         bool IsCreator(int userId, int scheduleId);
+        void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
     }
     public class ScheduleRepository: IScheduleRepository
     {
@@ -204,5 +205,33 @@ namespace DaNangTourism.Server.DAL
             return GetScheduleCount(sql, parameters) > 0;
         }
 
+        /// <summary>
+        /// Update schedule
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="scheduleId"></param>
+        /// <param name="schedule"></param>
+        public void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule)
+        {
+            string sql = "UPDATE Schedules SET Title = @title, Description = @description, IsPublic = @isPublic, Status = @status WHERE UserId = @userId AND ScheduleId = @scheduleId";
+            MySqlParameter[] parameters = new MySqlParameter[]
+            {
+                new MySqlParameter("@title", schedule.Title),
+                new MySqlParameter("@description", schedule.Description),
+                new MySqlParameter("@isPublic", schedule.IsPublic),
+                new MySqlParameter("@status", schedule.Status),
+                new MySqlParameter("@userId", userId),
+                new MySqlParameter("@scheduleId", scheduleId)
+            };
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.AddRange(parameters);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

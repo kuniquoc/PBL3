@@ -1,4 +1,4 @@
-﻿using DaNangTourism.Server.Service;
+﻿using DaNangTourism.Server.Services;
 using DaNangTourism.Server.Helper;
 using Microsoft.AspNetCore.Mvc;
 using DaNangTourism.Server.Models.DestinationModels;
@@ -10,11 +10,11 @@ namespace DaNangTourism.Server.Controllers
     public class DestinationController : Controller
     {
         private readonly IDestinationService _destinationService;
-        private readonly IAuthenticationHelper _authenticationHelper;
-        public DestinationController (IDestinationService destinationService, IAuthenticationHelper authenticationHelper)
+        private readonly IAccountService _accountService;
+        public DestinationController (IDestinationService destinationService, IAccountService accountService)
         {
             _destinationService = destinationService;
-            _authenticationHelper = authenticationHelper;
+            _accountService = accountService;
         }
         
         [HttpGet("home")]
@@ -43,7 +43,9 @@ namespace DaNangTourism.Server.Controllers
 
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
+
                 var destinations = _destinationService.GetListDestinations(userId, destinationFilter);
                 if (destinations.Count() == 0)
                 {
@@ -85,7 +87,9 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _authenticationHelper.GetUserIdFromToken();
+                int userId = _accountService.GetUserIdFromToken();
+
+
                 _destinationService.UpdateFavDes(userId, destinationId, favorite);
                 return StatusCode(200, "Favorite updated");
             }
@@ -126,9 +130,10 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 // xác thực admin
-
-
-                //
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                }
                 AdminDestinations adminDestinations = _destinationService.GetDestinationElements(adminDestinationFilter);
                 if (adminDestinations.Items.Count == 0)
                 {
@@ -148,11 +153,12 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 // xác thực admin
-
-
-                //
-                _destinationService.AddDestination(destination);
-                return StatusCode(201, new { message = "Destination created" });
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                }
+                int id = _destinationService.AddDestination(destination);
+                return StatusCode(201, new { message = "Destination created", data = id });
             }
             catch (Exception e)
             {
@@ -166,9 +172,10 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 // xác thực admin
-
-
-                //
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                }
                 _destinationService.UpdateDestination(id, destination);
                 return StatusCode(200, new { message = "Destination updated" });
             }
@@ -184,8 +191,10 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 // xác thực admin
-
-
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                }
                 //
                 _destinationService.DeleteDestination(id);
                 return StatusCode(200, new { message = "Destination deleted" });

@@ -192,7 +192,7 @@ namespace DaNangTourism.Server.DAL
         public int AddDestination(InputDestinationModel destination)
         {
             string sql = "INSERT INTO Destinations(Name, LocalName, Address, GoogleMapUrl, Cost, Opentime, CloseTime, Images, Tags, Introduction)" +
-                "VALUES (@name, @localName, @address, @googleMapUrl, @cost, @openTime, @closeTime, @images, @tags, @introduction)";
+                "VALUES (@name, @localName, @address, @googleMapUrl, @cost, @openTime, @closeTime, @images, @tags, @introduction); SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@name", destination.Name),
@@ -212,7 +212,7 @@ namespace DaNangTourism.Server.DAL
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddRange(parameters);
-                    return command.ExecuteNonQuery();
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
             }
         }
