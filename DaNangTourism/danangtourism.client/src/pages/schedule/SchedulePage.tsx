@@ -20,7 +20,7 @@ const SortOptions = [
 ]
 
 const SchedulePage: React.FC = () => {
-	document.title = 'Schedules | Da Nang Explore'
+	document.title = 'Schedules | Danang Tourism'
 	const [tabIndex, setTabIndex] = useState(0)
 	const [mySchedules, setMySchedules] = useState<MyScheduleItemProps[]>()
 	const [publicSchedules, setPublicSchedules] =

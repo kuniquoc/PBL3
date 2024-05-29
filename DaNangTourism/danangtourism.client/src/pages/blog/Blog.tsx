@@ -32,7 +32,7 @@ const Blog: React.FC = () => {
 	}, [id])
 
 	useEffect(() => {
-		document.title = (blog?.title ?? 'Blogs') + ' | Da Nang Explore'
+		document.title = (blog?.title ?? 'Blogs') + ' | Danang Tourism'
 	}, [blog])
 
 	if (loading)

@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 const BlogsSortOptions = ['Sort by', 'Newest', 'Oldest', 'Popular']
 
 const BlogPage: React.FC = () => {
-	document.title = 'Blogs | Da Nang Explore'
+	document.title = 'Blogs | Danang Tourism'
 	const navigate = useNavigate()
 	const [sort, setSort] = useState(0)
 	const [searchValue, setSearchValue] = useState('')

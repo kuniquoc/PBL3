@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { PiXBold } from 'react-icons/pi'
 import { uploadToCloudinary } from '../../utils/Cloundinary'
 import { useToast } from '../../hook/useToast'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { DestinationEditorProps } from '../../types/destination'
 import axios from 'axios'
 
@@ -29,7 +29,7 @@ const DestinationEditor: React.FC = () => {
 	const location = useLocation()
 	const { id } = useParams()
 	const [editMode, setEditMode] = useState(false)
-
+	const navigate = useNavigate()
 	useEffect(() => {
 		const path = location.pathname.split('/')
 		if (path.includes('edit')) {
@@ -113,8 +113,12 @@ const DestinationEditor: React.FC = () => {
 			}
 		} else {
 			try {
-				toast.success('Post success', 'Destination posted successfully')
-				console.log('Post destination', des)
+				const response = await axios.post('/api/destination/create', des)
+				if (response.status === 200) {
+					toast.success('Post success', 'Destination posted successfully')
+					await new Promise((resolve) => setTimeout(resolve, 1000))
+					navigate('/destination' + response.data.data.id)
+				}
 			} catch (error) {
 				toast.error('Post failed', 'Failed to post destination')
 				console.error(error)

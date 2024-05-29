@@ -35,7 +35,7 @@ const Schedule: React.FC = () => {
 	}, [id])
 
 	useEffect(() => {
-		document.title = (schedule?.title ?? 'Schedules') + ' | Da Nang Explore'
+		document.title = (schedule?.title ?? 'Schedules') + ' | Danang Tourism'
 	}, [schedule])
 
 	if (loading)

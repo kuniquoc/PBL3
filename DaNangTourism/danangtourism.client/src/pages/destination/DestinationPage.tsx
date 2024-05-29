@@ -66,7 +66,7 @@ const DestinationPage: React.FC = () => {
 
 	const navigate = useNavigate()
 	const toast = useToast()
-	document.title = 'Destinations | Da Nang Explore'
+	document.title = 'Destinations | Danang Tourism'
 
 	useEffect(() => {
 		getDestinations(currentPage)

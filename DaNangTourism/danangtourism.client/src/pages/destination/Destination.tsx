@@ -38,7 +38,7 @@ const Destination: React.FC = () => {
 
 	useEffect(() => {
 		document.title =
-			(destination?.information.name ?? 'Destination') + ' | Da Nang Explore'
+			(destination?.information.name ?? 'Destination') + ' | Danang Tourism'
 	}, [destination])
 
 	if (loading)

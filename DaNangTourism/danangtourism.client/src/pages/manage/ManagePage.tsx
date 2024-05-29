@@ -7,6 +7,7 @@ import UsersTab from './UsersTab'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const ManagePage: React.FC = () => {
+	document.title = 'Manage | Danang Tourism'
 	const [tabIndex, setTabIndex] = useState(0)
 	const location = useLocation()
 	const navigate = useNavigate()

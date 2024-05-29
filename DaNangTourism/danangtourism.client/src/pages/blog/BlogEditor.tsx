@@ -15,7 +15,7 @@ const EmptyBlog = {
 const BlogTypeOptions = ['All', 'Places', 'Tips']
 
 const BlogEditor: React.FC = () => {
-	document.title = 'New Blog | Da Nang Explore'
+	document.title = 'New Blog | Danang Tourism'
 	const [blog, setBlog] = useState(EmptyBlog)
 	const [imgFile, setImgFile] = useState<File>()
 	const toast = useToast()

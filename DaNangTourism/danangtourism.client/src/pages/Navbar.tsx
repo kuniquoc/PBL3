@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignUp, onLogin }) => {
 						className={`cursor-pointer select-none text-xl font-bold leading-10 ${isHome ? 'text-primary-3' : 'text-primary-1'} `}
 						to="/"
 					>
-						Da Nang Explore
+						Danang Tourism
 					</Link>
 				</div>
 				<div className="h-full">
