@@ -167,7 +167,7 @@ const UserTable: React.FC<{
 		try {
 			const response = await axios.put(`/api/account/update/role/${id}`)
 			if (response.status === 200) {
-				toast.success('Success', 'Role updated')
+				toast.success('Success', response.data.message)
 				onReload()
 			} else {
 				toast.error('Error', 'Failed to update role')

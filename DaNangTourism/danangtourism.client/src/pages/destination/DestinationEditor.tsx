@@ -103,17 +103,48 @@ const DestinationEditor: React.FC = () => {
 	const handleSubmit = async () => {
 		if (!validate()) return
 
+		const openTimeObj = {
+			hour: des.information.openTime.split(':')[0],
+			minute: des.information.openTime.split(':')[1],
+		}
+
+		const closeTimeObj = {
+			hour: des.information.closeTime.split(':')[0],
+			minute: des.information.closeTime.split(':')[1],
+		}
+
 		if (editMode) {
 			try {
-				toast.success('Update success', 'Destination updated successfully')
-				console.log('Update destination', des)
+				const response = await axios.post('/api/destination/update', {
+					id: des.id,
+					information: {
+						...des.information,
+						openTime: openTimeObj,
+						closeTime: closeTimeObj,
+					},
+					introduction: des.introduction,
+					googleMapUrl: des.googleMapUrl,
+				})
+				if (response.status === 200) {
+					toast.success('Update success', 'Destination updated successfully')
+					await new Promise((resolve) => setTimeout(resolve, 1000))
+					navigate('/destination' + response.data.data.id)
+				}
 			} catch (error) {
 				toast.error('Update failed', 'Failed to update destination')
 				console.error(error)
 			}
 		} else {
 			try {
-				const response = await axios.post('/api/destination/create', des)
+				const response = await axios.post('/api/destination/create', {
+					information: {
+						...des.information,
+						openTime: openTimeObj,
+						closeTime: closeTimeObj,
+					},
+					introduction: des.introduction,
+					googleMapUrl: des.googleMapUrl,
+				})
 				if (response.status === 200) {
 					toast.success('Post success', 'Destination posted successfully')
 					await new Promise((resolve) => setTimeout(resolve, 1000))
