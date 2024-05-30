@@ -22,8 +22,10 @@ namespace DaNangTourism.Server.Models.DestinationModels
         [JsonPropertyName("cost")]
         public double Cost { get; set; }
         [JsonPropertyName("openTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly OpenTime { get; set; }
         [JsonPropertyName("closeTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly CloseTime { get; set; }
         [JsonPropertyName("tags")]
         public string[] Tags { get; set; }

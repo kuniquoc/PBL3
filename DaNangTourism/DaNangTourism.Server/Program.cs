@@ -1,5 +1,4 @@
 using DaNangTourism.Server.DAL;
-using DaNangTourism.Server.Helper;
 using DaNangTourism.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);

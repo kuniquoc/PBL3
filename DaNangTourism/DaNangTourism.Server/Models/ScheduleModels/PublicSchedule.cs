@@ -42,13 +42,13 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public string Creator { get; set; }
         public PublicScheduleElement(MySqlDataReader reader)
         {
-            Id = reader.GetInt32(reader.GetOrdinal("SheduleId"));
+            Id = reader.GetInt32(reader.GetOrdinal("ScheduleId"));
             Title = reader.GetString(reader.GetOrdinal("Title"));
             Description = reader.GetString(reader.GetOrdinal("Description"));
-            Destinations = reader.GetString(reader.GetOrdinal("Destinations")).Split(',');
             TotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
             TotalBudget = reader.GetDouble(reader.GetOrdinal("TotalBudget"));
             Creator = reader.GetString(reader.GetOrdinal("Creator"));
+            Destinations = Array.Empty<string>();
         }
 
     }

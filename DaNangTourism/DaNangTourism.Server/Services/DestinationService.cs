@@ -8,13 +8,13 @@ namespace DaNangTourism.Server.Services
     public interface IDestinationService
     {
         IEnumerable<HomeDestination> GetHomeDestinations();
-        IEnumerable<ListDestination> GetListDestinations(int userId, DestinationFilter destinationFilter);
-        DestinationDetail? GetDestinationDetail(int id);
+        ListDestinations GetListDestinations(DestinationFilter destinationFilter, int userId = 0);
+        DestinationDetail? GetDestinationDetail(int id, int userId = 0);
         void UpdateFavDes(int userId, int favDesId, bool favorite);
         IEnumerable<HomeDestination> GetRandomDestinations(int limit = 3);
         AdminDestinations GetDestinationElements(AdminDestinationFilter adminDestinationFilter);
         int AddDestination(InputDestinationModel destination);
-        int UpdateDestination(int id, InputDestinationModel destination);
+        InputDestinationModel UpdateDestination(int id, InputDestinationModel destination);
         int DeleteDestination(int id);
     }
     public class DestinationService : IDestinationService
@@ -45,19 +45,27 @@ namespace DaNangTourism.Server.Services
         /// <param name="userId"></param>
         /// <param name="destinationFilter"></param>
         /// <returns></returns>
-        public IEnumerable<ListDestination> GetListDestinations(int userId, DestinationFilter destinationFilter)
+        public ListDestinations GetListDestinations(DestinationFilter destinationFilter, int userId = 0)
         {
+            ListDestinations destinations = new ListDestinations();
+
             // xử lý query để có điều kiện lọc
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT DestinationId, Name, Address, Images, Rating, Cost, OpenTime, CloseTime, Tags");
+            sql.Append("SELECT Destinations.DestinationId AS DestinationId, Name, Address, Images, Rating, Cost, OpenTime, CloseTime, Tags");
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
             // xử lý favorite Des
-            if (destinationFilter.IsFavorite != null)
+            if (userId > 0)
             {
-                sql.Append(", IF(UserId = @userId, TRUE, FALSE) as Favorite  FROM Destinations LEFT JOIN FavoriteDestinations ON FavoriteDestinations.DestinationId = Destinations.Id");
+                sql.Append(", IF(UserId = @userId, TRUE, FALSE) as Favorite");
+                parameters.Add(new MySqlParameter("@userId", userId));
             }
-            else sql.Append(" FROM Destinations");
+            else
+            {
+                sql.Append(", FALSE as Favorite");
+            }
+            sql.Append(" FROM Destinations LEFT JOIN FavoriteDestinations ON FavoriteDestinations.DestinationId = Destinations.DestinationId");
+            
 
             // xử lý các bộ lọc dùng where
             if (!string.IsNullOrEmpty(destinationFilter.Search))
@@ -147,8 +155,26 @@ namespace DaNangTourism.Server.Services
             // xử lý order by
             sql.Append(" ORDER BY " + destinationFilter.SortBy + " " + destinationFilter.SortType);
 
+            // Lấy tổng kết quả có được
+            StringBuilder countSql = new StringBuilder();
+            countSql.Append("SELECT COUNT(*) FROM (" + sql + ") AS subquery");
+            destinations.Total = _destinationRepository.GetDestinationCount(countSql.ToString(), parameters.ToArray());
 
-            return _destinationRepository.GetListDestination(sql.ToString(), parameters);
+            // Xử lý trang hiển thị và số lượng tương ứng
+
+            // Kiểm tra 
+            sql.Append(" LIMIT @limit OFFSET @offset");
+            destinations.Limit = destinationFilter.Limit;
+            parameters.Add(new MySqlParameter("@limit", destinations.Limit));
+
+            // Kiểm tra page
+            destinations.Page = destinationFilter.Page;
+            parameters.Add(new MySqlParameter("@offset", (destinations.Page - 1) * destinations.Limit));
+
+            // Lấy dữ liệu từ cơ sở dữ liệu
+            destinations.Items = _destinationRepository.GetListDestination(sql.ToString(), parameters).ToList();
+
+            return destinations;
         }
 
         /// <summary>
@@ -156,19 +182,25 @@ namespace DaNangTourism.Server.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public DestinationDetail? GetDestinationDetail(int id)
+        public DestinationDetail? GetDestinationDetail(int id, int userId = 0)
         {
-            DestinationDetail? destinationDetail = _destinationRepository.GetDestinationById(id);
+            DestinationDetail? destinationDetail = _destinationRepository.GetDestinationById(id, userId);
             if (destinationDetail == null) return null;
             // xử lý để nhận thông tin cho GeneralReview
             var reviewsCount = _reviewRepository.GetReviewsCountByDesIdGroupedByRating(id);
 
+            //Xử lý nhận tổng số review trước
             foreach (var review in reviewsCount)
             {
                 destinationDetail.GeneralReview.TotalReview += review.Value;
+            }
+
+            //Xử lý nhận phần trăm các review;
+            foreach (var review in reviewsCount)
+            {
                 destinationDetail.GeneralReview.AddRatingPercent(review.Key, review.Value);
             }
-            
+
             return destinationDetail;
         }
 
@@ -213,9 +245,9 @@ namespace DaNangTourism.Server.Services
             // Khởi tạo StringBuilder để xây dựng câu truy vấn SQL
             StringBuilder sql = new StringBuilder();
             sql.Append("SELECT d.DestinationId AS DestinationId, d.Name AS Name, d.Address AS Address, d.Rating AS Rating, ");
-            sql.Append("(SELECT COUNT(*) FROM Reviews r WHERE r.DestinationId = d.DestinationId) AS CounfOfReview, ");
+            sql.Append("(SELECT COUNT(*) FROM Reviews r WHERE r.DestinationId = d.DestinationId) AS CountOfReview, ");
             sql.Append("(SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.DestinationId = d.DestinationId) AS CountOfFavorite, ");
-            sql.Append("d.Created_At AS Created_At FROM Destination d");
+            sql.Append("d.Created_At AS Created_At FROM Destinations d");
 
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
@@ -282,7 +314,7 @@ namespace DaNangTourism.Server.Services
         /// <param name="id"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public int UpdateDestination(int id, InputDestinationModel destination)
+        public InputDestinationModel UpdateDestination(int id, InputDestinationModel destination)
         {
             return _destinationRepository.UpdateDestination(id, destination);
         }

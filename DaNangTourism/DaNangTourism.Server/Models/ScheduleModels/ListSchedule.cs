@@ -48,16 +48,16 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public DateTime UpdatedAt { get; set; }
         public ScheduleElement (MySqlDataReader reader)
         {
-            Id = reader.GetInt32(reader.GetOrdinal("SheduleId"));
+            Id = reader.GetInt32(reader.GetOrdinal("ScheduleId"));
             string s = reader.GetString(reader.GetOrdinal("Status"));
             Status = (ScheduleStatus)Enum.Parse(typeof(ScheduleStatus), s); ;
             Title = reader.GetString(reader.GetOrdinal("Title"));
             Description = reader.GetString(reader.GetOrdinal("Description"));
-            Destinations = reader.GetString(reader.GetOrdinal("Destinations")).Split(',');
             StartDate = reader.GetDateOnly(reader.GetOrdinal("StartDate"));
             TotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
             TotalBudget = reader.GetDouble(reader.GetOrdinal("TotalBudget"));
             UpdatedAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt"));
+            Destinations = Array.Empty<string>();
         }
 
     }

@@ -79,7 +79,7 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpGet("detail/{id}")]
-        public IActionResult GetScheduleDetail([FromQuery] int id)
+        public IActionResult GetScheduleDetail([FromRoute] int id)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace DaNangTourism.Server.Controllers
                     return BadRequest();
                 }
                 else
-                    return StatusCode(200, new { message = "Create schedule successful", data = id });
+                    return StatusCode(200, new { message = "Create schedule successful", data = new { id } });
             }
             catch (UnauthorizedAccessException)
             {
@@ -146,7 +146,7 @@ namespace DaNangTourism.Server.Controllers
                     return BadRequest();
                 }
                 else
-                    return StatusCode(200, new { message = "Clone schedule successful", data = id });
+                    return StatusCode(200, new { message = "Clone schedule successful", data = new { id } });
             }
             catch (UnauthorizedAccessException)
             {
@@ -159,19 +159,16 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpPost("adddestination")]
-        public IActionResult AddScheduleDestination([FromBody] ScheduleDestination scheduleDestination)
-        {
+        public IActionResult AddScheduleDestination([FromBody] AddScheduleDestinationModel scheduleDestination)
+        {   if (scheduleDestination.ArrivalTime >= scheduleDestination.LeaveTime)
+                return BadRequest();
             try
             {
                 _accountService.GetUserIdFromToken();
 
                 var id = _scheduleService.AddScheduleDestination(scheduleDestination);
-                if (id == 0)
-                {
-                    return BadRequest();
-                }
-                else
-                    return StatusCode(200, new { message = "Add destination to schedule successful", data = id });
+                
+                return StatusCode(200, new { message = "Add destination to schedule successful", data = new { id } });
             }
             catch (UnauthorizedAccessException)
             {
@@ -203,15 +200,15 @@ namespace DaNangTourism.Server.Controllers
             }
         }
 
-        [HttpPut("updatedestination/{id}")]
-        public IActionResult UpdateScheduleDestination([FromRoute] int id, [FromBody] ScheduleDestination scheduleDestination)
+        [HttpPut("updatedestination/{scheduleDestinationId}")]
+        public IActionResult UpdateScheduleDestination([FromRoute] int scheduleDestinationId, [FromBody] UpdateScheduleDestinationModel scheduleDestination)
         {
             try
             {
                 int userId = _accountService.GetUserIdFromToken();
 
-                _scheduleService.UpdateScheduleDestination(userId, id, scheduleDestination);
-                return StatusCode(200, new { message = "Update destination in schedule successful" });
+                var returnScheduleDes = _scheduleService.UpdateScheduleDestination(userId, scheduleDestinationId, scheduleDestination);
+                return StatusCode(200, new { message = "Update destination in schedule successful", data = returnScheduleDes });
             }
             catch (UnauthorizedAccessException uae)
             {
@@ -224,7 +221,6 @@ namespace DaNangTourism.Server.Controllers
         }
 
 
-        // chưa xong
         [HttpPut("update/{scheduleId}")]
         public IActionResult UpdateSchedule([FromRoute] int scheduleId, [FromBody] UpdateScheduleModel schedule)
         {
@@ -232,9 +228,9 @@ namespace DaNangTourism.Server.Controllers
             {
                 int userId = _accountService.GetUserIdFromToken();
 
-                _scheduleService.UpdateSchedule(userId, scheduleId, schedule);
+                var returnSchedule = _scheduleService.UpdateSchedule(userId, scheduleId, schedule);
 
-                return StatusCode(200, new { message = "Update schedule successful" });
+                return StatusCode(200, new { message = "Update schedule successful" , data = returnSchedule});
             }
             catch (UnauthorizedAccessException uae)
             {

@@ -25,7 +25,7 @@ public class DestinationReview
     public int Rating { get; set; }
     [JsonPropertyName("comment")]
     public string Comment { get; set; }
-    [JsonPropertyName("created_at")]
+    [JsonPropertyName("createdAt")]
     [JsonConverter(typeof(ConvertToISO8061DateTime))]
     public DateTime Created_At { get; set; }
     public DestinationReview(MySqlDataReader reader)

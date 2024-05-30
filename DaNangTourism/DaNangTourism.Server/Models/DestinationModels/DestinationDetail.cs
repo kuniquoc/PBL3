@@ -4,6 +4,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Net;
 using System.Xml.Linq;
 using System.Text.Json.Serialization;
+using DaNangTourism.Server.ModelBindingConverter;
 
 namespace DaNangTourism.Server.Models.DestinationModels
 {
@@ -13,6 +14,8 @@ namespace DaNangTourism.Server.Models.DestinationModels
         public int Id { get; set; }
         [JsonPropertyName("information")]
         public DesInfo Information { get; set; }
+        [JsonPropertyName("favorite")]
+        public bool Favorite { get; set; }
         [JsonPropertyName("introduction")]
         public string Introduction { get; set; }
         [JsonPropertyName("googleMapUrl")]
@@ -32,6 +35,8 @@ namespace DaNangTourism.Server.Models.DestinationModels
             TimeOnly CloseTime = reader.GetTimeOnly(reader.GetOrdinal("CloseTime"));
             string[] Tags = reader.GetString(reader.GetOrdinal("Tags")).Split(';');
             Information = new DesInfo(Name, LocalName, Address, Images, Cost, OpenTime, CloseTime, Tags);
+
+            Favorite = reader.GetBoolean(reader.GetOrdinal("Favorite"));
 
             Introduction = reader.GetString(reader.GetOrdinal("Introduction"));
 
@@ -54,8 +59,10 @@ namespace DaNangTourism.Server.Models.DestinationModels
         [JsonPropertyName("cost")]
         public double Cost { get; set; }
         [JsonPropertyName("openTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly OpenTime { get; set; }
         [JsonPropertyName("closeTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly CloseTime { get; set; }
         [JsonPropertyName("tags")]
         public string[] Tags { get; set; }

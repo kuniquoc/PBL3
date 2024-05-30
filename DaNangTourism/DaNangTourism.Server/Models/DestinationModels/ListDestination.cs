@@ -1,10 +1,26 @@
-﻿using MySqlConnector;
+﻿using DaNangTourism.Server.ModelBindingConverter;
+using MySqlConnector;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace DaNangTourism.Server.Models.DestinationModels
 {
-    public class ListDestination
+    public class ListDestinations
+    {
+        [JsonPropertyName("total")]
+        public int Total { get; set; }
+        [JsonPropertyName("page")]
+        public int Page { get; set; }
+        [JsonPropertyName("limit")]
+        public int Limit { get; set; }
+        [JsonPropertyName("items")]
+        public List<ListDestinationItem> Items { get; set; }
+        public ListDestinations()
+        {
+            Items = new List<ListDestinationItem>();
+        }
+    }
+    public class ListDestinationItem
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
@@ -19,15 +35,17 @@ namespace DaNangTourism.Server.Models.DestinationModels
         [JsonPropertyName("cost")]
         public double Cost { get; set; }
         [JsonPropertyName("openTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly OpenTime { get; set; }
         [JsonPropertyName("closeTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly CloseTime { get; set; }
         [JsonPropertyName("tags")]
         public string[] Tags { get; set; }
         [JsonPropertyName("favorite")]
         public bool Favourite { get; set; }
 
-        public ListDestination(MySqlDataReader reader)
+        public ListDestinationItem(MySqlDataReader reader)
         {
             Id = reader.GetInt32(reader.GetOrdinal("DestinationId"));
             Name = reader.GetString(reader.GetOrdinal("Name"));

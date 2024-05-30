@@ -10,8 +10,6 @@ namespace DaNangTourism.Server.DAL
         int GetReviewCount(string sql, params MySqlParameter[] parameters);
         int AddReview(int userId, InputReviewModel review);
         int DeleteReview(int userId);
-        int GetDesIdOfReview(int id);
-        float GetNewReviewRating(int destinationId);
     }
     public class ReviewRepository : IReviewRepository
     {
@@ -29,7 +27,7 @@ namespace DaNangTourism.Server.DAL
         public Dictionary<int, int> GetReviewsCountByDesIdGroupedByRating(int destinationId)
         {
             // SQL query to count reviews grouped by rating
-            string sql = "SELECT Rating, COUNT(*) AS Count FROM Review WHERE DestinationId = @destinationId GROUP BY Rating";
+            string sql = "SELECT Rating, COUNT(*) AS Count FROM Reviews WHERE DestinationId = @destinationId GROUP BY Rating";
             MySqlParameter parameter = new MySqlParameter("@destinationId", destinationId);
 
             // Create a dictionary to store the results
@@ -119,7 +117,8 @@ namespace DaNangTourism.Server.DAL
         /// </returns>
         public int AddReview(int userId, InputReviewModel review)
         {
-            string sql = "Insert into Review(UserId, DestinationId, Rating, Comment, Created_At) values (@userId, @destinationId, @rating, @comment, @create_at)";
+            string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment, Created_At) values (@userId, @destinationId, @rating, @comment, @create_at);" +
+                "SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@userId", userId),
@@ -134,7 +133,7 @@ namespace DaNangTourism.Server.DAL
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddRange(parameters);
-                    return command.ExecuteNonQuery();
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
             }
         }
@@ -146,7 +145,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int DeleteReview(int id)
         {
-            string sql = "DELETE FROM Review WHERE ReviewId = @id";
+            string sql = "DELETE FROM Reviews WHERE ReviewId = @id";
             MySqlParameter parameter = new MySqlParameter("@id", id);
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -159,34 +158,5 @@ namespace DaNangTourism.Server.DAL
             }
         }
 
-        public int GetDesIdOfReview(int id)
-        {
-            string sql = "SELECT DestinationId FROM Review WHERE ReviewId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", id);
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.Add(parameter);
-                    return Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
-        }
-
-        public float GetNewReviewRating(int destinationId)
-        {
-            string sql = "SELECT AVG(Rating) FROM Review WHERE DestinationId = @destinationId";
-            MySqlParameter parameter = new MySqlParameter("@destinationId", destinationId);
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.Add(parameter);
-                    return Convert.ToSingle(command.ExecuteScalar());
-                }
-            }
-        }
     }
 }

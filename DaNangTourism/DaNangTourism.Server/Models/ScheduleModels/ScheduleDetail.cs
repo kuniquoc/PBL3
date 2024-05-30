@@ -1,4 +1,5 @@
-﻿using MySqlConnector;
+﻿using DaNangTourism.Server.ModelBindingConverter;
+using MySqlConnector;
 using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models.ScheduleModels
@@ -26,8 +27,8 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         [JsonPropertyName("totalBudget")]
         public double TotalBudget { get; set; }
 
-        [JsonPropertyName("updateAt")]
-        public DateTime UpdateAt { get; set; }
+        [JsonPropertyName("updatedAt")]
+        public DateTime UpdatedAt { get; set; }
 
         [JsonPropertyName("creator")]
         public string? Creator { get; set; }
@@ -40,13 +41,13 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public ScheduleDetail(MySqlDataReader reader)
         {
             Id = reader.GetInt32(reader.GetOrdinal("ScheduleId"));
-            Status = (ScheduleStatus)reader.GetInt32(reader.GetOrdinal("Status"));
+            Status = Enum.Parse<ScheduleStatus> (reader.GetString(reader.GetOrdinal("Status")));
             Title = reader.GetString(reader.GetOrdinal("Title"));
             Description = reader.GetString(reader.GetOrdinal("Description"));
             StartDate = reader.GetDateOnly(reader.GetOrdinal("StartDate"));
             TotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
             TotalBudget = reader.GetDouble(reader.GetOrdinal("TotalBudget"));
-            UpdateAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt"));
+            UpdatedAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt"));
             Creator = reader.GetString(reader.GetOrdinal("Creator"));
             IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic"));
         }
@@ -80,9 +81,11 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public string? Address { get; set; }
 
         [JsonPropertyName("arrivalTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly ArrivalTime { get; set; }
 
         [JsonPropertyName("leaveTime")]
+        [JsonConverter(typeof(TimeOnlyJsonConverter))]
         public TimeOnly LeaveTime { get; set; }
 
         [JsonPropertyName("budget")]

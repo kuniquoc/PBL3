@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using MySqlConnector;
+using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models.ScheduleModels
 {
@@ -12,5 +13,14 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public bool IsPublic { get; set; }
         [JsonPropertyName("status")]
         public ScheduleStatus Status { get; set; }
+
+        public UpdateScheduleModel() { }
+        public UpdateScheduleModel(MySqlDataReader reader)
+        {
+            Title = reader.GetString(reader.GetOrdinal("Title"));
+            Description = reader.GetString(reader.GetOrdinal("Description"));
+            IsPublic = reader.GetBoolean(reader.GetOrdinal("IsPublic"));
+            Status = Enum.Parse<ScheduleStatus>(reader.GetString(reader.GetOrdinal("Status")));
+        }
     }
 }

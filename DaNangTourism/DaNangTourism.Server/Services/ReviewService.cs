@@ -10,7 +10,7 @@ namespace DaNangTourism.Server.Services
     public interface IReviewService
     {
         DestinationReviews GetReviewsByDestinationId(int destinationId, ReviewFilter reviewFilter);
-        void AddReview(int userId, InputReviewModel review);
+        int AddReview(int userId, InputReviewModel review);
         void DeleteReview(int reviewId);
     }
     public class ReviewService : IReviewService
@@ -37,8 +37,8 @@ namespace DaNangTourism.Server.Services
             DestinationReviews destinationReviews = new DestinationReviews();
 
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT ReviewId AS Id, Users.Name AS Author, Users.Avatar AS Avatar, Rating, Comment, Reviews.Created_At AS Created_At" +
-                " FROM Reviews INNER JOIN Users ON Users.UserId = Reviews.UserId WHERE DestinationId = @destinationId");
+            sql.Append("SELECT ReviewId AS Id, Users.full_name AS Author, Users.avatar_url AS Avatar, Rating, Comment, Reviews.Created_At AS Created_At" +
+                " FROM Reviews INNER JOIN Users ON Users.user_id = Reviews.UserId WHERE DestinationId = @destinationId");
 
             List<MySqlParameter> parameters = new List<MySqlParameter>();
             parameters.Add(new MySqlParameter("@destinationId", destinationId));
@@ -87,21 +87,14 @@ namespace DaNangTourism.Server.Services
         /// <param name="destinationId"></param>
         /// <param name="review"></param>
         /// <returns> Return id of added review</returns>
-        public void AddReview(int userId, InputReviewModel review)
+        public int AddReview(int userId, InputReviewModel review)
         {
-            _reviewRepository.AddReview(userId, review);
-            float newRating  = _reviewRepository.GetNewReviewRating(review.DestinationId);
-            // cập nhật rating của destination
-            _destinationRepository.UpdateRating(review.DestinationId, newRating);
+            return _reviewRepository.AddReview(userId, review);
         }
 
         public void DeleteReview(int reviewId)
         {
             _reviewRepository.DeleteReview(reviewId);
-            int destinationId = _reviewRepository.GetDesIdOfReview(reviewId);
-            float newRating = _reviewRepository.GetNewReviewRating(destinationId);
-            // cập nhật rating của destination
-            _destinationRepository.UpdateRating(destinationId, newRating);
         }
     }
 }

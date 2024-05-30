@@ -10,9 +10,10 @@ namespace DaNangTourism.Server.DAL
         IEnumerable<PublicScheduleElement> GetPublicSchedule(string sql, params MySqlParameter[] parameters);
         ScheduleDetail? GetScheduleDetail(int userId, int scheduleId);
         int CreateSchedule(int userId, string creator, InputSchedule schedule);
-        int CloneSchedule(int userId, string creator);
+        void UpdateBudget(int scheduleId, double budget);
+        int CloneSchedule(int userId, string creator, int scheduleId);
         bool IsCreator(int userId, int scheduleId);
-        void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
+        UpdateScheduleModel UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
     }
     public class ScheduleRepository: IScheduleRepository
     {
@@ -140,14 +141,15 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int CreateSchedule(int userId, string creator, InputSchedule schedule)
         {
-            string sql = "INSERT INTO Schedules (UserId, Title, Description, UpdateAt, Creator, IsPublic) " +
-                "VALUES (@userId, @title, @description, @updateAt, @creator, @isPublic); SELECT LAST_INSERT_ID();";
+            string sql = "INSERT INTO Schedules (UserId, Title, Description, StartDate, UpdatedAt, Creator, IsPublic) " +
+                "VALUES (@userId, @title, @description, @startDate, @updatedAt, @creator, @isPublic); SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@userId", userId),
                 new MySqlParameter("@title", schedule.Title),
                 new MySqlParameter("@description", schedule.Description),
-                new MySqlParameter("@updateAt", DateTime.Now),
+                new MySqlParameter("@startDate", DateOnly.FromDateTime(DateTime.Now)),
+                new MySqlParameter("@updatedAt", DateTime.Now),
                 new MySqlParameter("@creator", creator),
                 new MySqlParameter("@isPublic", schedule.IsPublic)
             };
@@ -162,20 +164,38 @@ namespace DaNangTourism.Server.DAL
             }
         }
 
-
+        public void UpdateBudget(int scheduleId, double budget)
+        {
+            string sql = "UPDATE Schedules SET TotalBudget = TotalBudget + @budget WHERE ScheduleID = @scheduleId ";
+            MySqlParameter[] parameters = new MySqlParameter[]{
+                new MySqlParameter("@budget", budget),
+                new MySqlParameter("@scheduleId", scheduleId)
+            };
+            using (var con = new MySqlConnection(_connectionString))
+            {
+                con.Open();
+                using (var command = new MySqlCommand(sql, con))
+                {
+                    command.Parameters.AddRange(parameters);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
         /// <summary>
         /// Clone schedule
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="creator"></param>
         /// <returns></returns>
-        public int CloneSchedule(int userId, string creator) {
-            string sql = "INSERT INTO Schedules (UserId, Status, Title, Title, Description, StartDate, TotalDays, TotalDays, TotalBudget, UpdateAt, Creator, IsPucblic) " +
-                "SELECT @userId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdateAt, @creator, IsPucblic; SELECT LAST_INSERT_ID();";
+        public int CloneSchedule(int userId, string creator, int scheduleId) {
+            string sql = "INSERT INTO Schedules (UserId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, Creator, IsPublic) " +
+                "(SELECT @userId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, @creator, IsPublic FROM Schedules WHERE ScheduleId = @scheduleId); " +
+                "SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@userId", userId),
-                new MySqlParameter("@creator", creator)
+                new MySqlParameter("@creator", creator),
+                new MySqlParameter("@scheduleId", scheduleId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -211,9 +231,10 @@ namespace DaNangTourism.Server.DAL
         /// <param name="userId"></param>
         /// <param name="scheduleId"></param>
         /// <param name="schedule"></param>
-        public void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule)
+        public UpdateScheduleModel UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule)
         {
-            string sql = "UPDATE Schedules SET Title = @title, Description = @description, IsPublic = @isPublic, Status = @status WHERE UserId = @userId AND ScheduleId = @scheduleId";
+            string sql = "UPDATE Schedules SET Title = @title, Description = @description, IsPublic = @isPublic, Status = @status WHERE UserId = @userId AND ScheduleId = @scheduleId; " +
+                "SELECT Title, Description, IsPublic, Status FROM Schedules WHERE ScheduleId = @scheduleId;";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@title", schedule.Title),
@@ -229,7 +250,14 @@ namespace DaNangTourism.Server.DAL
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddRange(parameters);
-                    command.ExecuteNonQuery();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new UpdateScheduleModel(reader);
+                        }
+                        throw new Exception("This schedule isn't exist");
+                    }
                 }
             }
         }

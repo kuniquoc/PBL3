@@ -85,7 +85,7 @@ namespace DaNangTourism.Server.Services
             }
             else
             {
-                throw new Exception("Token not found in cookies");
+                throw new UnauthorizedAccessException("Token not found in cookies");
             }
         }
 

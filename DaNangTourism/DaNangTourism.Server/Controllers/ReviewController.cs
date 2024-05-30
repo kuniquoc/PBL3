@@ -19,14 +19,14 @@ namespace DaNangTourism.Server.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet("list/{id}")]
-        public IActionResult GetReviewsByDestinationId([FromRoute] int id, [FromQuery] ReviewFilter reviewFilter)
+        [HttpGet("list/{destinationId}")]
+        public IActionResult GetReviewsByDestinationId([FromRoute] int destinationId, [FromQuery] ReviewFilter reviewFilter)
         {
             reviewFilter.SortBy = DataSanitization.RemoveSpecialCharacters(reviewFilter.SortBy);
             reviewFilter.SortType = DataSanitization.RemoveSpecialCharacters(reviewFilter.SortType);
             try
             {
-                var reviews = _reviewService.GetReviewsByDestinationId(id, reviewFilter);
+                var reviews = _reviewService.GetReviewsByDestinationId(destinationId, reviewFilter);
                 if (reviews.Items.Count() == 0)
                 {
                     return NotFound();
@@ -46,8 +46,8 @@ namespace DaNangTourism.Server.Controllers
             {
                 int userId = _accountService.GetUserIdFromToken();
 
-                _reviewService.AddReview(userId, review);
-                return StatusCode(201, "Review created");
+                int id = _reviewService.AddReview(userId, review);
+                return StatusCode(201, new {message = "Review created", data = new { id } });
             }
             catch (UnauthorizedAccessException)
             {

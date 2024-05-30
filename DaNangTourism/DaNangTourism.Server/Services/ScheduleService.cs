@@ -9,23 +9,24 @@ namespace DaNangTourism.Server.Services
     {
         ListSchedule GetListSchedule(int userId, ScheduleFilter scheduleFilter);
         PublicSchedule GetPublicSchedule(PublicScheduleFilter publicScheduleFilter, int userId = 0);
-
         ScheduleDetail? GetScheduleDetail(int userId, int scheduleId);
         int CreateSchedule(int userId, string creator, InputSchedule schedule);
         int CloneSchedule(int userId, string creator, int scheduleId);
-        int AddScheduleDestination(ScheduleDestination scheduleDestination);    
+        int AddScheduleDestination(AddScheduleDestinationModel scheduleDestination);    
         void DeleteScheduleDestination(int userId, int scheduleDestinationId);
-        void UpdateScheduleDestination(int userId, int scheduleDestinationId, ScheduleDestination scheduleDestination);
-        void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
+        AddScheduleDestinationModel UpdateScheduleDestination(int userId, int scheduleDestinationId, UpdateScheduleDestinationModel scheduleDestination);
+        UpdateScheduleModel UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
     }
     public class ScheduleService: IScheduleService
     {
         private readonly IScheduleRepository _scheduleRepository;
         private readonly IScheduleDestinationRepository _scheduleDestinationRepository;
-        public ScheduleService(IScheduleRepository scheduleRepository, IScheduleDestinationRepository scheduleDestinationRepository)
+        private readonly IDestinationRepository _destinationRepository;
+        public ScheduleService(IScheduleRepository scheduleRepository, IScheduleDestinationRepository scheduleDestinationRepository, IDestinationRepository destinationRepository)
         {
             _scheduleRepository = scheduleRepository;
             _scheduleDestinationRepository = scheduleDestinationRepository;
+            _destinationRepository = destinationRepository;
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace DaNangTourism.Server.Services
 
             StringBuilder sql = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();
-            sql.Append("SELECT ScheduleId, Status, Title, Description, Destinations, StartDate, TotalDays, TotalBudget, UpdatedAt FROM Schedules WHERE UserId = @userId");
+            sql.Append("SELECT ScheduleId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt FROM Schedules WHERE UserId = @userId");
             parameters.Add(new MySqlParameter("@userId", userId));
 
             // xử lý where
@@ -76,6 +77,11 @@ namespace DaNangTourism.Server.Services
 
             listSchedule.Items = _scheduleRepository.GeListSchedule(sql.ToString(), parameters.ToArray()).ToList();
 
+            foreach (var item in  listSchedule.Items)
+            {
+                item.Destinations = _scheduleDestinationRepository.GetListDesNameByScheduleId(item.Id);
+            }
+
             return listSchedule;
         }
 
@@ -91,12 +97,12 @@ namespace DaNangTourism.Server.Services
 
             StringBuilder sql = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();
-            sql.Append("SELECT ScheduleId, Title, Description, Destinations, TotalDays, TotalBudget, Creator FROM Schedules WHERE IsPublic = TRUE");
+            sql.Append("SELECT ScheduleId, Title, Description, TotalDays, TotalBudget, Creator FROM Schedules WHERE IsPublic = TRUE");
 
-            // kiểm tra xem có đăng nhập chưa
+            // kiểm tra xem có đăng nhập chưa, nếu có thì không lấy những schedule của người đã đăng nhập
             if (userId != 0)
             {
-                sql.Append(" AND UserId = @userId");
+                sql.Append(" AND UserId != @userId");
                 parameters.Add(new MySqlParameter("@userId", userId));
             }
 
@@ -128,6 +134,11 @@ namespace DaNangTourism.Server.Services
             parameters.Add(new MySqlParameter("@offset", (publicScheduleFilter.Page - 1) * publicScheduleFilter.Limit));
 
             publicSchedule.Items = _scheduleRepository.GetPublicSchedule(sql.ToString(), parameters.ToArray()).ToList();
+
+            foreach (var item in publicSchedule.Items)
+            {
+                item.Destinations = _scheduleDestinationRepository.GetListDesNameByScheduleId(item.Id);
+            }
 
             return publicSchedule;
         }
@@ -167,7 +178,7 @@ namespace DaNangTourism.Server.Services
         /// <returns></returns>
         public int CloneSchedule(int userId, string creator, int scheduleId)
         {
-            int newScheduleId = _scheduleRepository.CloneSchedule(userId, creator);
+            int newScheduleId = _scheduleRepository.CloneSchedule(userId, creator, scheduleId);
             _scheduleDestinationRepository.CloneScheduleDestination(scheduleId, newScheduleId);
             return newScheduleId;
         }
@@ -177,9 +188,14 @@ namespace DaNangTourism.Server.Services
         /// </summary>
         /// <param name="scheduleDestination"></param>
         /// <returns></returns>
-        public int AddScheduleDestination(ScheduleDestination scheduleDestination)
+        public int AddScheduleDestination(AddScheduleDestinationModel scheduleDestination)
         {
-            return _scheduleDestinationRepository.AddScheduleDestination(scheduleDestination);
+            // Get Name by DestinationId
+            string name = _destinationRepository.GetName(scheduleDestination.DestinationId);
+            // Get Address by DestinationId
+            string address = _destinationRepository.GetAddress(scheduleDestination.DestinationId);
+
+            return _scheduleDestinationRepository.AddScheduleDestination(scheduleDestination, name, address);
         }
 
         /// <summary>
@@ -192,8 +208,8 @@ namespace DaNangTourism.Server.Services
         public void DeleteScheduleDestination(int userId, int scheduleDestinationId)
         {
             int scheduleId = _scheduleDestinationRepository.GetScheduleId(scheduleDestinationId);
-            if (scheduleId == 0) throw new Exception("Schedule destination not found");
             if (!_scheduleRepository.IsCreator(userId, scheduleId)) throw new UnauthorizedAccessException("You are not the creator of this schedule");
+
             _scheduleDestinationRepository.DeleteScheduleDestination(scheduleDestinationId);
         }
 
@@ -205,18 +221,19 @@ namespace DaNangTourism.Server.Services
         /// <param name="scheduleDestination"></param>
         /// <exception cref="Exception"></exception>
         /// <exception cref="UnauthorizedAccessException"></exception>
-        public void UpdateScheduleDestination(int userId, int scheduleDestinationId, ScheduleDestination scheduleDestination)
+        public AddScheduleDestinationModel UpdateScheduleDestination(int userId, int scheduleDestinationId, UpdateScheduleDestinationModel scheduleDestination)
         {
             int scheduleId = _scheduleDestinationRepository.GetScheduleId(scheduleDestinationId);
             if (scheduleId == 0) throw new Exception("Schedule destination not found");
             if (!_scheduleRepository.IsCreator(userId, scheduleId)) throw new UnauthorizedAccessException("You are not the creator of this schedule");
-            _scheduleDestinationRepository.UpdateScheduleDestination(scheduleDestinationId, scheduleDestination);
+
+            return _scheduleDestinationRepository.UpdateScheduleDestination(scheduleDestinationId, scheduleDestination);
         }
 
-        public void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule)
+        public UpdateScheduleModel UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule)
         {
             if (!_scheduleRepository.IsCreator(userId, scheduleId)) throw new UnauthorizedAccessException("You are not the creator of this schedule");
-            _scheduleRepository.UpdateSchedule(userId, scheduleId, schedule);
+            return _scheduleRepository.UpdateSchedule(userId, scheduleId, schedule);
         }
     }
 }
