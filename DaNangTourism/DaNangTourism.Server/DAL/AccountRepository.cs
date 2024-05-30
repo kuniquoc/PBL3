@@ -192,10 +192,10 @@ namespace DaNangTourism.Server.DAL
 
       // Define the parameters
       MySqlParameter[] parameters = {
-                new MySqlParameter("@name", "%" + search + "%"),
-                new MySqlParameter("@offset", (page - 1) * limit),
-                new MySqlParameter("@limit", limit)
-            };
+        new MySqlParameter("@name", "%" + search + "%"),
+        new MySqlParameter("@offset", (page - 1) * limit),
+        new MySqlParameter("@limit", limit)
+      };
 
       // Include role parameter only if role filter is applied
       if (role.ToLower() != "all")
