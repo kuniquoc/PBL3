@@ -18,7 +18,7 @@ namespace DaNangTourism.Server.Services
         int AddBlog(BlogAdd blogAdd, int uid);
         BlogAdd GetBlogToUpdate(int id);
         bool CheckBlogBelongToUser(int blogId, int uid);
-        BlogAdd UpdateBlog(BlogAdd blogAdd, int id);
+        void UpdateBlog(BlogAdd blogAdd, int id);
         void DeleteBlog(int id);
         BLogListData GetBlogList(BlogListAdminFilter blogLAF);
         void UpdateStatus(int blogId, BlogStatus status);
@@ -35,13 +35,13 @@ namespace DaNangTourism.Server.Services
         public int IncreaseView(int id)
         {
             MySqlParameter parameter = new MySqlParameter("@id", id);
-            return _blogRepository.increaseView(parameter);
+            return _blogRepository.IncreaseView(parameter);
         }
 
         // 5 bài có lượt xem cao nhất
         public List<BlogHome> Get5MostView()
         {
-            return _blogRepository.get5MostView();
+            return _blogRepository.Get5MostView();
         }
 
 
@@ -127,9 +127,9 @@ namespace DaNangTourism.Server.Services
         }
 
         // cập nhật Blog
-        public BlogAdd UpdateBlog(BlogAdd blogAdd, int id)
+        public void UpdateBlog(BlogAdd blogAdd, int id)
         {
-            return _blogRepository.UpdateBlog(blogAdd, id);
+            _blogRepository.UpdateBlog(blogAdd, id);
         }
 
         // xóa Blog

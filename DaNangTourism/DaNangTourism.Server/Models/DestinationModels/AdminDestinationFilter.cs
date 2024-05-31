@@ -15,7 +15,7 @@ namespace DaNangTourism.Server.Models.DestinationModels
         {
             if (Page < 1) Page = 1;
             if (Limit < 1) Limit = 12;
-            if (SortBy != "created_at" && SortBy != "name" && SortBy != "rating" && SortBy != "raview" && SortBy != "favorite") SortBy = "created_at";
+            if (SortBy != "created_at" && SortBy != "name" && SortBy != "rating" && SortBy != "review" && SortBy != "favorite") SortBy = "created_at";
             if (SortType != "asc" && SortType != "desc") SortType = "asc";
             Search = DataSanitization.RemoveSpecialCharacters(Search);
         }

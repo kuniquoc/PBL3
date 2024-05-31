@@ -16,7 +16,7 @@ namespace DaNangTourism.Server.DAL
         int GetDestinationCount(string sql, params MySqlParameter[] parameters);
         int AddDestination(InputDestinationModel destination);
         InputDestinationModel GetDestinationToUpdate(int id);
-        InputDestinationModel UpdateDestination(int id, InputDestinationModel destination);
+        void UpdateDestination(int id, InputDestinationModel destination);
         int DeleteDestination(int id);
         string GetName(int DestinationId);
         string GetAddress(int DestinationId);
@@ -38,7 +38,7 @@ namespace DaNangTourism.Server.DAL
         public IEnumerable<HomeDestination> GetNewestDestinations(int limit = 10)
         {
             string sql = "SELECT DestinationId, Name, Address, Images, Rating FROM Destinations ORDER BY Created_At DESC LIMIT @limit";
-            MySqlParameter parameter = new MySqlParameter("@limit", limit);
+            var parameter = new MySqlParameter("@limit", limit);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -90,8 +90,8 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public DestinationDetail? GetDestinationById(int id, int userId = 0)
         {
-            StringBuilder sql = new StringBuilder();
-            List<MySqlParameter> parameters = new List<MySqlParameter>();
+            var sql = new StringBuilder();
+            var parameters = new List<MySqlParameter>();
             if (userId > 0)
             {
                 sql.Append("SELECT Destinations.DestinationId, Name, LocalName, Address, Images, Cost, OpenTime, CloseTime, Tags, Introduction, GoogleMapUrl, Rating");
@@ -149,7 +149,7 @@ namespace DaNangTourism.Server.DAL
         {
 
             string sql = "SELECT DestinationId, Name, Address, Images, Rating FROM Destinations ORDER BY RAND() LIMIT @limit";
-            MySqlParameter parameter = new MySqlParameter("@limit", limit);
+            var parameter = new MySqlParameter("@limit", limit);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -249,7 +249,7 @@ namespace DaNangTourism.Server.DAL
         public InputDestinationModel GetDestinationToUpdate(int id)
         {
             string sql = "SELECT Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction FROM Destinations WHERE DestinationId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", id);
+            var parameter = new MySqlParameter("@id", id);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -273,41 +273,31 @@ namespace DaNangTourism.Server.DAL
         /// </summary>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public InputDestinationModel UpdateDestination(int id, InputDestinationModel destination)
+        public void UpdateDestination(int id, InputDestinationModel destination)
         {
             string sql = "UPDATE Destinations SET Name = @name, LocalName = @localName, Address = @address, GoogleMapUrl = @googleMapUrl, Cost = @cost, Opentime = @openTime, " +
-                   "CloseTime = @closeTime, Images = @images, Tags = @tags, Introduction = @introduction WHERE DestinationId = @destinationId; " +
-                   "SELECT Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction FROM Destinations " +
-                   "WHERE DestinationId = @destinationId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+                   "CloseTime = @closeTime, Images = @images, Tags = @tags, Introduction = @introduction WHERE DestinationId = @destinationId; ";
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@name", destination.Name),
-                new MySqlParameter("@localName", destination.LocalName),
-                new MySqlParameter("@address", destination.Address),
-                new MySqlParameter("@googleMapUrl", destination.GoogleMapUrl),
-                new MySqlParameter("@cost", destination.Cost),
-                new MySqlParameter("@openTime", destination.OpenTime),
-                new MySqlParameter("@closeTime", destination.CloseTime),
-                new MySqlParameter("@images", String.Join(";",destination.Images)),
-                new MySqlParameter("@tags", String.Join(";",destination.Tags)),
-                new MySqlParameter("@introduction", destination.Introduction),
-                new MySqlParameter("@destinationId", id)
+                new ("@name", destination.Name),
+                new ("@localName", destination.LocalName),
+                new ("@address", destination.Address),
+                new ("@googleMapUrl", destination.GoogleMapUrl),
+                new ("@cost", destination.Cost),
+                new ("@openTime", destination.OpenTime),
+                new ("@closeTime", destination.CloseTime),
+                new ("@images", String.Join(";",destination.Images)),
+                new ("@tags", String.Join(";",destination.Tags)),
+                new ("@introduction", destination.Introduction),
+                new ("@destinationId", id)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = new MySqlCommand(sql, connection))
                 {
-
                     command.Parameters.AddRange(parameters);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new InputDestinationModel(reader);
-                        }
-                        else throw new Exception("Fault occurs when get destination which updated");
-                    }
+                    command.ExecuteNonQuery();
                 }
             }
         }
@@ -320,7 +310,7 @@ namespace DaNangTourism.Server.DAL
         public int DeleteDestination(int id)
         {
             string sql = "DELETE FROM Destinations WHERE DestinationId = @id";
-            MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
+            MySqlParameter[] parameters = { new ("@id", id) };
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -341,7 +331,7 @@ namespace DaNangTourism.Server.DAL
         public string GetName(int destinationId)
         {
             string sql = "SELECT Name FROM Destinations WHERE DestinationId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", destinationId);
+            var parameter = new MySqlParameter("@id", destinationId);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -369,7 +359,7 @@ namespace DaNangTourism.Server.DAL
         public string GetAddress(int destinationId)
         {
             string sql = "SELECT Address FROM Destinations WHERE DestinationId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", destinationId);
+            var parameter = new MySqlParameter("@id", destinationId);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();

@@ -11,7 +11,7 @@ namespace DaNangTourism.Server.DAL
     }
     public class FavoriteDestinationRepository : IFavoriteDestinationRepository
     {
-        private string _connectionString;
+        private readonly string _connectionString;
         public FavoriteDestinationRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -26,10 +26,10 @@ namespace DaNangTourism.Server.DAL
         public int AddFavDes(int userId, int destinationId)
         {
             string sql = "INSERT INTO FavoriteDestinations(UserId, DestinationId) values (@userId, @destinationId)";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@destinationId", destinationId)
+                new ("@userId", userId),
+                new ("@destinationId", destinationId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -50,10 +50,10 @@ namespace DaNangTourism.Server.DAL
         public int DeleteFavDes(int userId, int destinationId)
         {
             string sql = "DELETE FROM FavoriteDestinations WHERE UserId = @userId AND DestinationId = @destinationId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@destinationId", destinationId)
+                new ("@userId", userId),
+                new ("@destinationId", destinationId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -73,7 +73,7 @@ namespace DaNangTourism.Server.DAL
         public int GetFavDesCountByDesId(int destinationId)
         {
             string sql = "SELECT COUNT(*) FROM FavoriteDestinations WHERE DestinationId = @destinationId";
-            MySqlParameter parameter = new MySqlParameter("@destinationId", destinationId);
+            var parameter = new MySqlParameter("@destinationId", destinationId);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();

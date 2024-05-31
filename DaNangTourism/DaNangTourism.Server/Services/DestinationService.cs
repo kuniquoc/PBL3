@@ -15,7 +15,7 @@ namespace DaNangTourism.Server.Services
         AdminDestinations GetDestinationElements(AdminDestinationFilter adminDestinationFilter);
         int AddDestination(InputDestinationModel destination);
         InputDestinationModel GetDestinationToUpdate(int id);
-        InputDestinationModel UpdateDestination(int id, InputDestinationModel destination);
+        void UpdateDestination(int id, InputDestinationModel destination);
         int DeleteDestination(int id);
     }
     public class DestinationService : IDestinationService
@@ -246,8 +246,8 @@ namespace DaNangTourism.Server.Services
             // Khởi tạo StringBuilder để xây dựng câu truy vấn SQL
             StringBuilder sql = new StringBuilder();
             sql.Append("SELECT d.DestinationId AS DestinationId, d.Name AS Name, d.Address AS Address, d.Rating AS Rating, ");
-            sql.Append("(SELECT COUNT(*) FROM Reviews r WHERE r.DestinationId = d.DestinationId) AS CountOfReview, ");
-            sql.Append("(SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.DestinationId = d.DestinationId) AS CountOfFavorite, ");
+            sql.Append("(SELECT COUNT(*) FROM Reviews r WHERE r.DestinationId = d.DestinationId) AS Review, ");
+            sql.Append("(SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.DestinationId = d.DestinationId) AS Favorite, ");
             sql.Append("d.Created_At AS Created_At FROM Destinations d");
 
             List<MySqlParameter> parameters = new List<MySqlParameter>();
@@ -326,9 +326,9 @@ namespace DaNangTourism.Server.Services
         /// <param name="id"></param>
         /// <param name="destination"></param>
         /// <returns></returns>
-        public InputDestinationModel UpdateDestination(int id, InputDestinationModel destination)
+        public void UpdateDestination(int id, InputDestinationModel destination)
         {
-            return _destinationRepository.UpdateDestination(id, destination);
+            _destinationRepository.UpdateDestination(id, destination);
         }
         /// <summary>
         /// Delete destination

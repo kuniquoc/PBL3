@@ -31,7 +31,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                BlogReturn<List<BlogHome>> blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
+                var blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
                 return Ok(blogReturn);
             }
             catch (Exception e)
@@ -50,7 +50,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                BlogReturn<BlogPageData> blogReturn = new BlogReturn<BlogPageData>(blogPageData);
+                var blogReturn = new BlogReturn<BlogPageData>(blogPageData);
                 return Ok(blogReturn);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                BlogReturn<List<BlogRandom>> blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
+                var blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
                 return Ok(blogReturn);
             }
             catch (Exception e)
@@ -89,7 +89,7 @@ namespace DaNangTourism.Server.Controllers
                     return NotFound();
                 }
                 _blogService.IncreaseView(id);
-                BlogReturn<BlogDetail> blogReturn = new BlogReturn<BlogDetail>(blogDetail);
+                var blogReturn = new BlogReturn<BlogDetail>(blogDetail);
                 return Ok(blogReturn);
             }
             catch (Exception e)
@@ -167,8 +167,8 @@ namespace DaNangTourism.Server.Controllers
 
                 if (_blogService.CheckBlogBelongToUser(id, uid))
                 {
-                    var returnBlog = _blogService.UpdateBlog(blogAdd, id);
-                    return Ok(new { message = "Success", data = returnBlog });
+                    _blogService.UpdateBlog(blogAdd, id);
+                    return Ok(new { message = "Success"});
                 }
                 else
                 {
@@ -251,7 +251,7 @@ namespace DaNangTourism.Server.Controllers
         }
 
         [HttpPut("updateStatus/{id}")]
-        public IActionResult updateStatus([FromRoute] int id, [FromBody] BlogStatus status)
+        public IActionResult UpdateStatus([FromRoute] int id, [FromBody] BlogStatus status)
         {
             try
             {

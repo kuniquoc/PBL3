@@ -37,7 +37,7 @@ namespace DaNangTourism.Server.Controllers
                 }
 
                 var schedules = _scheduleService.GetListSchedule(userId, scheduleFilter);
-                if (schedules.Items.Count() == 0)
+                if (schedules.Items.Count == 0)
                 {
                     return NotFound();
                 }
@@ -66,7 +66,7 @@ namespace DaNangTourism.Server.Controllers
                 }
 
                 var schedules = _scheduleService.GetPublicSchedule(scheduleFilter, userId);
-                if (schedules.Items.Count() == 0)
+                if (schedules.Items.Count == 0)
                 {
                     return NotFound();
                 }

@@ -27,7 +27,7 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 var reviews = _reviewService.GetReviewsByDestinationId(destinationId, reviewFilter);
-                if (reviews.Items.Count() == 0)
+                if (reviews.Items.Count == 0)
                 {
                     return NotFound();
                 }

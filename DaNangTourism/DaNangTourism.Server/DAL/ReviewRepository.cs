@@ -13,7 +13,7 @@ namespace DaNangTourism.Server.DAL
     }
     public class ReviewRepository : IReviewRepository
     {
-        private string _connectionString;
+        private readonly string _connectionString;
         public ReviewRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -28,10 +28,10 @@ namespace DaNangTourism.Server.DAL
         {
             // SQL query to count reviews grouped by rating
             string sql = "SELECT Rating, COUNT(*) AS Count FROM Reviews WHERE DestinationId = @destinationId GROUP BY Rating";
-            MySqlParameter parameter = new MySqlParameter("@destinationId", destinationId);
+            var parameter = new MySqlParameter("@destinationId", destinationId);
 
             // Create a dictionary to store the results
-            Dictionary<int, int> reviewCountsByRating = new Dictionary<int, int>();
+            var reviewCountsByRating = new Dictionary<int, int>();
 
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -78,7 +78,7 @@ namespace DaNangTourism.Server.DAL
                         var reviews = new List<DestinationReview>();
                         while (reader.Read())
                         {
-                            DestinationReview review = new DestinationReview(reader);
+                            var review = new DestinationReview(reader);
                             reviews.Add(review);
                         }
                         return reviews;
@@ -119,12 +119,12 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment, Created_At) values (@userId, @destinationId, @rating, @comment);" +
                 "SELECT LAST_INSERT_ID();";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@destinationId", review.DestinationId),
-                new MySqlParameter("@rating", review.Rating),
-                new MySqlParameter("@comment", review.Comment)
+                new ("@userId", userId),
+                new ("@destinationId", review.DestinationId),
+                new ("@rating", review.Rating),
+                new ("@comment", review.Comment)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -145,7 +145,7 @@ namespace DaNangTourism.Server.DAL
         public int DeleteReview(int id)
         {
             string sql = "DELETE FROM Reviews WHERE ReviewId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", id);
+            var parameter = new MySqlParameter("@id", id);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();

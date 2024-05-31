@@ -30,9 +30,9 @@ namespace DaNangTourism.Server.DAL
         {
             var sql = "SELECT ScheduleDestinationId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note " +
                 "FROM ScheduleDestinations WHERE ScheduleId = @scheduleId ORDER BY Date, ArrivalTime";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@scheduleId", scheduleId)
+                new ("@scheduleId", scheduleId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -53,7 +53,7 @@ namespace DaNangTourism.Server.DAL
                             }
                             scheduleDay.Destinations.Add(new DestinationOfDay(reader));
                         }
-                        return scheduleDaysDict.Values.ToList();
+                        return scheduleDaysDict.Values;
                     }
                 }
             }
@@ -69,10 +69,10 @@ namespace DaNangTourism.Server.DAL
             var sql = "INSERT INTO ScheduleDestinations (ScheduleId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note) " +
                 "(SELECT @newScheduleId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note " +
                 "FROM ScheduleDestinations WHERE ScheduleId = @scheduleId)";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@scheduleId", scheduleId),
-                new MySqlParameter("@newScheduleId", newScheduleId)
+                new ("@scheduleId", scheduleId),
+                new ("@newScheduleId", newScheduleId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -95,17 +95,17 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "INSERT INTO ScheduleDestinations (ScheduleId, DestinationId, Date, Name, Address, ArrivalTime, LeaveTime, Budget, Note) " +
                 "VALUES (@scheduleId, @destinationId, @date, @name, @address, @arrivalTime, @leaveTime, @budget, @note); SELECT LAST_INSERT_ID();";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@scheduleId", destination.ScheduleId),
-                new MySqlParameter("@destinationId", destination.DestinationId),
-                new MySqlParameter("@date", destination.Date),
-                new MySqlParameter("@name", name),
-                new MySqlParameter("@address", address),
-                new MySqlParameter("@arrivalTime", destination.ArrivalTime),
-                new MySqlParameter("@leaveTime", destination.LeaveTime),
-                new MySqlParameter("@budget", destination.Budget),
-                new MySqlParameter("@note", destination.Note)
+                new ("@scheduleId", destination.ScheduleId),
+                new ("@destinationId", destination.DestinationId),
+                new ("@date", destination.Date),
+                new ("@name", name),
+                new ("@address", address),
+                new ("@arrivalTime", destination.ArrivalTime),
+                new ("@leaveTime", destination.LeaveTime),
+                new ("@budget", destination.Budget),
+                new ("@note", destination.Note)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -126,9 +126,9 @@ namespace DaNangTourism.Server.DAL
         public int GetScheduleId(int scheduleDestinationId)
         {
             string sql = "SELECT ScheduleId FROM ScheduleDestinations WHERE ScheduleDestinationId = @ScheduleDestinationId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@ScheduleDestinationId", scheduleDestinationId),
+                new ("@ScheduleDestinationId", scheduleDestinationId),
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -152,9 +152,9 @@ namespace DaNangTourism.Server.DAL
         public double GetBudget(int scheduleDestinationId)
         {
             string sql = "SELECT Budget FROM ScheduleDestinations WHERE ScheduleDestinationId = @ScheduleDestinationId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@ScheduleDestinationId", scheduleDestinationId),
+                new ("@ScheduleDestinationId", scheduleDestinationId),
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -181,9 +181,9 @@ namespace DaNangTourism.Server.DAL
         public void DeleteScheduleDestination(int scheduleDestinationId)
         {
             string sql = "DELETE FROM ScheduleDestinations WHERE ScheduleDestinationId = @scheduleDestinationId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@scheduleDestinationId", scheduleDestinationId),
+                new ("@scheduleDestinationId", scheduleDestinationId),
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -208,14 +208,14 @@ namespace DaNangTourism.Server.DAL
             "WHERE ScheduleDestinationId = @scheduleDestinationId; " +
             "SELECT ScheduleId, DestinationId, Date, ArrivalTime, LeaveTime, Budget, Note FROM ScheduleDestinations " +
             "WHERE ScheduleDestinationId = @scheduleDestinationId;";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-            new MySqlParameter("@date", scheduleDestination.Date),
-            new MySqlParameter("@arrivalTime", scheduleDestination.ArrivalTime),
-            new MySqlParameter("@leaveTime", scheduleDestination.LeaveTime),
-            new MySqlParameter("@budget", scheduleDestination.Budget),
-            new MySqlParameter("@note", scheduleDestination.Note),
-            new MySqlParameter("@scheduleDestinationId", scheduleDestinationId)
+            new ("@date", scheduleDestination.Date),
+            new ("@arrivalTime", scheduleDestination.ArrivalTime),
+            new ("@leaveTime", scheduleDestination.LeaveTime),
+            new ("@budget", scheduleDestination.Budget),
+            new ("@note", scheduleDestination.Note),
+            new ("@scheduleDestinationId", scheduleDestinationId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -247,7 +247,7 @@ namespace DaNangTourism.Server.DAL
         public string[] GetListDesNameByScheduleId(int scheduleId)
         {
             string sql = "SELECT Name FROM ScheduleDestinations WHERE ScheduleId = @scheduleId";
-            MySqlParameter parameter = new MySqlParameter("@scheduleId", scheduleId);
+            var parameter = new MySqlParameter("@scheduleId", scheduleId);
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
@@ -256,7 +256,7 @@ namespace DaNangTourism.Server.DAL
                     command.Parameters.Add(parameter);
                     using (var reader = command.ExecuteReader())
                     {
-                        List<string> listDesName = new List<string>();
+                        var listDesName = new List<string>();
                         while (reader.Read())
                         {
                             listDesName.Add(reader.GetString(reader.GetOrdinal("Name")));

@@ -9,8 +9,8 @@ namespace DaNangTourism.Server.DAL
 {
     public interface IBlogRepository
     {
-        List<BlogHome> get5MostView();
-        int increaseView(params MySqlParameter[] parameters);
+        List<BlogHome> Get5MostView();
+        int IncreaseView(params MySqlParameter[] parameters);
         List<BlogPage> GetBlogPage(string sql, List<MySqlParameter> parameters);
         int GetBlogCount(string sql, List<MySqlParameter> parameters);
         List<BlogRandom> GetRandomBlog(string filter, List<MySqlParameter> parameters);
@@ -18,7 +18,7 @@ namespace DaNangTourism.Server.DAL
         int AddBlog(BlogAdd blogAdd, int uid);
         BlogAdd GetBlogToUpdate(int id);
         bool CheckBlogBelongToUser(int blogId, int uid);
-        BlogAdd UpdateBlog(BlogAdd blogAdd, int id);
+        void UpdateBlog(BlogAdd blogAdd, int id);
         void DeleteBlog(int id);
         List<BlogList> GetBlogList(string sql, List<MySqlParameter> parameters);
         void UpdateStatus(int blogId, BlogStatus status);
@@ -32,22 +32,22 @@ namespace DaNangTourism.Server.DAL
         }
 
         // lấy 5 blog mới nhất
-        public List<BlogHome> get5MostView()
+        public List<BlogHome> Get5MostView()
         {
             string sql = "SELECT blog_id, type, title, image, " +
                 "(SELECT full_name FROM users WHERE users.user_id = blogs.user_id) AS author, " +
                 "created_at FROM blogs ORDER BY views desc LIMIT 5";
-            using (MySqlConnection con = new MySqlConnection(_connectionString))
+            using (var con = new MySqlConnection(_connectionString))
             {
-                using (MySqlCommand cmd = new MySqlCommand(sql, con))
+                using (var cmd = new MySqlCommand(sql, con))
                 {
                     con.Open();
                     using (var reader = cmd.ExecuteReader())
                     {
-                        List<BlogHome> blogHomes = new List<BlogHome>();
+                        var blogHomes = new List<BlogHome>();
                         while (reader.Read())
                         {
-                            BlogHome blogHome = new BlogHome(reader);
+                            var blogHome = new BlogHome(reader);
                             blogHomes.Add(blogHome);
                         }
                         return blogHomes;
@@ -57,13 +57,13 @@ namespace DaNangTourism.Server.DAL
         }
 
         // tăng view
-        public int increaseView(params MySqlParameter[] parameters)
+        public int IncreaseView(params MySqlParameter[] parameters)
         {
             string sql = "update blogs set views = views + 1 where blog_id = @id";
-            using (MySqlConnection con = new MySqlConnection(_connectionString))
+            using (var con = new MySqlConnection(_connectionString))
             {
                 con.Open();
-                using (MySqlCommand cmd = new MySqlCommand(sql, con))
+                using (var cmd = new MySqlCommand(sql, con))
                 {
                     cmd.Parameters.AddRange(parameters);
                     return cmd.ExecuteNonQuery();
@@ -76,8 +76,6 @@ namespace DaNangTourism.Server.DAL
         public List<BlogPage> GetBlogPage(string sql, List<MySqlParameter> parameters)
         {
 
-            List<BlogPage> blogPages = new List<BlogPage>();
-
             using (var con = new MySqlConnection(_connectionString))
             {
                 con.Open();
@@ -86,6 +84,7 @@ namespace DaNangTourism.Server.DAL
                     cmd.Parameters.AddRange(parameters.ToArray());
                     using (var reader = cmd.ExecuteReader())
                     {
+                        var blogPages = new List<BlogPage>();
                         while (reader.Read())
                         {
                             blogPages.Add(new BlogPage(reader));
@@ -112,7 +111,6 @@ namespace DaNangTourism.Server.DAL
         // lấy random blog
         public List<BlogRandom> GetRandomBlog(string filter, List<MySqlParameter> parameters)
         {
-            List<BlogRandom> blogRandoms = new List<BlogRandom>();
             string sql = "Select blog_id, title, type, image, user_id, created_at, (SELECT full_name FROM users WHERE users.user_id = blogs.user_id) as author" +
                 " from blogs order by rand()" + filter;
 
@@ -124,6 +122,7 @@ namespace DaNangTourism.Server.DAL
                     cmd.Parameters.AddRange(parameters.ToArray());
                     using (var reader = cmd.ExecuteReader())
                     {
+                        var blogRandoms = new List<BlogRandom>();
                         while (reader.Read())
                         {
                             blogRandoms.Add(new BlogRandom(reader));
@@ -140,7 +139,7 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "SELECT blog_id, title, type, blogs.created_at as created_at, views, content, blogs.user_id AS id, full_name AS name, avatar_url AS avatar " +
                 "FROM blogs INNER JOIN users ON blogs.user_id = users.user_id WHERE blog_id = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", id);
+            var parameter = new MySqlParameter("@id", id);
 
             using (var con = new MySqlConnection(_connectionString))
             {
@@ -165,15 +164,15 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "INSERT INTO blogs(user_id, title, type, image, introduction, content, status) " +
                 "VALUES (@uid, @title, @type, @image, @introduction, @content, @status); SELECT LAST_INSERT_ID();";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@uid", uid),
-                new MySqlParameter("@title", blogAdd.title),
-                new MySqlParameter("@type", blogAdd.type),
-                new MySqlParameter("@image", blogAdd.image),
-                new MySqlParameter("@introduction", blogAdd.introduction),
-                new MySqlParameter("@content", blogAdd.content),
-                new MySqlParameter("@status", BlogStatus.pending),
+                new ("@uid", uid),
+                new ("@title", blogAdd.title),
+                new ("@type", blogAdd.type),
+                new ("@image", blogAdd.image),
+                new ("@introduction", blogAdd.introduction),
+                new ("@content", blogAdd.content),
+                new ("@status", BlogStatus.pending),
             };
             using (var con = new MySqlConnection(_connectionString))
             {
@@ -190,7 +189,7 @@ namespace DaNangTourism.Server.DAL
         public BlogAdd GetBlogToUpdate(int id)
         {
             string sql = "SELECT title, type, image, introduction, content FROM blogs WHERE blog_id = @blogID";
-            MySqlParameter parameter = new MySqlParameter("@blogID", id);
+            var parameter = new MySqlParameter("@blogID", id);
             using (var con = new MySqlConnection(_connectionString))
             {
                 con.Open();
@@ -213,10 +212,10 @@ namespace DaNangTourism.Server.DAL
         public bool CheckBlogBelongToUser(int blogId, int uid)
         {
             string sql = "select * from blogs where blog_id = @blogID and user_id = @uid";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@blogID", blogId),
-                new MySqlParameter("@uid", uid)
+                new ("@blogID", blogId),
+                new ("@uid", uid)
             };
             using (var con = new MySqlConnection(_connectionString))
             {
@@ -237,19 +236,18 @@ namespace DaNangTourism.Server.DAL
         }
 
         // sửa blog
-        public BlogAdd UpdateBlog(BlogAdd blogAdd, int id)
+        public void UpdateBlog(BlogAdd blogAdd, int id)
         {
             string sql = "UPDATE blogs SET title = @title, type = @type, image = @image, " +
-                "introduction = @introduction, content = @content WHERE blog_id = @blogID;" +
-                "SELECT title, type, image, introduction, content FROM blogs WHERE blog_id = @blogID";
-            MySqlParameter[] parameters = new MySqlParameter[]
+                "introduction = @introduction, content = @content WHERE blog_id = @blogID;";
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@title", blogAdd.title),
-                new MySqlParameter("@type", blogAdd.type),
-                new MySqlParameter("@image", blogAdd.image),
-                new MySqlParameter("@introduction", blogAdd.introduction),
-                new MySqlParameter("@content", blogAdd.content),
-                new MySqlParameter("@blogID", id),
+                new ("@title", blogAdd.title),
+                new ("@type", blogAdd.type),
+                new ("@image", blogAdd.image),
+                new ("@introduction", blogAdd.introduction),
+                new ("@content", blogAdd.content),
+                new ("@blogID", id),
             };
             using (var con = new MySqlConnection(_connectionString))
             {
@@ -257,14 +255,7 @@ namespace DaNangTourism.Server.DAL
                 using (var cmd = new MySqlCommand(sql, con))
                 {
                     cmd.Parameters.AddRange(parameters);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new BlogAdd(reader);
-                        }
-                        throw new Exception("Blog doesn't exist");
-                    }
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -312,10 +303,10 @@ namespace DaNangTourism.Server.DAL
         public void UpdateStatus(int blogId, BlogStatus status)
         {
             string sql = "UPDATE blogs SET status = @status WHERE id = @blogID";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@blogID", blogId),
-                new MySqlParameter("@status", status)
+                new ("@blogID", blogId),
+                new ("@status", status)
             };
             using (var con = new MySqlConnection(_connectionString))
             {

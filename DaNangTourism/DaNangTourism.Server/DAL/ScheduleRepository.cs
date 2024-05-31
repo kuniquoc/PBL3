@@ -109,10 +109,10 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "SELECT ScheduleId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, Creator, IsPublic " +
                 "FROM Schedules WHERE ScheduleId = @scheduleId AND UserId = @userId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@scheduleId", scheduleId),
-                new MySqlParameter("@userId", userId)
+                new ("@scheduleId", scheduleId),
+                new ("@userId", userId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -142,14 +142,14 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "INSERT INTO Schedules (UserId, Title, Description, StartDate, Creator, IsPublic) " +
                 "VALUES (@userId, @title, @description, @startDate, @creator, @isPublic); SELECT LAST_INSERT_ID();";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@title", schedule.Title),
-                new MySqlParameter("@description", schedule.Description),
-                new MySqlParameter("@startDate", DateOnly.FromDateTime(DateTime.Now)),
-                new MySqlParameter("@creator", creator),
-                new MySqlParameter("@isPublic", schedule.IsPublic)
+                new ("@userId", userId),
+                new ("@title", schedule.Title),
+                new ("@description", schedule.Description),
+                new ("@startDate", DateOnly.FromDateTime(DateTime.Now)),
+                new ("@creator", creator),
+                new ("@isPublic", schedule.IsPublic)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -172,11 +172,11 @@ namespace DaNangTourism.Server.DAL
             string sql = "INSERT INTO Schedules (UserId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, Creator, IsPublic) " +
                 "(SELECT @userId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, @creator, IsPublic FROM Schedules WHERE ScheduleId = @scheduleId); " +
                 "SELECT LAST_INSERT_ID();";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters = 
             {
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@creator", creator),
-                new MySqlParameter("@scheduleId", scheduleId)
+                new ("@userId", userId),
+                new ("@creator", creator),
+                new ("@scheduleId", scheduleId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -198,10 +198,10 @@ namespace DaNangTourism.Server.DAL
         public bool IsCreator(int userId, int scheduleId)
         {
             string sql = "SELECT COUNT(*) FROM Schedules WHERE UserId = @userId AND ScheduleId = @scheduleId";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@scheduleId", scheduleId)
+                new ("@userId", userId),
+                new ("@scheduleId", scheduleId)
             };
             return GetScheduleCount(sql, parameters) > 0;
         }
@@ -216,14 +216,14 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "UPDATE Schedules SET Title = @title, Description = @description, IsPublic = @isPublic, Status = @status WHERE UserId = @userId AND ScheduleId = @scheduleId; " +
                 "SELECT Title, Description, IsPublic, Status FROM Schedules WHERE ScheduleId = @scheduleId;";
-            MySqlParameter[] parameters = new MySqlParameter[]
+            MySqlParameter[] parameters =
             {
-                new MySqlParameter("@title", schedule.Title),
-                new MySqlParameter("@description", schedule.Description),
-                new MySqlParameter("@isPublic", schedule.IsPublic),
-                new MySqlParameter("@status", schedule.Status),
-                new MySqlParameter("@userId", userId),
-                new MySqlParameter("@scheduleId", scheduleId)
+                new ("@title", schedule.Title),
+                new ("@description", schedule.Description),
+                new ("@isPublic", schedule.IsPublic),
+                new ("@status", schedule.Status),
+                new ("@userId", userId),
+                new ("@scheduleId", scheduleId)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {

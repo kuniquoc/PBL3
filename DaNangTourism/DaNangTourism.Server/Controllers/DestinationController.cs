@@ -23,7 +23,7 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 var destinations = _destinationService.GetHomeDestinations();
-                if (destinations.Count() == 0)
+                if (destinations.Any())
                 {
                     return NotFound();
                 }
@@ -48,13 +48,13 @@ namespace DaNangTourism.Server.Controllers
                 {
                     userId = _accountService.GetUserIdFromToken();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     userId = 0;
                 }
 
                 var destinations = _destinationService.GetListDestinations(destinationFilter, userId);
-                if (destinations.Items.Count() == 0)
+                if (destinations.Items.Count == 0)
                 {
                     return NotFound();
                 }
@@ -76,7 +76,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     userId = _accountService.GetUserIdFromToken();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     userId = 0;
                 }
@@ -105,7 +105,7 @@ namespace DaNangTourism.Server.Controllers
                 {
                     userId = _accountService.GetUserIdFromToken();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     userId = 0;
                 }
@@ -126,7 +126,7 @@ namespace DaNangTourism.Server.Controllers
             try
             {
                 var destinations = _destinationService.GetRandomDestinations(limit);
-                if (destinations.Count() == 0)
+                if (destinations.Any())
                 {
                     return NotFound();
                 }
@@ -243,8 +243,8 @@ namespace DaNangTourism.Server.Controllers
                     return Unauthorized(new { message = ex.Message });
                 }
 
-                var returnDes = _destinationService.UpdateDestination(id, destination);
-                return StatusCode(200, new { message = "Destination updated", data = returnDes });
+                _destinationService.UpdateDestination(id, destination);
+                return StatusCode(200, new { message = "Destination updated"});
             }
             catch (Exception e)
             {
