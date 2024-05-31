@@ -49,14 +49,10 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 	const handleGetDestinations = async () => {
 		setDestinations(undefined)
 		try {
-			const response = await axios.get(`api/destination/manageList`, {
-				params: {
-					page: currentPage,
-					limit,
-					sortBy: sortBy[sort.by].value,
-					sortType: sort.type,
-				},
-			})
+			const response = await axios.get(
+				`api/destination/manage-${currentPage}.json`,
+			)
+			await new Promise((resolve) => setTimeout(resolve, 1000))
 			const res = response.data.data
 			setDestinations(res.items)
 			setTotal(res.total)
@@ -169,7 +165,7 @@ const DesTable: React.FC<{ destinations: ManageDesProps[] }> = ({
 					<tr key={des.id} className="h-10 text-center text-sm">
 						<td className="pl-2">{des.id}</td>
 						<td className="text-left">{des.name}</td>
-						<td>{des.rating.toFixed(2)}</td>
+						<td>{des.rating}</td>
 						<td>{des.review}</td>
 						<td>{des.favorite}</td>
 						<td>{toDisplayDateTime(des.createdAt)}</td>
