@@ -1,4 +1,4 @@
-import { Button, TextEditor } from '../../components'
+import { Button, Loader, TextEditor } from '../../components'
 import { useEffect, useState } from 'react'
 import { PiXBold } from 'react-icons/pi'
 import { uploadToCloudinary } from '../../utils/Cloundinary'
@@ -6,71 +6,80 @@ import { useToast } from '../../hook/useToast'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { DestinationEditorProps } from '../../types/destination'
 import axios from 'axios'
+import PageNotFound from '../PageNotFound'
 
 const initDes = {
 	id: 0,
-	information: {
-		name: '',
-		localName: '',
-		address: '',
-		images: [],
-		cost: 0,
-		openTime: '',
-		closeTime: '',
-		tags: [],
-	},
+	name: '',
+	localName: '',
+	address: '',
+	images: [],
+	cost: 0,
+	openTime: '',
+	closeTime: '',
+	tags: [],
 	introduction: '',
 	googleMapUrl: '',
 }
 
 const DestinationEditor: React.FC = () => {
-	document.title = 'New Destination | Da Nang Explore'
 	const toast = useToast()
 	const location = useLocation()
 	const { id } = useParams()
 	const [editMode, setEditMode] = useState(false)
+	const [loading, setLoading] = useState(true)
+	const [invalid, setInvalid] = useState(false)
 	const navigate = useNavigate()
 	useEffect(() => {
 		const path = location.pathname.split('/')
 		if (path.includes('edit')) {
+			document.title = 'Edit Destination | Da Nang Explore'
 			setEditMode(true)
 			handleGetDes(Number(id))
+		} else {
+			document.title = 'New Destination | Da Nang Explore'
+			setLoading(false)
 		}
 	}, [location])
 
 	const handleGetDes = async (desId: number) => {
+		setLoading(true)
 		try {
-			const response = await axios.get(`/api/destination/edit-${desId}.json`)
+			const response = await axios.get(`/api/destination/GetToUpdate/${desId}`)
 			setDes(response.data.data)
 		} catch (error) {
+			setInvalid(true)
+			toast.error('Invalid destination', 'Destination not found')
 			console.error(error)
 		}
+		setLoading(false)
 	}
 
 	const [des, setDes] = useState<DestinationEditorProps>(initDes)
 	const [is247, setIs247] = useState(false)
 
 	useEffect(() => {
-		if (
-			des.information.openTime === '00:00' &&
-			des.information.closeTime === '23:59'
-		) {
+		if (des.openTime === '00:00' && des.closeTime === '23:59') {
 			setIs247(true)
 		} else {
 			setIs247(false)
 		}
-	}, [des.information.openTime, des.information.closeTime])
+	}, [des.openTime, des.closeTime])
 
-	const handleReset = () => {
-		setDes(initDes)
+	const handleNegative = () => {
+		if (editMode) {
+			handleDelete()
+		} else {
+			setDes(initDes)
+		}
 	}
 
 	const validate = () => {
-		if (!des.information.name) {
+		if (!des.name) {
 			toast.error('Empty name', 'Please enter destination name')
 			return false
 		}
-		if (!des.information.address) {
+		if (!des.address) {
 			toast.error('Empty address', 'Please enter destination address')
 			return false
 		}
@@ -82,15 +91,15 @@ const DestinationEditor: React.FC = () => {
 			toast.error('Empty content', 'Please enter destination content')
 			return false
 		}
-		if (des.information.tags.length === 0) {
+		if (des.tags.length === 0) {
 			toast.error('Empty tags', 'Please enter destination tags')
 			return false
 		}
-		if (des.information.images.length === 0) {
+		if (des.images.length === 0) {
 			toast.error('Empty images', 'Please upload destination images')
 			return false
 		}
-		if (!is247 && (!des.information.openTime || !des.information.closeTime)) {
+		if (!is247 && (!des.openTime || !des.closeTime)) {
 			toast.error(
 				'Empty time',
 				'Please enter destination opening and closing time',
@@ -103,53 +112,23 @@ const DestinationEditor: React.FC = () => {
 	const handleSubmit = async () => {
 		if (!validate()) return
 
-		const openTimeObj = {
-			hour: des.information.openTime.split(':')[0],
-			minute: des.information.openTime.split(':')[1],
-		}
-
-		const closeTimeObj = {
-			hour: des.information.closeTime.split(':')[0],
-			minute: des.information.closeTime.split(':')[1],
-		}
-
 		if (editMode) {
 			try {
-				const response = await axios.post('/api/destination/update', {
-					id: des.id,
-					information: {
-						...des.information,
-						openTime: openTimeObj,
-						closeTime: closeTimeObj,
-					},
-					introduction: des.introduction,
-					googleMapUrl: des.googleMapUrl,
-				})
+				const response = await axios.put(
+					'/api/destination/update/' + Number(id),
+					des,
+				)
 				if (response.status === 200) {
 					toast.success('Update success', 'Destination updated successfully')
-					await new Promise((resolve) => setTimeout(resolve, 1000))
-					navigate('/destination' + response.data.data.id)
 				}
 			} catch (error) {
 				toast.error('Update failed', 'Failed to update destination')
-				console.error(error)
 			}
 		} else {
 			try {
-				const response = await axios.post('/api/destination/create', {
-					information: {
-						...des.information,
-						openTime: openTimeObj,
-						closeTime: closeTimeObj,
-					},
-					introduction: des.introduction,
-					googleMapUrl: des.googleMapUrl,
-				})
-				if (response.status === 200) {
-					toast.success('Post success', 'Destination posted successfully')
-					await new Promise((resolve) => setTimeout(resolve, 1000))
-					navigate('/destination' + response.data.data.id)
-				}
+				const response = await axios.post('/api/destination/create', des)
+				toast.success('Post success', 'Destination posted successfully')
+				navigate('/destination/' + response.data.data.id)
 			} catch (error) {
 				toast.error('Post failed', 'Failed to post destination')
 				console.error(error)
@@ -169,10 +148,7 @@ const DestinationEditor: React.FC = () => {
 		if (url) {
 			setDes({
 				...des,
-				information: {
-					...des.information,
-					images: [...des.information.images, url],
-				},
+				images: [...des.images, url],
 			})
 			toast.success('Upload success', 'Image uploaded successfully')
 		} else {
@@ -182,30 +158,67 @@ const DestinationEditor: React.FC = () => {
 		setUploading(false)
 	}
 
+	const handleDelete = async () => {
+		try {
+			const response = await axios.delete(
+				'/api/destination/delete/' + Number(id),
+			)
+			if (response.status === 200) {
+				toast.success('Delete success', 'Destination deleted successfully')
+				navigate('/destination')
+			}
+		} catch (error) {
+			toast.error('Delete failed', 'Failed to delete destination')
+			console.error(error)
+		}
+	}
+
+	if (loading) {
+		return (
+			<div className="mx-auto flex min-h-screen items-center justify-center xl:max-w-screen-xl">
+				<Loader />
+			</div>
+		)
+	}
+	if (!loading && editMode && invalid) return <PageNotFound />
 	return (
 		<div className="mx-auto min-h-screen xl:max-w-screen-xl">
 			<div className="w-full pb-5 pt-[72px]">
 				<div className="flex w-full flex-col gap-5 rounded-lg border border-borderCol-1 bg-white p-10 pb-5 shadow-custom">
 					<div className="w-full text-center text-xl font-bold tracking-wider">
-						Create new destination
+						{editMode ? 'Edit Destination' : 'New Destination'}
 					</div>
 					<div className="flex w-full items-center gap-4">
 						<label className="w-[100px] font-semibold" htmlFor="des-name">
 							Name
 						</label>
 						<input
-							className="h-9 flex-1 border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
+							className="h-9 w-[440px] border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
 							id="des-name"
 							type="text"
 							placeholder="Enter destination name"
-							value={des?.information.name || ''}
+							value={des.name}
 							onChange={(e) => {
 								setDes({
 									...des,
-									information: {
-										...des?.information,
-										name: e.target.value,
-									},
+									name: e.target.value,
+								})
+							}}
+							required
+						/>
+						<label className="ml-4 w-[106px] font-semibold" htmlFor="des-name">
+							Local Name
+						</label>
+						<input
+							className="h-9 flex-1 border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
+							id="des-local-name"
+							type="text"
+							placeholder="Enter destination local name"
+							value={des.localName}
+							onChange={(e) => {
+								setDes({
+									...des,
+									localName: e.target.value,
 								})
 							}}
 							required
@@ -222,14 +235,11 @@ const DestinationEditor: React.FC = () => {
 									id="des-cost"
 									type="number"
 									placeholder="0"
-									value={des?.information.cost || 0}
+									value={des.cost}
 									onChange={(e) => {
 										setDes({
 											...des,
-											information: {
-												...des?.information,
-												cost: Number(e.target.value),
-											},
+											cost: Number(e.target.value),
 										})
 									}}
 									required
@@ -246,11 +256,8 @@ const DestinationEditor: React.FC = () => {
 								onChange={(e) => {
 									setDes({
 										...des,
-										information: {
-											...des?.information,
-											openTime: e.target.checked ? '00:00' : '',
-											closeTime: e.target.checked ? '23:59' : '',
-										},
+										openTime: e.target.checked ? '00:00' : '',
+										closeTime: e.target.checked ? '23:59' : '',
 									})
 								}}
 							/>
@@ -268,14 +275,11 @@ const DestinationEditor: React.FC = () => {
 								className="h-9 invalid:focus:border-tertiary-1"
 								id="des-open"
 								type="time"
-								value={des?.information.openTime || ''}
+								value={des.openTime}
 								onChange={(e) =>
 									setDes({
 										...des,
-										information: {
-											...des?.information,
-											openTime: e.target.value,
-										},
+										openTime: e.target.value,
 									})
 								}
 								required={!is247}
@@ -291,17 +295,14 @@ const DestinationEditor: React.FC = () => {
 								className="h-9 invalid:focus:border-tertiary-1"
 								id="des-close"
 								type="time"
-								value={des?.information.closeTime || ''}
+								value={des.closeTime}
 								onChange={(e) =>
 									setDes({
 										...des,
-										information: {
-											...des?.information,
-											closeTime: e.target.value,
-										},
+										closeTime: e.target.value,
 									})
 								}
-								min={!is247 ? des.information.openTime : ''}
+								min={!is247 ? des.openTime : ''}
 								required={!is247}
 							/>
 						</div>
@@ -315,14 +316,11 @@ const DestinationEditor: React.FC = () => {
 							id="des-address"
 							type="text"
 							placeholder="Enter destination address"
-							value={des?.information.address || ''}
+							value={des.address}
 							onChange={(e) => {
 								setDes({
 									...des,
-									information: {
-										...des?.information,
-										address: e.target.value,
-									},
+									address: e.target.value,
 								})
 							}}
 							required
@@ -337,7 +335,7 @@ const DestinationEditor: React.FC = () => {
 							id="des-map"
 							type="text"
 							placeholder="Enter google map URL"
-							value={des?.googleMapUrl || ''}
+							value={des.googleMapUrl}
 							onChange={(e) => {
 								setDes({
 									...des,
@@ -352,13 +350,11 @@ const DestinationEditor: React.FC = () => {
 							Tags
 						</label>
 						<input
-							className={`h-9 w-[280px] border-borderCol-1 px-3 text-sm ${des.information.tags?.length === 3 && 'bg-[#f9f9f9] focus:border-tertiary-1'}`}
+							className={`h-9 w-[280px] border-borderCol-1 px-3 text-sm ${des.tags?.length === 3 && 'bg-[#f9f9f9] focus:border-tertiary-1'}`}
 							id="des-tags"
 							type="text"
 							placeholder={
-								des.information.tags?.length === 3
-									? 'Maximum tags reached'
-									: 'Enter tags'
+								des.tags?.length === 3 ? 'Maximum tags reached' : 'Enter tags'
 							}
 							onKeyDown={(e) => {
 								if (e.key === 'Enter') {
@@ -367,19 +363,16 @@ const DestinationEditor: React.FC = () => {
 									if (tag) {
 										setDes({
 											...des,
-											information: {
-												...des?.information,
-												tags: [...des.information.tags, tag],
-											},
+											tags: [...des.tags, tag],
 										})
 										tagInput.value = ''
 									}
 								}
 							}}
-							readOnly={des.information.tags?.length === 3}
+							readOnly={des.tags?.length === 3}
 						/>
 						<div className="inline-flex h-9 flex-1 items-center gap-2 overflow-x-auto">
-							{des.information.tags?.map((tag, index) => (
+							{des.tags?.map((tag, index) => (
 								<div
 									key={index}
 									className="flex items-center gap-1 rounded-full border border-[#cccccc] py-1 pl-3 pr-1 text-xs font-semibold hover:bg-[#2898c813]"
@@ -390,12 +383,7 @@ const DestinationEditor: React.FC = () => {
 										onClick={() => {
 											setDes({
 												...des,
-												information: {
-													...des?.information,
-													tags: des?.information.tags.filter(
-														(_, i) => i !== index,
-													),
-												},
+												tags: des.tags.filter((_, i) => i !== index),
 											})
 										}}
 									>
@@ -410,7 +398,7 @@ const DestinationEditor: React.FC = () => {
 							Images
 						</label>
 						<div className="flex h-full w-[280px] flex-col overflow-y-auto rounded-lg border border-borderCol-1 p-2 text-sm">
-							{des.information.images?.map((img, index) => (
+							{des.images?.map((img, index) => (
 								<div className="flex h-8 w-full items-center justify-between gap-2 rounded px-2 py-1.5 hover:bg-[#EDEDED]">
 									<a
 										className="line-clamp-1 w-full hover:text-primary-1 hover:underline"
@@ -424,12 +412,7 @@ const DestinationEditor: React.FC = () => {
 										onClick={() => {
 											setDes({
 												...des,
-												information: {
-													...des?.information,
-													images: des?.information.images.filter(
-														(_, i) => i !== index,
-													),
-												},
+												images: des.images.filter((_, i) => i !== index),
 											})
 										}}
 									>
@@ -473,15 +456,15 @@ const DestinationEditor: React.FC = () => {
 					<div className="flex w-full items-center justify-between pl-[116px]">
 						<Button
 							className="w-[120px] border-[2px] border-tertiary-2 font-semibold text-tertiary-2 hover:bg-[#ff201017]"
-							onClick={handleReset}
+							onClick={handleNegative}
 						>
-							Reset
+							{editMode ? 'Delete' : 'Clear'}
 						</Button>
 						<Button
 							onClick={handleSubmit}
 							className="w-[120px] bg-primary-2 text-white hover:bg-primary-1"
 						>
-							Post
+							{editMode ? 'Update' : 'Post'}
 						</Button>
 					</div>
 				</div>

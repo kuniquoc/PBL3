@@ -260,6 +260,10 @@ input.dollar {
 	color: #505050;
 }
 
+.ql-editor strong {
+	font-weight: 600;
+}
+
 .shadow-modal {
 	box-shadow:
 		rgba(0, 0, 0, 0.2) 0px 20px 25px,

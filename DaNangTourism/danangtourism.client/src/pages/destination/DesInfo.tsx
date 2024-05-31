@@ -25,7 +25,7 @@ const DesInfo: React.FC<{
 				<li className="flex w-full items-start gap-[10px] text-sm">
 					<p className="w-[100px] font-semibold">Avg. rating</p>
 					<div className="flex flex-1 items-center gap-1">
-						{rating} <PiStarFill className="text-[#FFC70D]" />
+						{rating.toFixed(1)} <PiStarFill className="text-[#FFC70D]" />
 					</div>
 				</li>
 				<li className="flex w-full items-start gap-[10px] text-sm">

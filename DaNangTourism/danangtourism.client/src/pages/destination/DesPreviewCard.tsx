@@ -7,6 +7,8 @@ import {
 } from 'react-icons/pi'
 import { useState } from 'react'
 import { DesListItemProps } from '../../types/destination'
+import axios from 'axios'
+import { useToast } from '../../hook/useToast'
 
 interface DesPreviewCardProps extends DesListItemProps {
 	className?: string
@@ -15,6 +17,7 @@ interface DesPreviewCardProps extends DesListItemProps {
 
 const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
 	className = '',
+	id,
 	name,
 	address,
 	image,
@@ -28,6 +31,23 @@ const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
 }) => {
 	const [favor, setFavorite] = useState(favorite)
 	const [imgLoaded, setImgLoaded] = useState(false)
+	const toast = useToast()
+	const handleChangeFavorite = async (isFavorite: boolean) => {
+		try {
+			await axios.put('/api/destination/favorite', {
+				destinationId: id,
+				isFavorite,
+			})
+		} catch (error: any) {
+			console.error(error)
+			toast.error('Error', error.response.data.message)
+		}
+	}
+
+	const toggleFavorite = () => {
+		setFavorite(!favor)
+		handleChangeFavorite(!favor)
+	}
 
 	const is247 = openTime === '00:00' && closeTime === '23:59'
 	if (is247) {
@@ -63,10 +83,7 @@ const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
 						{address}
 					</p>
 				</div>
-				<button
-					className="h-[30px] text-3xl"
-					onClick={() => setFavorite(!favor)}
-				>
+				<button className="h-[30px] text-3xl" onClick={toggleFavorite}>
 					{favor ? (
 						<PiHeartFill className=" text-tertiary-1" />
 					) : (
@@ -77,7 +94,7 @@ const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
 			<div className="mb-1 flex w-full items-center gap-1">
 				<div className="flex flex-1 items-center gap-1 text-sm font-semibold">
 					<p className=" text-txtCol-2">Rating: </p>
-					<p>{rating}</p>
+					<p>{rating.toFixed(1)}</p>
 					<PiStarFill className="text-[#FFC70D]" />
 				</div>
 				<div className="flex flex-1 items-center gap-1 text-sm font-semibold">

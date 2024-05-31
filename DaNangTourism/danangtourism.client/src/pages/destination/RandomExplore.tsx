@@ -2,16 +2,23 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Stars } from '../../components'
 import { SortDesProps } from '../../types/destination'
+import { useToast } from '../../hook/useToast'
 
 const RandomExplore: React.FC = () => {
 	const [randomDess, setRandomDess] = useState<SortDesProps[]>([])
-
+	const toast = useToast()
 	const getRandomDestination = async () => {
 		try {
-			const response = await axios.get('/api/destination/random.json')
+			const response = await axios.get('/api/destination/random', {
+				params: { limit: 3 },
+			})
 			setRandomDess(response.data.data)
 		} catch (error) {
 			console.error(error)
+			toast.error(
+				'Error',
+				'Failed to fetch random destinations. Please try again later',
+			)
 		}
 	}
 	useEffect(() => {
@@ -23,9 +30,7 @@ const RandomExplore: React.FC = () => {
 			<div className="mb-0.5 flex h-8 w-full items-center justify-center rounded border border-borderCol-1 bg-white font-bold tracking-wide">
 				Random Explore
 			</div>
-			{randomDess.map((des) => (
-				<RandomCard key={des.id} {...des} />
-			))}
+			{randomDess?.map((des) => <RandomCard key={des.id} {...des} />)}
 		</div>
 	)
 }
@@ -34,27 +39,21 @@ const RandomCard: React.FC<SortDesProps> = ({
 	id,
 	name,
 	address,
-	tags,
 	rating,
 	image,
 }) => {
 	return (
 		<div
-			className=" flex cursor-pointer items-center gap-3 rounded-lg border border-borderCol-1 bg-white p-3 transition-colors hover:bg-[#52cbff0e]"
+			className=" flex cursor-pointer items-center gap-3 rounded-lg border border-borderCol-1 bg-white p-2 transition-colors hover:bg-[#52cbff0e]"
 			onClick={() => console.log('Go to des', id)}
 		>
 			<img className="h-20 w-20 rounded" src={image} />
-			<div className="flex shrink grow basis-0 flex-col items-center justify-between self-stretch">
-				<div className="font-['Open Sans'] self-stretch text-sm font-semibold text-slate-950">
-					{name}
-				</div>
-				<div className="font-['Open Sans'] self-stretch text-xs font-normal text-slate-950">
+			<div className="flex h-full w-full flex-col justify-between py-0.5">
+				<div className="text-left font-semibold text-slate-950">{name}</div>
+				<div className="mb-2 line-clamp-1 text-[13px] font-normal text-slate-950">
 					{address}
 				</div>
-				<div className="font-['Open Sans'] self-stretch text-xs font-normal text-primary-2">
-					{tags.join(', ')}
-				</div>
-				<Stars rating={rating} className="w-full justify-start" />
+				<Stars rating={rating} className="w-full justify-start text-xl" />
 			</div>
 		</div>
 	)

@@ -18,33 +18,18 @@ import {
 	AccountPage,
 	ManagePage,
 } from './pages'
-import { useContext, useEffect, useState } from 'react'
-import { UserContext, defaultUser } from './context/UserContext'
+import { useEffect, useState } from 'react'
 import ScrollToTop from './utils/ScrollToTop'
 import { AnimatePresence } from 'framer-motion'
-import axios from 'axios'
-import { useToast } from './hook/useToast'
 import { Loader } from './components'
-
+import useUser from './hook/useUser'
 function App() {
 	const [accountModal, setAccountModal] = useState(0)
-	const { user, setUser } = useContext(UserContext)
 	const [loading, setLoading] = useState(true)
-	const toast = useToast()
+	const { LoadUser, user } = useUser()
 	const auth = async () => {
 		setLoading(true)
-		try {
-			const res = await axios.get('/api/auth/authenticated')
-			const resData = await res.data.data
-			setUser({
-				...resData,
-				rememberMe: true,
-			})
-			toast.success('Welcome back!', `Hello, ${resData.name}!`)
-		} catch (error) {
-			setUser(defaultUser.user)
-			toast.info('Welcome, guess!', 'Please login to access all our features.')
-		}
+		await LoadUser()
 		await new Promise((resolve) => setTimeout(resolve, 100))
 		setLoading(false)
 	}

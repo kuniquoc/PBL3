@@ -6,77 +6,158 @@ import { Button, DropdownSelect, Pagination, Stars } from '../../components'
 import { twMerge } from 'tailwind-merge'
 import { NumberFormat } from '../../utils/Format'
 import { timeAgo } from '../../utils/TimeFormatters'
+import { useToast } from '../../hook/useToast'
 
-const SortOptions = ['Newest', 'Oldest', 'Highest rating', 'Lowest rating']
+const SortOptions = [
+	{
+		value: 0,
+		params: {
+			sortBy: 'rating',
+			sortType: 'desc',
+		},
+		label: 'Highest rating',
+	},
+	{
+		value: 1,
+		params: {
+			sortBy: 'rating',
+			sortType: 'asc',
+		},
+		label: 'Lowest rating',
+	},
+	{
+		value: 2,
+		params: {
+			sortBy: 'created_at',
+			sortType: 'desc',
+		},
+		label: 'Newest',
+	},
+	{
+		value: 3,
+		params: {
+			sortBy: 'created_at',
+			sortType: 'asc',
+		},
+		label: 'Oldest',
+	},
+]
 
 const Reviews: React.FC<{
 	destinationId: number
 	className?: string
 	general: GeneralReviewProps
-}> = ({ destinationId, className, general }) => {
+	onChanged: () => void
+}> = ({ destinationId, className, general, onChanged }) => {
 	const [reviews, setReviews] = useState<ReviewProps[]>()
 	const [sortOption, setSortOption] = useState(0)
-	const fetchReviews = async (destinationId: number) => {
-		const response = await axios.get(
-			`/api/destination/reviews-${destinationId}.json`,
-		)
-		const data = response.data.data
-		setReviews(data.items)
-		setNumbOfPages(Math.ceil(data.total / data.limit))
-		setCurrentPage(data.page)
-	}
 	const [currentPage, setCurrentPage] = useState(1)
 	const [numbOfPages, setNumbOfPages] = useState(1)
 
+	const handleGetReviews = async () => {
+		try {
+			const response = await axios.get('/api/review/list/' + destinationId, {
+				params: {
+					page: currentPage,
+					limit: 3,
+					...SortOptions[sortOption].params,
+				},
+			})
+			const data = response.data.data
+			setReviews(data.items)
+			setNumbOfPages(Math.ceil(data.total / data.limit))
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
 	useEffect(() => {
-		fetchReviews(destinationId)
-	}, [destinationId])
-	if (!reviews) return null
+		handleGetReviews()
+	}, [destinationId, sortOption, currentPage])
 	return (
 		<div className={`flex gap-5 pt-5 ${className}`}>
-			<div className=" relative flex flex-1 flex-col items-center gap-4 rounded-lg border border-borderCol-1 bg-white p-4">
-				<div className="relative mb-1 w-full items-center justify-center">
-					<h2 className="text-center text-lg font-semibold">Reviews</h2>
-					<DropdownSelect
-						id={''}
-						className="absolute right-0 top-0 w-[120px] border-2 focus:border-2"
-						options={SortOptions}
-						value={sortOption}
-						onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-							setSortOption(Number(e.target.value))
-						}}
-					/>
+			<div className="flex-1">
+				<div className="relative flex min-h-[185.6px] flex-col items-center gap-4 rounded-lg border border-borderCol-1 bg-white p-4">
+					<div className="relative mb-1 w-full items-center justify-center">
+						<h2 className="text-center text-lg font-semibold">Reviews</h2>
+						<DropdownSelect
+							id={''}
+							className="absolute right-0 top-0 w-[140px] border-2 focus:border-2"
+							options={SortOptions.map((option) => option.label)}
+							value={sortOption}
+							onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+								setSortOption(Number(e.target.value))
+							}}
+						/>
+					</div>
+					{reviews ? (
+						reviews.map((review) => (
+							<Review
+								key={review.id}
+								review={review}
+								onDeleted={() => {
+									handleGetReviews()
+									onChanged()
+								}}
+							/>
+						))
+					) : (
+						<p className="mt-2 w-full rounded-lg bg-bgCol-3 py-6 text-center text-xl text-txtCol-3">
+							This destination have no review yet
+						</p>
+					)}
+					{reviews && (
+						<Pagination
+							className="mt-2"
+							numbOfPages={numbOfPages}
+							currentPage={currentPage}
+							setCurrentPage={(numb) => {
+								setCurrentPage(numb)
+							}}
+						/>
+					)}
 				</div>
-				{reviews.map((review) => (
-					<Review key={review.id} {...review} />
-				))}
-				<Pagination
-					className="mt-2"
-					numbOfPages={numbOfPages}
-					currentPage={currentPage}
-					setCurrentPage={(numb) => {
-						setCurrentPage(numb)
-					}}
-				/>
 			</div>
 			<div className="item-center flex w-[380px] flex-col gap-5">
 				<GeneralReview general={general} />
-				<ReviewForm destinationid={destinationId} />
+				<ReviewForm
+					desId={destinationId}
+					onPosted={() => {
+						handleGetReviews()
+						onChanged()
+					}}
+				/>
 			</div>
 		</div>
 	)
 }
 
-const Review: React.FC<ReviewProps> = ({
-	author,
-	avatar,
-	rating,
-	createdAt,
-	comment,
+const Review: React.FC<{
+	review: ReviewProps
+	onDeleted: () => void
+}> = ({
+	review: { id, author, avatar, rating, comment, createdAt },
+	onDeleted,
 }) => {
+	const toast = useToast()
+	const [isShowDelete, setIsShowDelete] = useState(false)
+	const handleDeleteReview = async () => {
+		if (isShowDelete) {
+			try {
+				const response = await axios.delete('/api/review/delete/' + id)
+				onDeleted()
+				toast.success('Success', response.data.message)
+			} catch (error: any) {
+				console.error(error)
+				toast.error('Error', error.response.data.message)
+			}
+			setIsShowDelete(false)
+		}
+	}
+
 	return (
 		<div className="w-full rounded-xl border bg-gray-50 p-3 shadow">
-			<div className="flex items-center justify-between">
+			<div className="relative flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<img
 						className="h-5 w-5 rounded-full object-cover"
@@ -86,9 +167,20 @@ const Review: React.FC<ReviewProps> = ({
 					<h3 className=" text-sm font-semibold">{author}</h3>
 					<Stars rating={rating} className="" />
 				</div>
-				<button className="flex h-5 w-5 items-center justify-center rounded-full">
+				<button
+					className="flex h-5 w-5 items-center justify-center rounded-full"
+					onClick={() => setIsShowDelete(!isShowDelete)}
+				>
 					<PiDotsThreeVerticalBold />
 				</button>
+				{isShowDelete && (
+					<div
+						className="absolute right-0 top-0 -translate-x-6 cursor-pointer select-none rounded border border-tertiary-1 bg-white px-4 py-0.5 text-xs text-tertiary-1 shadow-lg transition-all hover:bg-[#e75b5110] active:scale-95"
+						onClick={handleDeleteReview}
+					>
+						Delete
+					</div>
+				)}
 			</div>
 			<p className="mb-1 mt-2 text-sm leading-5">{comment}</p>
 			<div className="flex w-full items-center justify-end">
@@ -139,24 +231,40 @@ const GeneralReview: React.FC<{
 	)
 }
 
-const ReviewForm: React.FC<{ className?: string; destinationid: number }> = ({
-	className,
-	destinationid,
-}) => {
+const ReviewForm: React.FC<{
+	className?: string
+	desId: number
+	onPosted: () => void
+}> = ({ className, desId, onPosted }) => {
 	const [review, setReview] = useState('')
 	const [rating, setRating] = useState(0)
-
-	const submitReview = async (destinationid: number) => {
+	const toast = useToast()
+	const submitReview = async (desId: number) => {
 		if (!review || review.length < 10) {
-			alert('Please write a review')
+			toast.error('Cant post review', 'Review must be at least 10 characters')
 			return
 		}
 		if (!rating) {
-			alert('Please rate from 1-5 stars')
+			toast.error('Cant post review', 'Please rate this destination')
 			return
 		}
-		console.log({ review, rating, destinationid })
+
+		try {
+			const response = await axios.post('/api/review/create', {
+				destinationId: desId,
+				rating,
+				comment: review,
+			})
+			toast.success('Success', response.data.message)
+			onPosted()
+		} catch (error: any) {
+			console.error(error)
+			toast.error('Error', error.response.data.message)
+		}
+		setReview('')
+		setRating(0)
 	}
+
 	return (
 		<div
 			className={twMerge(
@@ -189,7 +297,7 @@ const ReviewForm: React.FC<{ className?: string; destinationid: number }> = ({
 				</div>
 				<Button
 					className="h-8 w-[100px] rounded-full bg-primary-2 text-sm font-semibold text-white hover:bg-primary-1"
-					onClick={() => submitReview(destinationid)}
+					onClick={() => submitReview(desId)}
 				>
 					Post
 				</Button>

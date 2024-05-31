@@ -80,7 +80,7 @@ const toDisplayDate = (date: string) => {
 }
 
 const datetimeDecay = (date: string) => {
-	const dateObj = new Date(date)
+	const dateObj = new Date(new Date(date).getTime() - 7 * 60 * 60 * 1000)
 	return {
 		day: dateObj.getDate().toString().padStart(2, '0'),
 		month: monthOfYear(dateObj.getMonth()),
