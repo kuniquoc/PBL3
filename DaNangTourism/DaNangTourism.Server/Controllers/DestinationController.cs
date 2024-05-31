@@ -31,7 +31,7 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -43,7 +43,15 @@ namespace DaNangTourism.Server.Controllers
 
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    userId = 0;
+                }
 
                 var destinations = _destinationService.GetListDestinations(destinationFilter, userId);
                 if (destinations.Items.Count() == 0)
@@ -52,19 +60,9 @@ namespace DaNangTourism.Server.Controllers
                 }
                 else return StatusCode(200, new { message = "Success", data = destinations });
             }
-            catch (UnauthorizedAccessException)
-            {
-                var destinations = _destinationService.GetListDestinations(destinationFilter);
-                if (destinations.Items.Count() == 0)
-                {
-                    return NotFound();
-                }
-                else return StatusCode(200, new { message = "Success", data = destinations });
-
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -73,7 +71,15 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    userId = 0;
+                }
 
                 var destination = _destinationService.GetDestinationDetail(id, userId);
                 if (destination == null)
@@ -82,18 +88,9 @@ namespace DaNangTourism.Server.Controllers
                 }
                 else return StatusCode(200, new { message = "Success", data = destination });
             }
-            catch (UnauthorizedAccessException)
-            {
-                var destination = _destinationService.GetDestinationDetail(id);
-                if (destination == null)
-                {
-                    return NotFound();
-                }
-                else return StatusCode(200, new { message = "Success", data = destination });
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
 
         }
@@ -103,19 +100,23 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    userId = 0;
+                }
 
 
                 _destinationService.UpdateFavDes(userId, destinationId, favorite);
                 return StatusCode(200, "Favorite updated");
             }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -131,9 +132,9 @@ namespace DaNangTourism.Server.Controllers
                 }
                 else return StatusCode(200, new { message = "Success", data = destinations });
             }
-            catch (Exception e)
+             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -145,11 +146,19 @@ namespace DaNangTourism.Server.Controllers
 
             try
             {
-                // xác thực admin
-                if (!_accountService.IsAdmin())
+                try
                 {
-                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    // xác thực admin
+                    if (!_accountService.IsAdmin())
+                    {
+                        return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    }
                 }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+                
                 AdminDestinations adminDestinations = _destinationService.GetDestinationElements(adminDestinationFilter);
                 if (adminDestinations.Items.Count == 0)
                 {
@@ -159,7 +168,7 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -168,13 +177,47 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                // xác thực admin
-                if (!_accountService.IsAdmin())
+                try
                 {
-                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    // xác thực admin
+                    if (!_accountService.IsAdmin())
+                    {
+                        return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    }
                 }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+
                 int id = _destinationService.AddDestination(destination);
                 return StatusCode(201, new { message = "Destination created", data = new { id } });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+        [HttpGet("GetToUpdate/{id}")]
+        public IActionResult GetDestinationToUpdate([FromRoute] int id)
+        {
+            try
+            {
+                try
+                {
+                    // xác thực admin
+                    if (!_accountService.IsAdmin())
+                    {
+                        return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+
+                var returnDes = _destinationService.GetDestinationToUpdate(id);
+                return StatusCode(200, new { message = "Get successful", data = returnDes });
             }
             catch (Exception e)
             {
@@ -187,17 +230,25 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                // xác thực admin
-                if (!_accountService.IsAdmin())
+                try
                 {
-                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    // xác thực admin
+                    if (!_accountService.IsAdmin())
+                    {
+                        return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    }
                 }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+
                 var returnDes = _destinationService.UpdateDestination(id, destination);
                 return StatusCode(200, new { message = "Destination updated", data = returnDes });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -206,18 +257,25 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                // xác thực admin
-                if (!_accountService.IsAdmin())
+                try
                 {
-                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    // xác thực admin
+                    if (!_accountService.IsAdmin())
+                    {
+                        return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    }
                 }
-                //
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+
                 _destinationService.DeleteDestination(id);
                 return StatusCode(200, new { message = "Destination deleted" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
     }

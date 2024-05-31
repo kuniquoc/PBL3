@@ -1,5 +1,7 @@
 ﻿using DaNangTourism.Server.Helper;
+using DaNangTourism.Server.ModelBindingConverter;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models.ScheduleModels
 {
@@ -15,6 +17,7 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public string Search { get; set; } = "";
 
         [FromQuery(Name = "status")]
+        [JsonConverter(typeof(EnumToStringJsonConverter<ScheduleStatus>))]
         public ScheduleStatus Status { get; set; } = ScheduleStatus.all;
 
         [FromQuery(Name = "sortBy")]

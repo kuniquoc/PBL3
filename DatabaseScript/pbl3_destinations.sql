@@ -33,11 +33,11 @@ CREATE TABLE `destinations` (
   `CloseTime` time NOT NULL,
   `Tags` varchar(100) DEFAULT NULL,
   `Introduction` text NOT NULL,
-  `GoogleMapUrl` varchar(100) DEFAULT NULL,
+  `GoogleMapUrl` varchar(255) DEFAULT NULL,
   `Rating` float DEFAULT '0',
-  `Created_At` datetime NOT NULL,
+  `Created_At` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`DestinationId`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 13:22:50
+-- Dump completed on 2024-05-31 19:15:18

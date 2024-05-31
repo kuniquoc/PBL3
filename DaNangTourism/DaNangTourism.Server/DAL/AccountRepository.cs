@@ -28,18 +28,17 @@ namespace DaNangTourism.Server.DAL
         //Thêm tài khoản
         public int AddAccount(Account account)
         {
-            string sql = "Insert into users(full_name, birthday, email, password_hash, password_salt , permission, avatar_url, created_at) " +
-                "values(@name, @birthday, @email, @passwordHash, @passwordSalt, @permission, @avatar, @createdat)";
+            string sql = "Insert into users(full_name, birthday, email, password_hash, password_salt , permission, avatar_url) " +
+                "values(@name, @birthday, @email, @passwordHash, @passwordSalt, @permission, @avatar)";
             MySqlParameter[] parameters =
             [
-              new("@name", account.Name),
-        new("@birthday", new DateTime(1970,1,1)),
-        new("@email", account.Email),
-        new("@passwordHash", account.PasswordHash),
-        new("@passwordSalt", account.PasswordSalt),
-        new("@permission", Permission.user.ToString()),
-        new("@avatar", account.Avatar),
-        new("@createdat", account.CreatedAt)
+                new("@name", account.Name),
+                new("@birthday", new DateTime(1970,1,1)),
+                new("@email", account.Email),
+                new("@passwordHash", account.PasswordHash),
+                new("@passwordSalt", account.PasswordSalt),
+                new("@permission", Permission.user.ToString()),
+                new("@avatar", account.Avatar)
             ];
             using var connection = new MySqlConnection(_connectionstring);
             connection.Open();
@@ -54,14 +53,14 @@ namespace DaNangTourism.Server.DAL
             string sql = "Update users set full_name = @name, birthday = @birthday, email = @email, password_hash = @passwordhash, password_salt = @passwordsalt, permission = @permission, avatar_url = @avatar where user_id = @id";
             MySqlParameter[] parameters =
             [
-              new("@name", account.Name),
-        new("@birthday", account.Birthday),
-        new("@email", account.Email),
-        new("@passwordhash", account.PasswordHash),
-        new("@passwordsalt", account.PasswordSalt),
-        new("@permission", account.Permission.ToString()),
-        new("@avatar", account.Avatar),
-        new("@id", account.Id)
+                new("@name", account.Name),
+                new("@birthday", account.Birthday),
+                new("@email", account.Email),
+                new("@passwordhash", account.PasswordHash),
+                new("@passwordsalt", account.PasswordSalt),
+                new("@permission", account.Permission.ToString()),
+                new("@avatar", account.Avatar),
+                new("@id", account.Id)
             ];
             using (var connection = new MySqlConnection(_connectionstring))
             {
@@ -192,10 +191,10 @@ namespace DaNangTourism.Server.DAL
 
             // Define the parameters
             MySqlParameter[] parameters = {
-        new MySqlParameter("@name", "%" + search + "%"),
-        new MySqlParameter("@offset", (page - 1) * limit),
-        new MySqlParameter("@limit", limit)
-      };
+                new MySqlParameter("@name", "%" + search + "%"),
+                new MySqlParameter("@offset", (page - 1) * limit),
+                new MySqlParameter("@limit", limit)
+            };
 
             // Include role parameter only if role filter is applied
             if (role.ToLower() != "all")

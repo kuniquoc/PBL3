@@ -16,9 +16,12 @@ namespace DaNangTourism.Server.Services
         List<BlogRandom> GetRandomBlog(BlogRandomFilter blogRF);
         BlogDetail? GetBlogDetail(int id);
         int AddBlog(BlogAdd blogAdd, int uid);
+        BlogAdd GetBlogToUpdate(int id);
         bool CheckBlogBelongToUser(int blogId, int uid);
-        BlogAdd? UpdateBlog(BlogAdd blogAdd, int id);
+        BlogAdd UpdateBlog(BlogAdd blogAdd, int id);
         void DeleteBlog(int id);
+        BLogListData GetBlogList(BlogListAdminFilter blogLAF);
+        void UpdateStatus(int blogId, BlogStatus status);
     }
     public class BlogService : IBlogService
     {
@@ -48,34 +51,21 @@ namespace DaNangTourism.Server.Services
             BlogPageData blogPageData = new BlogPageData();
 
             StringBuilder sql = new StringBuilder();
-            sql.Append("Select blog_id, title, image, type, user_id, created_at, views, introduction from blogs");
+            sql.Append("SELECT blog_id, title, image, type, blogs.created_at as created_at, views, introduction, blogs.user_id AS id, full_name AS name, avatar_url AS avatar ");
+            sql.Append("FROM blogs INNER JOIN users ON blogs.user_id = users.user_id");
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
             if (!blogPF.search.IsNullOrEmpty())
             {
-                sql.Append(" where title like @title");
+                sql.Append(" WHERE title LIKE @title");
                 parameters.Add(new MySqlParameter("@title", "'%" + blogPF.search + "%'"));
             }
 
-            if (!blogPF.sortBy.IsNullOrEmpty())
-            {
-                sql.Append(" order by @sortBy");
-                parameters.Add(new MySqlParameter("@sortBy", blogPF.sortBy));
-            }
-            else
-            {
-                sql.Append(" order by created_at");
-            }
+            // xử lý order by
+            sql.Append(" ORDER BY " + blogPF.sortBy);
 
-            if (!blogPF.sortType.IsNullOrEmpty())
-            {
-                sql.Append(" @sortType");
-                parameters.Add(new MySqlParameter("@sortType", blogPF.sortType));
-            }
-            else
-            {
-                sql.Append(" desc");
-            }
+            sql.Append(" " + blogPF.sortType);
+
 
             // xử lý blogPageData
             // xử lý total
@@ -94,7 +84,7 @@ namespace DaNangTourism.Server.Services
             parameters.Add(new MySqlParameter("@offset", (blogPF.page - 1) * blogPF.limit));
 
             // xử lý item 
-            blogPageData.items = _blogRepository.getBlogPage(sql.ToString(), parameters);
+            blogPageData.items = _blogRepository.GetBlogPage(sql.ToString(), parameters);
 
 
             return blogPageData;
@@ -124,6 +114,11 @@ namespace DaNangTourism.Server.Services
             return _blogRepository.AddBlog(blogAdd, uid);
         }
 
+        // nhận blog để update
+        public BlogAdd GetBlogToUpdate(int id)
+        {
+            return _blogRepository.GetBlogToUpdate(id);
+        }
 
         // kiểm tra tác giả Blog
         public bool CheckBlogBelongToUser(int blogId, int uid)
@@ -132,7 +127,7 @@ namespace DaNangTourism.Server.Services
         }
 
         // cập nhật Blog
-        public BlogAdd? UpdateBlog(BlogAdd blogAdd, int id)
+        public BlogAdd UpdateBlog(BlogAdd blogAdd, int id)
         {
             return _blogRepository.UpdateBlog(blogAdd, id);
         }
@@ -143,122 +138,85 @@ namespace DaNangTourism.Server.Services
             _blogRepository.DeleteBlog(id);
         }
 
-        //// cập nhật trạng thái Blog
-        //public int updateStatus(int blogID, Status status)
-        //{
-        //    MySqlParameter[] parameters = new MySqlParameter[]
-        //    {
-        //        new MySqlParameter("@blogID", blogID),
-        //        new MySqlParameter("@status", status)
-        //    };
-        //    return _blogRepository.updateStatus(parameters);
-        //}
-        
-        
-        
-        
+
         //// lấy blog list dành cho admin
-        //public List<BlogList> GetBlogList(BlogListAdminFilter blogLAF)
-        //{
-        //    StringBuilder filter = new StringBuilder();
-        //    List<MySqlParameter> parameters = new List<MySqlParameter>();
+        public BLogListData GetBlogList(BlogListAdminFilter blogLAF)
+        {
+            BLogListData bLogListData = new BLogListData();
 
-        //    if (!blogLAF.search.IsNullOrEmpty())
-        //    {
-        //        filter.Append(" where title = @title");
-        //        parameters.Add(new MySqlParameter("@title", blogLAF.search));
-        //        if (!blogLAF.type.IsNullOrEmpty())
-        //        {
-        //            filter.Append(" and type = @type");
-        //            parameters.Add(new MySqlParameter("@type", blogLAF.type));
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT blog_id, title, type, created_at, status, " +
+                "(SELECT full_name FROM users WHERE users.user_id = blogs.user_id) AS author FROM blogs");
+            List<MySqlParameter> parameters = new List<MySqlParameter>();
 
-        //            if (!blogLAF.status.ToString().IsNullOrEmpty())
-        //            {
-        //                filter.Append(" and status = @status");
-        //                parameters.Add(new MySqlParameter("@type", blogLAF.status));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (!blogLAF.status.ToString().IsNullOrEmpty())
-        //            {
-        //                filter.Append(" and status = @status");
-        //                parameters.Add(new MySqlParameter("@type", blogLAF.status));
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (!blogLAF.type.IsNullOrEmpty())
-        //        {
-        //            filter.Append(" where type = @type");
-        //            parameters.Add(new MySqlParameter("@type", blogLAF.type));
+            // xử lý where
+            if (!blogLAF.search.IsNullOrEmpty())
+            {
+                if (sql.ToString().Contains("where"))
+                {
+                    sql.Append(" AND title = @title");
+                }
+                else {
+                    sql.Append(" WHERE title = @title");
+                }
+                parameters.Add(new MySqlParameter("@title", blogLAF.search));
+            }
+            
+            if (sql.ToString().Contains("where"))
+            {
+                sql.Append(" AND type = @type");
+            }
+            else {
+                sql.Append(" WHERE type = @type");
+            }
+            parameters.Add(new MySqlParameter("@type", blogLAF.type.ToString()));
 
-        //            if (!blogLAF.status.ToString().IsNullOrEmpty())
-        //            {
-        //                filter.Append(" and status = @status");
-        //                parameters.Add(new MySqlParameter("@type", blogLAF.status));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (!blogLAF.status.ToString().IsNullOrEmpty())
-        //            {
-        //                filter.Append(" where status = @status");
-        //                parameters.Add(new MySqlParameter("@type", blogLAF.status));
-        //            }
-        //        }
-        //    }
+            if (blogLAF.status != BlogStatus.all)
+            {
+                if (sql.ToString().Contains("where"))
+                {
+                    sql.Append(" AND status = @status");
+                }
+                else {
+                    sql.Append(" WHERE status = @status");
+                }
+                parameters.Add(new MySqlParameter("@status", blogLAF.status.ToString()));
+            }
 
-        //    if (!blogLAF.sortBy.IsNullOrEmpty())
-        //    {
-        //        filter.Append(" order by @sortBy");
-        //        parameters.Add(new MySqlParameter("@sortBy", blogLAF.sortBy));
-        //    }
-        //    else
-        //    {
-        //        filter.Append(" order by created_at");
-        //    }
+            // xử lý order by
+            
+            sql.Append(" ORDER BY " + blogLAF.sortBy);
 
-        //    if (!blogLAF.sortType.IsNullOrEmpty())
-        //    {
-        //        filter.Append(" @sortType");
-        //        parameters.Add(new MySqlParameter("@sortType", blogLAF.sortType));
-        //    }
-        //    else
-        //    {
-        //        filter.Append(" desc");
-        //    }
+            sql.Append(" " + blogLAF.sortType);
 
-        //    if (blogLAF.limit != 12)
-        //    {
-        //        filter.Append(" limit @limit");
-        //        parameters.Add(new MySqlParameter("@limit", blogLAF.limit));
-        //    }
-        //    else
-        //    {
-        //        filter.Append(" limit 12");
-        //    }
+            // xử lý blogListData
+            // xử lý total
+            StringBuilder countSql = new StringBuilder();
+            countSql.Append("SELECT COUNT(*) FROM (" + sql + ") AS subquery");
+            bLogListData.total = _blogRepository.GetBlogCount(countSql.ToString(), parameters);
 
-        //    if (blogLAF.page != 1)
-        //    {
-        //        filter.Append(" offset @offset");
-        //        if (blogLAF.limit == 12)
-        //        {
-        //            parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * 12));
-        //        }
-        //        else
-        //        {
-        //            parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * blogLAF.limit));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        filter.Append(" offset 0");
-        //    }
-        //    return _blogRepository.getBlogList(filter.ToString(), parameters);
+            // xử lý limit
+            bLogListData.limit = blogLAF.limit;
+            sql.Append(" limit @limit");
+            parameters.Add(new MySqlParameter("@limit", blogLAF.limit));
 
-        //}
-        
+            // xử lý offset (page)
+            bLogListData.page = blogLAF.page;
+            sql.Append(" offset @offset");
+            parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * blogLAF.limit));
+
+            // xử lý item 
+            bLogListData.items = _blogRepository.GetBlogList(sql.ToString(), parameters);
+
+            return bLogListData;
+
+        }
+
+        // cập nhật trạng thái Blog
+        public void UpdateStatus(int blogId, BlogStatus status)
+        {
+            _blogRepository.UpdateStatus(blogId, status);
+        }
+
     }
 }

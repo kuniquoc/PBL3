@@ -90,7 +90,7 @@ namespace DaNangTourism.Server.Services
         }
 
         //Lấy claims theo cookie
-        public Dictionary<string, string> GetClaimsByCookie()
+        public Dictionary<string, string>  GetClaimsByCookie()
         {
             HttpContext? httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)

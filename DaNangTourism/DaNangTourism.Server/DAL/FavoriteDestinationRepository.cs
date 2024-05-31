@@ -49,7 +49,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int DeleteFavDes(int userId, int destinationId)
         {
-            string sql = "delete from FavoriteDestinations where UserId = @userId and DestinationId = @destinationId";
+            string sql = "DELETE FROM FavoriteDestinations WHERE UserId = @userId AND DestinationId = @destinationId";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@userId", userId),
@@ -72,7 +72,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int GetFavDesCountByDesId(int destinationId)
         {
-            string sql = "Select count(*) from FavoriteDestinations where DestinationId = @destinationId";
+            string sql = "SELECT COUNT(*) FROM FavoriteDestinations WHERE DestinationId = @destinationId";
             MySqlParameter parameter = new MySqlParameter("@destinationId", destinationId);
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -80,7 +80,7 @@ namespace DaNangTourism.Server.DAL
                 using (var command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.Add(parameter);
-                    return (int)command.ExecuteScalar();
+                    return Convert.ToInt32(command.ExecuteScalar());
                 }
             }
         }

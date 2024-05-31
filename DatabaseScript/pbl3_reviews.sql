@@ -28,7 +28,7 @@ CREATE TABLE `reviews` (
   `DestinationId` int NOT NULL,
   `Rating` int NOT NULL,
   `Comment` text,
-  `Created_At` datetime NOT NULL,
+  `Created_At` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ReviewId`),
   KEY `FK_review_destination` (`DestinationId`),
   KEY `FK_review_user_idx` (`UserId`),
@@ -125,4 +125,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 13:22:51
+-- Dump completed on 2024-05-31 19:15:17

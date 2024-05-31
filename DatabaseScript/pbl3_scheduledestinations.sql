@@ -66,7 +66,12 @@ DELIMITER ;;
         (SELECT Date FROM ScheduleDestinations 
         WHERE ScheduleId = NEW.ScheduleId 
         ORDER BY DATE ASC 
-        LIMIT 1)
+        LIMIT 1),
+        TotalDays = DATEDIFF(StartDate, 
+        (SELECT Date FROM ScheduleDestinations 
+        WHERE ScheduleId = NEW.ScheduleId 
+        ORDER BY DATE DESC 
+        LIMIT 1))
 		WHERE ScheduleId = NEW.ScheduleId;
 END */;;
 DELIMITER ;
@@ -91,7 +96,12 @@ DELIMITER ;;
         (SELECT Date FROM ScheduleDestinations 
         WHERE ScheduleId = NEW.ScheduleId 
         ORDER BY DATE ASC 
-        LIMIT 1)
+        LIMIT 1),
+        TotalDays = DATEDIFF(StartDate, 
+        (SELECT Date FROM ScheduleDestinations 
+        WHERE ScheduleId = NEW.ScheduleId 
+        ORDER BY DATE DESC 
+        LIMIT 1))
 		WHERE ScheduleId = NEW.ScheduleId;
     END IF;
 END */;;
@@ -116,7 +126,12 @@ DELIMITER ;;
         (SELECT Date FROM ScheduleDestinations 
         WHERE ScheduleId = OLD.ScheduleId 
         ORDER BY DATE ASC 
-        LIMIT 1)
+        LIMIT 1),
+        TotalDays = DATEDIFF(StartDate, 
+        (SELECT Date FROM ScheduleDestinations 
+        WHERE ScheduleId = OLD.ScheduleId 
+        ORDER BY DATE DESC 
+        LIMIT 1))
 		WHERE ScheduleId = OLD.ScheduleId;
 END */;;
 DELIMITER ;
@@ -134,4 +149,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 13:22:50
+-- Dump completed on 2024-05-31 19:15:17

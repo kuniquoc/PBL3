@@ -14,6 +14,7 @@ namespace DaNangTourism.Server.Services
         IEnumerable<HomeDestination> GetRandomDestinations(int limit = 3);
         AdminDestinations GetDestinationElements(AdminDestinationFilter adminDestinationFilter);
         int AddDestination(InputDestinationModel destination);
+        InputDestinationModel GetDestinationToUpdate(int id);
         InputDestinationModel UpdateDestination(int id, InputDestinationModel destination);
         int DeleteDestination(int id);
     }
@@ -308,6 +309,17 @@ namespace DaNangTourism.Server.Services
         {
             return _destinationRepository.AddDestination(destination);
         }
+
+        /// <summary>
+        /// Get destination by id to update destination
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public InputDestinationModel GetDestinationToUpdate(int id)
+        {
+            return _destinationRepository.GetDestinationToUpdate(id);
+        }
+
         /// <summary>
         /// Update destination
         /// </summary>

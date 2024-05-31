@@ -31,7 +31,7 @@ CREATE TABLE `schedules` (
   `StartDate` date NOT NULL,
   `TotalDays` int DEFAULT '0',
   `TotalBudget` double DEFAULT '0',
-  `UpdatedAt` datetime NOT NULL,
+  `UpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
   `Creator` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `IsPublic` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`ScheduleId`),
@@ -59,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 13:22:50
+-- Dump completed on 2024-05-31 19:15:18
