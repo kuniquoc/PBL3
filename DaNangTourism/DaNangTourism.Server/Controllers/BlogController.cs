@@ -34,14 +34,13 @@ namespace DaNangTourism.Server.Controllers
                 BlogReturn<List<BlogHome>> blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
                 return Ok(blogReturn);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
-        [HttpGet("blogPage")]
+        [HttpGet("list")]
         public IActionResult GetAllBlog([FromQuery] BlogPageFilter blogPageFilter)
         {
             try
@@ -54,10 +53,9 @@ namespace DaNangTourism.Server.Controllers
                 BlogReturn<BlogPageData> blogReturn = new BlogReturn<BlogPageData>(blogPageData);
                 return Ok(blogReturn);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -72,12 +70,11 @@ namespace DaNangTourism.Server.Controllers
                     return NotFound();
                 }
                 BlogReturn<List<BlogRandom>> blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
-                return Ok(blogRandoms);
+                return Ok(blogReturn);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -91,17 +88,13 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    _blogService.IncreaseView(id);
-                    BlogReturn<BlogDetail> blogReturn = new BlogReturn<BlogDetail>(blogDetail);
-                    return Ok(blogReturn);
-                }
+                _blogService.IncreaseView(id);
+                BlogReturn<BlogDetail> blogReturn = new BlogReturn<BlogDetail>(blogDetail);
+                return Ok(blogReturn);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Server Error");
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -110,21 +103,50 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                // nhận id
-                int uid = _accountService.GetUserIdFromToken();
+                int uid;
+                try
+                {
+                    uid = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                   return Unauthorized(new { message = ex.Message });
+                }
 
                 // nhận id blog mới thêm
                 int id = _blogService.AddBlog(blogAdd, uid);
 
                 return StatusCode(200, new { message = "Success", data = new { id } });
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception e)
             {
-                return Unauthorized();
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
+        [HttpGet("GetToUpdate/{id}")]
+        public IActionResult GetToUpdateBlog(int id)
+        {
+            try
+            {
+                int uid;
+                try
+                {
+                    uid = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+
+                // nhận blog bằng id
+                var returnBlog = _blogService.GetBlogToUpdate(id);
+
+                return StatusCode(200, new { message = "Get successful", data = returnBlog });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -133,16 +155,19 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                // nhận id
-                int uid = _accountService.GetUserIdFromToken();
+                int uid;
+                try
+                {
+                    uid = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 if (_blogService.CheckBlogBelongToUser(id, uid))
                 {
                     var returnBlog = _blogService.UpdateBlog(blogAdd, id);
-                    if (returnBlog == null)
-                    {
-                        return BadRequest(new { message = "Update fail; Don't exist this blog" });
-                    }
                     return Ok(new { message = "Success", data = returnBlog });
                 }
                 else
@@ -150,23 +175,26 @@ namespace DaNangTourism.Server.Controllers
                     return Unauthorized(new { message = "You are not Author" });
                 }
             }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult deleteBlog([FromRoute] int id)
+        public IActionResult DeleteBlog([FromRoute] int id)
         {
             try
             {
-                // nhận id
-                int uid = _accountService.GetUserIdFromToken();
+                int uid;
+                try
+                {
+                    uid = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 if (_accountService.IsAdmin())
                 {
@@ -186,76 +214,69 @@ namespace DaNangTourism.Server.Controllers
                     }
                 }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception e)
             {
-                return Unauthorized();
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
+
+        [HttpGet("managelist")]
+        public IActionResult GetBlogList([FromQuery] BlogListAdminFilter blogListAdminFilter)
+        {
+            try
+            {
+                int uid;
+                try
+                {
+                    uid = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
+
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "You are not Admin" });
+                }
+
+                var blogListData = _blogService.GetBlogList(blogListAdminFilter);
+                var blogReturn = new BlogReturn<BLogListData>(blogListData);
+                return Ok(blogReturn);
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
-        
-        //[HttpGet("managelist")]
-        //public IActionResult getBlogList([FromQuery] BlogListAdminFilter blogListAdminFilter)
-        //{
-        //    try
-        //    {
-        //        // nhận id
-        //        int uid = _accountService.GetUserIdFromToken();
 
-        //        if (_accountService.IsAdmin())
-        //        {
-        //            List<BlogList> blogLists = _blogService.GetBlogList(blogListAdminFilter);
-        //            BLogListData blogListData = new BLogListData(blogLists, blogListAdminFilter);
-        //            BlogReturn<BLogListData> blogReturn = new BlogReturn<BLogListData>(blogListData);
-        //            return Ok(blogReturn);
-        //        }
-        //        else
-        //        {
-        //            return StatusCode(500, "You are not Admin");
-        //        }
-        //    }
-        //    catch (UnauthorizedAccessException)
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return StatusCode(500, e.Message);
-        //    }
-        //}
+        [HttpPut("updateStatus/{id}")]
+        public IActionResult updateStatus([FromRoute] int id, [FromBody] BlogStatus status)
+        {
+            try
+            {
+                int uid;
+                try
+                {
+                    uid = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
-        //[HttpPut("updateStatus/{id}")]
-        //public IActionResult updateStatus([FromRoute] int id, [FromRoute] Status status)
-        //{
-        //    if (!HttpContext.Request.Cookies.ContainsKey("token"))
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            var claims = accountBLL.GetClaimsByCookie(HttpContext);
-        //            var uid = Convert.ToInt32(claims["id"]);
-        //            var account = AccountRepository.Instance.GetAccountById(uid);
-        //            if (account.Permission == Permission.admin)
-        //            {
-        //                _blogService.updateStatus(id, status);
-        //                return StatusCode(200, "Success");
-        //            }
-        //            else
-        //            {
-        //                return StatusCode(500, "You are not Admin");
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //            return StatusCode(500, "Server Error");
-        //        }
-        //    }
-        //}
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "You are not Admin" });
+                }
+
+                _blogService.UpdateStatus(id, status);
+                return StatusCode(200, "Success");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
     }
 }

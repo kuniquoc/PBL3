@@ -35,7 +35,7 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -44,18 +44,22 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 int id = _reviewService.AddReview(userId, review);
                 return StatusCode(201, new {message = "Review created", data = new { id } });
             }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -64,10 +68,17 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                // xác thực admin
-                if (!_accountService.IsAdmin())
+                try
                 {
-                    return Unauthorized("Only admin can delete!");
+                    // xác thực admin
+                    if (!_accountService.IsAdmin())
+                    {
+                        return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
                 }
 
                 // xóa review
@@ -76,7 +87,7 @@ namespace DaNangTourism.Server.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
     }

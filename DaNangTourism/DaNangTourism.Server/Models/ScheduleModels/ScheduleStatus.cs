@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models.ScheduleModels
 {
-    [TypeConverter(typeof(ScheduleStatusTypeConverter))]
     public enum ScheduleStatus
     {
         all = 0,

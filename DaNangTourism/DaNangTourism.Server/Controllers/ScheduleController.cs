@@ -26,23 +26,26 @@ namespace DaNangTourism.Server.Controllers
             scheduleFilter.Sanitization();
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var schedules = _scheduleService.GetListSchedule(userId, scheduleFilter);
                 if (schedules.Items.Count() == 0)
                 {
                     return NotFound();
                 }
-                else
                 return StatusCode(200, new {message = "Success", data = schedules});
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -52,29 +55,26 @@ namespace DaNangTourism.Server.Controllers
             scheduleFilter.Sanitization();
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var schedules = _scheduleService.GetPublicSchedule(scheduleFilter, userId);
                 if (schedules.Items.Count() == 0)
                 {
                     return NotFound();
                 }
-                else
-                    return StatusCode(200, new { message = "Success", data = schedules });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                var schedules = _scheduleService.GetPublicSchedule(scheduleFilter, 0);
-                if (schedules.Items.Count() == 0)
-                {
-                    return NotFound();
-                }
-                else
-                    return StatusCode(200, new { message = "Success", data = schedules });
+                return StatusCode(200, new { message = "Success", data = schedules });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -83,23 +83,26 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var schedule = _scheduleService.GetScheduleDetail(userId, id);
                 if (schedule == null)
                 {
                     return NotFound();
                 }
-                else
-                    return StatusCode(200, new { message = "Success", data = schedule });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
+                return StatusCode(200, new { message = "Success", data = schedule });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
         
@@ -108,7 +111,15 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 // lấy name từ token
                 string name = _accountService.GetUserName();
@@ -118,16 +129,11 @@ namespace DaNangTourism.Server.Controllers
                 {
                     return BadRequest();
                 }
-                else
-                    return StatusCode(200, new { message = "Create schedule successful", data = new { id } });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
+                return StatusCode(200, new { message = "Create schedule successful", data = new { id } });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -136,25 +142,28 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
-                // lấy name từ token
-                string name = _accountService.GetUserName();
+                int userId;
+                string name;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                    name = _accountService.GetUserName();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var id = _scheduleService.CloneSchedule(userId, name, scheduleId);
                 if (id == 0)
                 {
                     return BadRequest();
                 }
-                else
-                    return StatusCode(200, new { message = "Clone schedule successful", data = new { id } });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
+                return StatusCode(200, new { message = "Clone schedule successful", data = new { id } });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -164,19 +173,22 @@ namespace DaNangTourism.Server.Controllers
                 return BadRequest();
             try
             {
-                _accountService.GetUserIdFromToken();
+                try
+                {
+                    _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var id = _scheduleService.AddScheduleDestination(scheduleDestination);
                 
                 return StatusCode(200, new { message = "Add destination to schedule successful", data = new { id } });
             }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
         
@@ -185,18 +197,22 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 _scheduleService.DeleteScheduleDestination(userId, scheduleDestinationId);
                  return StatusCode(200, new { message = "Remove destination from schedule successful" });
             }
-            catch (UnauthorizedAccessException uae)
-            {
-                return Unauthorized(uae.Message);
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -205,18 +221,22 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var returnScheduleDes = _scheduleService.UpdateScheduleDestination(userId, scheduleDestinationId, scheduleDestination);
                 return StatusCode(200, new { message = "Update destination in schedule successful", data = returnScheduleDes });
             }
-            catch (UnauthorizedAccessException uae)
-            {
-                return Unauthorized(uae.Message);
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -226,19 +246,23 @@ namespace DaNangTourism.Server.Controllers
         {
             try
             {
-                int userId = _accountService.GetUserIdFromToken();
+                int userId;
+                try
+                {
+                    userId = _accountService.GetUserIdFromToken();
+                }
+                catch (Exception ex)
+                {
+                    return Unauthorized(new { message = ex.Message });
+                }
 
                 var returnSchedule = _scheduleService.UpdateSchedule(userId, scheduleId, schedule);
 
                 return StatusCode(200, new { message = "Update schedule successful" , data = returnSchedule});
             }
-            catch (UnauthorizedAccessException uae)
-            {
-                return Unauthorized(uae.Message);
-            }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { message = e.Message });
             }
         }
     }

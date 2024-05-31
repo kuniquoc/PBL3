@@ -10,6 +10,7 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public int Id { get; set; }
 
         [JsonPropertyName("status")]
+        [JsonConverter(typeof(EnumToStringJsonConverter<ScheduleStatus>))]
         public ScheduleStatus Status { get; set; }
 
         [JsonPropertyName("title")]
