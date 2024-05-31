@@ -92,12 +92,25 @@ builder.Services.AddScoped<IAccountRepository> (provider =>
   }
   return new AccountRepository(connectionString);
 });
+
+builder.Services.AddScoped<IBlogRepository>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+    }
+    return new BlogRepository(connectionString);
+});
+
 // Register scoped services here
 
 builder.Services.AddScoped<IDestinationService, DestinationService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
 
 
 // Register IHttpContextAccessor services here

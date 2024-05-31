@@ -37,6 +37,7 @@ CREATE TABLE `favoritedestinations` (
 
 LOCK TABLES `favoritedestinations` WRITE;
 /*!40000 ALTER TABLE `favoritedestinations` DISABLE KEYS */;
+INSERT INTO `favoritedestinations` VALUES (21,1);
 /*!40000 ALTER TABLE `favoritedestinations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-27 21:18:54
+-- Dump completed on 2024-05-31  9:23:23

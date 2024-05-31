@@ -31,8 +31,10 @@ CREATE TABLE `reviews` (
   `Created_At` datetime NOT NULL,
   PRIMARY KEY (`ReviewId`),
   KEY `FK_review_destination` (`DestinationId`),
-  CONSTRAINT `FK_review_destination` FOREIGN KEY (`DestinationId`) REFERENCES `destinations` (`DestinationId`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FK_review_user_idx` (`UserId`),
+  CONSTRAINT `FK_review_destination` FOREIGN KEY (`DestinationId`) REFERENCES `destinations` (`DestinationId`) ON DELETE CASCADE,
+  CONSTRAINT `FK_review_user` FOREIGN KEY (`UserId`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +43,7 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
+INSERT INTO `reviews` VALUES (1,21,1,5,'đẹp zờ lờ','2024-05-31 00:32:54'),(2,21,1,3,'cũng bình thường','2024-05-31 00:42:07'),(3,21,1,2,'string','2024-05-31 00:46:52'),(4,21,1,4,'string','2024-05-31 00:50:59');
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-27 21:18:54
+-- Dump completed on 2024-05-31  9:23:23

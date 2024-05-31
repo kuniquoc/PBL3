@@ -28,14 +28,16 @@ CREATE TABLE `schedules` (
   `Status` enum('planning','ongoing','completed','canceled') COLLATE utf8mb4_unicode_ci DEFAULT 'planning',
   `Title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Description` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `StartDate` date DEFAULT NULL,
+  `StartDate` date NOT NULL,
   `TotalDays` int DEFAULT '0',
   `TotalBudget` double DEFAULT '0',
-  `UpdateAt` datetime NOT NULL,
+  `UpdatedAt` datetime NOT NULL,
   `Creator` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `IsPublic` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ScheduleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  PRIMARY KEY (`ScheduleId`),
+  KEY `fk_schedule_user_idx` (`UserId`),
+  CONSTRAINT `fk_schedule_user` FOREIGN KEY (`UserId`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,6 +46,7 @@ CREATE TABLE `schedules` (
 
 LOCK TABLES `schedules` WRITE;
 /*!40000 ALTER TABLE `schedules` DISABLE KEYS */;
+INSERT INTO `schedules` VALUES (3,21,'planning','adu','nà ní','2021-12-01',0,70.5,'2024-05-31 01:15:15','Quoc',1),(4,21,'planning','3','4','2024-05-31',0,0,'2024-05-31 01:15:27','Quoc',0),(5,21,'planning','5','6','2024-05-31',0,0,'2024-05-31 01:17:44','Quoc',1);
 /*!40000 ALTER TABLE `schedules` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-27 21:18:54
+-- Dump completed on 2024-05-31  9:23:23

@@ -1,14 +1,10 @@
 ﻿using DaNangTourism.Server.Services;
 using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using MySqlConnector;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
+using DaNangTourism.Server.Models.DestinationModels;
+using System.Security.Principal;
+
 
 namespace DaNangTourism.Server.Controllers
 {
@@ -16,220 +12,217 @@ namespace DaNangTourism.Server.Controllers
     [Route("blog")]
     public class BlogController : Controller
     {
-        //private IAccountService _accountService;
-        //public BlogController(IAccountService accountService)
-        //{
-        //    _accountService = accountService;
-        //}
-        //[HttpGet("home")]
-        //public IActionResult get5MostView()
-        //{
-        //    try
-        //    {
-        //        List<BlogHome>? blogHomes = BlogBLL.Instance.get5MostView();
+        private readonly IBlogService _blogService;
+        private readonly IAccountService _accountService;
+        public BlogController(IBlogService blogService, IAccountService accountService)
+        {
+            _blogService = blogService;
+            _accountService = accountService;
+        }
 
-        //        if (blogHomes == null || blogHomes.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
-        //        BlogReturn<List<BlogHome>> blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
-        //        return Ok(blogReturn);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(500, "Server Error");
-        //    }
-        //}
+        [HttpGet("home")]
+        public IActionResult Get5MostView()
+        {
+            try
+            {
+                List<BlogHome>? blogHomes = _blogService.Get5MostView();
 
-        //[HttpGet("blogPage")]
-        //public IActionResult getAllBlog([FromQuery] BlogPageFilter blogPageFilter)
+                if (blogHomes == null || blogHomes.Count == 0)
+                {
+                    return NotFound();
+                }
+                BlogReturn<List<BlogHome>> blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
+                return Ok(blogReturn);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
+        }
+
+        [HttpGet("blogPage")]
+        public IActionResult GetAllBlog([FromQuery] BlogPageFilter blogPageFilter)
+        {
+            try
+            {
+                var blogPageData = _blogService.GetBlogPage(blogPageFilter);
+                if (blogPageData.items.Count == 0)
+                {
+                    return NotFound();
+                }
+                BlogReturn<BlogPageData> blogReturn = new BlogReturn<BlogPageData>(blogPageData);
+                return Ok(blogReturn);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
+        }
+
+        [HttpGet("random")]
+        public IActionResult GetRandomBlog([FromQuery] BlogRandomFilter blogRandomFilter)
+        {
+            try
+            {
+                List<BlogRandom> blogRandoms = _blogService.GetRandomBlog(blogRandomFilter);
+                if (blogRandoms.Count == 0)
+                {
+                    return NotFound();
+                }
+                BlogReturn<List<BlogRandom>> blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
+                return Ok(blogRandoms);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
+        }
+
+        [HttpGet("blogDetail/{id}")]
+        public IActionResult GetBlogDetail([FromRoute] int id)
+        {
+            try
+            {
+                BlogDetail? blogDetail = _blogService.GetBlogDetail(id);
+                if (blogDetail == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    _blogService.IncreaseView(id);
+                    BlogReturn<BlogDetail> blogReturn = new BlogReturn<BlogDetail>(blogDetail);
+                    return Ok(blogReturn);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Server Error");
+            }
+        }
+
+        [HttpPost("create")]
+        public IActionResult CreateNewBlog([FromBody] BlogAdd blogAdd)
+        {
+            try
+            {
+                // nhận id
+                int uid = _accountService.GetUserIdFromToken();
+
+                // nhận id blog mới thêm
+                int id = _blogService.AddBlog(blogAdd, uid);
+
+                return StatusCode(200, new { message = "Success", data = new { id } });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpPut("update/{id}")]
+        public IActionResult UpdateBlog([FromRoute] int id, [FromBody] BlogAdd blogAdd)
+        {
+            try
+            {
+                // nhận id
+                int uid = _accountService.GetUserIdFromToken();
+
+                if (_blogService.CheckBlogBelongToUser(id, uid))
+                {
+                    var returnBlog = _blogService.UpdateBlog(blogAdd, id);
+                    if (returnBlog == null)
+                    {
+                        return BadRequest(new { message = "Update fail; Don't exist this blog" });
+                    }
+                    return Ok(new { message = "Success", data = returnBlog });
+                }
+                else
+                {
+                    return Unauthorized(new { message = "You are not Author" });
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult deleteBlog([FromRoute] int id)
+        {
+            try
+            {
+                // nhận id
+                int uid = _accountService.GetUserIdFromToken();
+
+                if (_accountService.IsAdmin())
+                {
+                    _blogService.DeleteBlog(id);
+                    return Ok(new { message = "Success" });
+                }
+                else
+                {
+                    if (_blogService.CheckBlogBelongToUser(id, uid))
+                    {
+                        _blogService.DeleteBlog(id);
+                        return Ok(new { message = "Success" });
+                    }
+                    else
+                    {
+                        return StatusCode(500, "You are not Author");
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+        
+        //[HttpGet("managelist")]
+        //public IActionResult getBlogList([FromQuery] BlogListAdminFilter blogListAdminFilter)
         //{
         //    try
         //    {
-        //        List<BlogPage> blogPages = BlogBLL.Instance.getBlogPage(blogPageFilter);
-        //        if (blogPages.Count == 0)
+        //        // nhận id
+        //        int uid = _accountService.GetUserIdFromToken();
+
+        //        if (_accountService.IsAdmin())
         //        {
-        //            return NotFound();
-        //        }
-        //        BlogPageData blogPageData = new BlogPageData(blogPages, blogPageFilter);
-        //        BlogReturn<BlogPageData> blogReturn = new BlogReturn<BlogPageData>(blogPageData);
-        //        return Ok(blogReturn);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(500, "Server Error");
-        //    }
-        //}
-        //[HttpGet("random")]
-        //public IActionResult getRandomBlog([FromQuery] BlogRandomFilter blogRandomFilter)
-        //{
-        //    try
-        //    {
-        //        List<BlogRandom> blogRandoms = BlogBLL.Instance.getRandomBlog(blogRandomFilter);
-        //        if (blogRandoms.Count == 0)
-        //        {
-        //            return NotFound();
-        //        }
-        //        BlogReturn<List<BlogRandom>> blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
-        //        return Ok(blogRandoms);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(500, "Server Error");
-        //    }
-        //}
-        //[HttpGet("blogDetail/{id}")]
-        //public IActionResult getBlogDetail([FromRoute] int id)
-        //{
-        //    try
-        //    {
-        //        BlogDetail blogDetail = BlogBLL.Instance.getBlogDetail(id);
-        //        if (blogDetail == null)
-        //        {
-        //            return NotFound();
+        //            List<BlogList> blogLists = _blogService.GetBlogList(blogListAdminFilter);
+        //            BLogListData blogListData = new BLogListData(blogLists, blogListAdminFilter);
+        //            BlogReturn<BLogListData> blogReturn = new BlogReturn<BLogListData>(blogListData);
+        //            return Ok(blogReturn);
         //        }
         //        else
         //        {
-        //            BlogBLL.Instance.increaseView(id);
-        //            BlogReturn<BlogDetail> blogReturn = new BlogReturn<BlogDetail>(blogDetail);
-        //            return Ok(blogReturn);
+        //            return StatusCode(500, "You are not Admin");
         //        }
         //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(500, "Server Error");
-        //    }
-        //}
-        //[HttpPost("create")]
-        //public IActionResult createNewBlog([FromBody] BlogAdd blogAdd)
-        //{
-        //    int uid = 0;
-        //    if (!HttpContext.Request.Cookies.ContainsKey("token"))
-        //    {
-        //        xác thực token và nhận id
-        //        return Unauthorized();
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            var claims = accountBLL.GetClaimsByCookie(HttpContext);
-        //            uid = Convert.ToInt32(claims["id"]);
-        //            int blogId = BlogBLL.Instance.addBlog(blogAdd, uid);
-        //            return CreatedAtAction("Success", new { id = blogId }, blogAdd);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //            return StatusCode(500, "Server error");
-        //        }
-        //    }
-        //}
-        //[HttpPut("update/{id}")]
-        //public IActionResult updateBlog([FromRoute] int id, [FromBody] BlogAdd blogAdd)
-        //{
-        //    if (!HttpContext.Request.Cookies.ContainsKey("token"))
+        //    catch (UnauthorizedAccessException)
         //    {
         //        return Unauthorized();
         //    }
-        //    else
+        //    catch (Exception e)
         //    {
-        //        try
-        //        {
-        //            var claims = accountBLL.GetClaimsByCookie(HttpContext);
-        //            int uid = Convert.ToInt32(claims["id"]);
-        //            if (BlogBLL.Instance.checkBlogBelongToUser(id, uid) == 1)
-        //            {
-        //                BlogBLL.Instance.updateBlog(blogAdd, id);
-        //                return StatusCode(200, "Success");
-        //            }
-        //            else
-        //            {
-        //                return StatusCode(500, "You are not Author");
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //            return StatusCode(500, "Server Error");
-        //        }
-        //    }
-        //}
-        //[HttpDelete("delete/{id}")]
-        //public IActionResult deleteBlog([FromRoute] int id)
-        //{
-        //    if (!HttpContext.Request.Cookies.ContainsKey("token"))
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            var claims = accountBLL.GetClaimsByCookie(HttpContext);
-        //            int uid = Convert.ToInt32(claims["id"]);
-        //            var account = AccountRepository.Instance.GetAccountById(uid);
-
-        //            if (account.Permission == Permission.admin)
-        //            {
-        //                BlogBLL.Instance.deleteBlog(id);
-        //                return StatusCode(200, "Success");
-        //            }
-        //            else
-        //            {
-        //                if (BlogBLL.Instance.checkBlogBelongToUser(id, uid) == 1)
-        //                {
-        //                    BlogBLL.Instance.deleteBlog(id);
-        //                    return StatusCode(200, "Success");
-        //                }
-        //                else
-        //                {
-        //                    return StatusCode(500, "You are not Author");
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //            return StatusCode(500, "Server Error");
-        //        }
-        //    }
-        //}
-        //[HttpGet("blogList")]
-        //public IActionResult getBlogList([FromQuery] BlogListAdminFilter blogListAdminFilter)
-        //{
-        //    if(!HttpContext.Request.Cookies.ContainsKey("token"))
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            var claims = accountBLL.GetClaimsByCookie(HttpContext);
-        //            var uid = Convert.ToInt32(claims["id"]);
-        //            var account = AccountRepository.Instance.GetAccountById(uid);
-        //            if(account.Permission == Permission.admin)
-        //            {
-        //                List<BlogList> blogLists = BlogBLL.Instance.GetBlogList(blogListAdminFilter);
-        //                BLogListData blogListData = new BLogListData(blogLists, blogListAdminFilter);
-        //                BlogReturn<BLogListData> blogReturn = new BlogReturn<BLogListData>(blogListData);
-        //                return Ok(blogReturn);
-        //            }
-        //            else
-        //            {
-        //                return StatusCode(500, "You are not Admin");
-        //            }
-        //        }
-        //        catch(Exception ex) 
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //            return StatusCode(500, "Server Error");
-        //        }
+        //        return StatusCode(500, e.Message);
         //    }
         //}
 
@@ -242,14 +235,14 @@ namespace DaNangTourism.Server.Controllers
         //    }
         //    else
         //    {
-        //        try 
+        //        try
         //        {
         //            var claims = accountBLL.GetClaimsByCookie(HttpContext);
         //            var uid = Convert.ToInt32(claims["id"]);
         //            var account = AccountRepository.Instance.GetAccountById(uid);
-        //            if(account.Permission == Permission.admin)
+        //            if (account.Permission == Permission.admin)
         //            {
-        //                BlogBLL.Instance.updateStatus(id, status);
+        //                _blogService.updateStatus(id, status);
         //                return StatusCode(200, "Success");
         //            }
         //            else
@@ -264,39 +257,5 @@ namespace DaNangTourism.Server.Controllers
         //        }
         //    }
         //}
-
-        //    [HttpPost("add")]
-        //    public IActionResult AddBlog([FromBody] Blog blog)
-        //    {
-        //        BlogDAO blogDAO = new BlogDAO();
-        //        bool check = blogDAO.AddBlog(blog) > 0;
-        //        if (check)
-        //        {
-        //            return Ok();
-        //        }
-        //        else return BadRequest();
-        //    }
-        //    [HttpPut("update")]
-        //    public IActionResult UpdateDestination([FromBody] Blog blog)
-        //    {
-        //        BlogDAO blogDAO = new BlogDAO();
-        //        bool check = blogDAO.EditBlog(blog) > 0;
-        //        if (check)
-        //        {
-        //            return Ok();
-        //        }
-        //        else return BadRequest();
-        //    }
-        //    [HttpDelete("delete/{blogID}")]
-        //    public IActionResult DeleteDestination([FromRoute] int blogID)
-        //    {
-        //        BlogDAO blogDAO = new BlogDAO();
-        //        bool check = blogDAO.DeleteBlog(blogID) > 0;
-        //        if (check)
-        //        {
-        //            return Ok();
-        //        }
-        //        else return BadRequest();
-        //    }
     }
 }

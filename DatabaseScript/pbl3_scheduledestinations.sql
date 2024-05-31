@@ -26,15 +26,19 @@ CREATE TABLE `scheduledestinations` (
   `ScheduleDestinationId` int NOT NULL AUTO_INCREMENT,
   `ScheduleId` int NOT NULL,
   `DestinationId` int NOT NULL,
-  `Date` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Date` date NOT NULL,
   `Name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Address` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ArrivalTime` time DEFAULT NULL,
   `LeaveTime` time DEFAULT NULL,
-  `Budget` double DEFAULT NULL,
-  `Note` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`ScheduleDestinationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `Budget` double NOT NULL,
+  `Note` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  PRIMARY KEY (`ScheduleDestinationId`),
+  KEY `fk_scheDes_sche_idx` (`ScheduleId`),
+  KEY `fk_scheDes_des_idx` (`DestinationId`),
+  CONSTRAINT `fk_scheDes_des` FOREIGN KEY (`DestinationId`) REFERENCES `destinations` (`DestinationId`) ON DELETE CASCADE,
+  CONSTRAINT `fk_scheDes_sche` FOREIGN KEY (`ScheduleId`) REFERENCES `schedules` (`ScheduleId`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +47,7 @@ CREATE TABLE `scheduledestinations` (
 
 LOCK TABLES `scheduledestinations` WRITE;
 /*!40000 ALTER TABLE `scheduledestinations` DISABLE KEYS */;
+INSERT INTO `scheduledestinations` VALUES (3,3,2,'2021-12-01','Dragon Bridge','Nguyen Van Linh Street','09:00:00','11:00:00',50,'Don\'t forget to take a photo at the Golden Bridge.'),(5,3,1,'2021-12-12','Asia Park','Nguyen Van Linh Street','00:00:00','01:00:00',20.5,'alo alo');
 /*!40000 ALTER TABLE `scheduledestinations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +60,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-27 21:18:54
+-- Dump completed on 2024-05-31  9:23:22

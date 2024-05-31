@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ZocHrkDFWQJCVIVPaZc7ghDx5wYBbHU8inOXMtC/Vuw=",
+  "Hash": "tNx5RZue0gvG/80LOrE6iYA9EJCdiM6fssSNUzLz5h8=",
   "Source": "DaNangTourism.Server",
   "BasePath": "_content/DaNangTourism.Server",
   "Mode": "Default",
@@ -11,10 +11,10 @@
       "Version": 2,
       "Source": "danangtourism.client",
       "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
       "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
       "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
       "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
     }
   ],
