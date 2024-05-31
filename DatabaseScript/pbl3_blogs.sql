@@ -29,7 +29,7 @@ CREATE TABLE `blogs` (
   `type` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `introduction` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `views` int NOT NULL,
   `status` enum('pending','published','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
@@ -58,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 13:22:50
+-- Dump completed on 2024-05-31 16:06:14

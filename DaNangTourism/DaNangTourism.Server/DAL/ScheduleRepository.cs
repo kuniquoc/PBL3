@@ -10,7 +10,6 @@ namespace DaNangTourism.Server.DAL
         IEnumerable<PublicScheduleElement> GetPublicSchedule(string sql, params MySqlParameter[] parameters);
         ScheduleDetail? GetScheduleDetail(int userId, int scheduleId);
         int CreateSchedule(int userId, string creator, InputSchedule schedule);
-        void UpdateBudget(int scheduleId, double budget);
         int CloneSchedule(int userId, string creator, int scheduleId);
         bool IsCreator(int userId, int scheduleId);
         UpdateScheduleModel UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
@@ -141,15 +140,14 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int CreateSchedule(int userId, string creator, InputSchedule schedule)
         {
-            string sql = "INSERT INTO Schedules (UserId, Title, Description, StartDate, UpdatedAt, Creator, IsPublic) " +
-                "VALUES (@userId, @title, @description, @startDate, @updatedAt, @creator, @isPublic); SELECT LAST_INSERT_ID();";
+            string sql = "INSERT INTO Schedules (UserId, Title, Description, StartDate, Creator, IsPublic) " +
+                "VALUES (@userId, @title, @description, @startDate, @creator, @isPublic); SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@userId", userId),
                 new MySqlParameter("@title", schedule.Title),
                 new MySqlParameter("@description", schedule.Description),
                 new MySqlParameter("@startDate", DateOnly.FromDateTime(DateTime.Now)),
-                new MySqlParameter("@updatedAt", DateTime.Now),
                 new MySqlParameter("@creator", creator),
                 new MySqlParameter("@isPublic", schedule.IsPublic)
             };
@@ -164,23 +162,6 @@ namespace DaNangTourism.Server.DAL
             }
         }
 
-        public void UpdateBudget(int scheduleId, double budget)
-        {
-            string sql = "UPDATE Schedules SET TotalBudget = TotalBudget + @budget WHERE ScheduleID = @scheduleId ";
-            MySqlParameter[] parameters = new MySqlParameter[]{
-                new MySqlParameter("@budget", budget),
-                new MySqlParameter("@scheduleId", scheduleId)
-            };
-            using (var con = new MySqlConnection(_connectionString))
-            {
-                con.Open();
-                using (var command = new MySqlCommand(sql, con))
-                {
-                    command.Parameters.AddRange(parameters);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
         /// <summary>
         /// Clone schedule
         /// </summary>

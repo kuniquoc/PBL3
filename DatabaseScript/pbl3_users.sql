@@ -31,7 +31,7 @@ CREATE TABLE `users` (
   `password_salt` blob NOT NULL,
   `permission` enum('admin','user') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
   `avatar_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `created_at` date NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -42,7 +42,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (18,'User6035','2000-01-01','ldblckrs',_binary '\Âó´tbòe\é‚\'¨4¿9\È#œ\îS6†¼§¨\ê\Ïõµ³B5bm¾m·HúC(@\Òe†\ãˆ*4\Í?>Î†½Àl¯',_binary '¡›ú\ÃV·¼\Ç~\Õ\é	°sn*°]\ÆÀY]Ž-\Æ!{[\ÙeÁ¡ó«¹}#ó÷ÀlyU}ÿ\ËrüšwŠ%\Ë\ÑHõ\Ì\Ó\á\Ä)ü™{\èª\í\Þ\ÌA\ÃÕ½ý\ï\ßF *H:|¨,O;\âöJšª\Â\Ü\Ð\ë¬f\Ü\âFYJþ\Ëòrs3[CŽ†cª±c\Å','admin','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-21'),(19,'string','2000-01-01','string',_binary '\á„9G)\\2Vv\É5ŠlYB¦ZPûO/ M}\×$Wv\Ù\ç\ÙÑ˜rn“C²\È+¼\r ldñd\ÛÁ5„Y÷\×',_binary 'œ+õÀ>\'Î€¨ÿðÙ²«¤0À–¶÷B¦n» \Ø8Žrt\Ñ	£œ¤Þ¨‘\éF:\Ã6£DÓ«cww„C(ahs§C4\Þ8DZ&\ì_\ÄH,©E,¬3n„i\ä (’‚{\rb\Ê}_\ÒM\ZL˜´\nÁð\ÎUtN¬`\í—\×qÀ\Ì[4‘°“ò[,','user','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-21'),(20,'admin','2000-01-01','admin',_binary '<ETAZ¹/u\ÖLy+e]ó\ÔÝµzÔ€\á¶žë§¹\ç#ú\ßw½XIË†\ÑS3\à¡`ö—œHu{ð›e\Û4\Íl#',_binary '™vqW†€‘%\Ë\ì3\ÃAØ¹sóˆ€D\r\Ú,ð%]\è}÷W\Ó\ï¸O\â#¡¯[,q!R?\Zž¬Où.®\â%\Æ1g1E=A\Ë\á»ë½~@XO©ª5\0\ë\\\É,3«5ž‰\0<<3qƒ¶ü\î8{L4\× /\Ïo¸­\à\rx\Ú¦','admin','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-21'),(21,'Quoc','1970-01-01','quoc',_binary '\å¡º^\ëù¥¶Có™k\ÊPgIY>¬\å\Ó<\í’\Ç\"7€\ZˆYdóOª–ò\Î\Ñb\ã;:VrpÇ™B\Ò ',_binary '6BMž`³.\ÆóJe±*¬,,:ÿT»¾;¼KuÚ§iŠY½\çV™Ÿ˜µqD\Ý\ÖûkQrI»‡\Ùy‡Ã¸dn\ÏD¿b1ƒÅ‹?·¤®\îðyc$«^K:qu¥A°\á\ï¨ç¨ƒ-ˆ\Ûó*i<~Zd\Øó\Ù=Àp\ì‘\ÇGü','admin','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-30'),(22,'User2473','1970-01-01','quoc1',_binary '¸‡%¹@ã·²œT{‘\ÜN§pŒ>¼SfÜŽˆ\é9¡’†;Y7ø\Ýx2\æ:\ÛÁ`”²Ä‰\å\î\Òjóýv',_binary ')ŽUM7*‘‚h¦¡‰i\Ø	 7ð1_¯u¿3Ù¿„–T\È\ÄX„¹&ü\Ò2mƒ9\ßø[‹Bx-|©µ\à7S0Fr\ÞUš“B\éµ˜Ñœ\Â©mU\çÿ\Ù]5œ\Ô\à\ÖN‰Î½1\Ô\Åpn:á´‰»=°\Ém\ï‰+8\Ãù¿ù\Â\Å\n¥¡(','user','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-31');
+INSERT INTO `users` VALUES (18,'User6035','2000-01-01','ldblckrs',_binary '\Âó´tbòe\é‚\'¨4¿9\È#œ\îS6†¼§¨\ê\Ïõµ³B5bm¾m·HúC(@\Òe†\ãˆ*4\Í?>Î†½Àl¯',_binary '¡›ú\ÃV·¼\Ç~\Õ\é	°sn*°]\ÆÀY]Ž-\Æ!{[\ÙeÁ¡ó«¹}#ó÷ÀlyU}ÿ\ËrüšwŠ%\Ë\ÑHõ\Ì\Ó\á\Ä)ü™{\èª\í\Þ\ÌA\ÃÕ½ý\ï\ßF *H:|¨,O;\âöJšª\Â\Ü\Ð\ë¬f\Ü\âFYJþ\Ëòrs3[CŽ†cª±c\Å','admin','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-21 00:00:00'),(19,'string','2000-01-01','string',_binary '\á„9G)\\2Vv\É5ŠlYB¦ZPûO/ M}\×$Wv\Ù\ç\ÙÑ˜rn“C²\È+¼\r ldñd\ÛÁ5„Y÷\×',_binary 'œ+õÀ>\'Î€¨ÿðÙ²«¤0À–¶÷B¦n» \Ø8Žrt\Ñ	£œ¤Þ¨‘\éF:\Ã6£DÓ«cww„C(ahs§C4\Þ8DZ&\ì_\ÄH,©E,¬3n„i\ä (’‚{\rb\Ê}_\ÒM\ZL˜´\nÁð\ÎUtN¬`\í—\×qÀ\Ì[4‘°“ò[,','user','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-21 00:00:00'),(20,'admin','2000-01-01','admin',_binary '<ETAZ¹/u\ÖLy+e]ó\ÔÝµzÔ€\á¶žë§¹\ç#ú\ßw½XIË†\ÑS3\à¡`ö—œHu{ð›e\Û4\Íl#',_binary '™vqW†€‘%\Ë\ì3\ÃAØ¹sóˆ€D\r\Ú,ð%]\è}÷W\Ó\ï¸O\â#¡¯[,q!R?\Zž¬Où.®\â%\Æ1g1E=A\Ë\á»ë½~@XO©ª5\0\ë\\\É,3«5ž‰\0<<3qƒ¶ü\î8{L4\× /\Ïo¸­\à\rx\Ú¦','admin','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-21 00:00:00'),(21,'Quoc','1970-01-01','quoc',_binary '\å¡º^\ëù¥¶Có™k\ÊPgIY>¬\å\Ó<\í’\Ç\"7€\ZˆYdóOª–ò\Î\Ñb\ã;:VrpÇ™B\Ò ',_binary '6BMž`³.\ÆóJe±*¬,,:ÿT»¾;¼KuÚ§iŠY½\çV™Ÿ˜µqD\Ý\ÖûkQrI»‡\Ùy‡Ã¸dn\ÏD¿b1ƒÅ‹?·¤®\îðyc$«^K:qu¥A°\á\ï¨ç¨ƒ-ˆ\Ûó*i<~Zd\Øó\Ù=Àp\ì‘\ÇGü','admin','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-30 00:00:00'),(22,'User2473','1970-01-01','quoc1',_binary '¸‡%¹@ã·²œT{‘\ÜN§pŒ>¼SfÜŽˆ\é9¡’†;Y7ø\Ýx2\æ:\ÛÁ`”²Ä‰\å\î\Òjóýv',_binary ')ŽUM7*‘‚h¦¡‰i\Ø	 7ð1_¯u¿3Ù¿„–T\È\ÄX„¹&ü\Ò2mƒ9\ßø[‹Bx-|©µ\à7S0Fr\ÞUš“B\éµ˜Ñœ\Â©mU\çÿ\Ù]5œ\Ô\à\ÖN‰Î½1\Ô\Åpn:á´‰»=°\Ém\ï‰+8\Ãù¿ù\Â\Å\n¥¡(','user','https://cdn3.iconfinder.com/data/icons/web-design-and-development-2-6/512/87-1024.png','2024-05-31 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -76,4 +76,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 13:22:50
+-- Dump completed on 2024-05-31 16:06:13

@@ -117,15 +117,14 @@ namespace DaNangTourism.Server.DAL
         /// </returns>
         public int AddReview(int userId, InputReviewModel review)
         {
-            string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment, Created_At) values (@userId, @destinationId, @rating, @comment, @create_at);" +
+            string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment, Created_At) values (@userId, @destinationId, @rating, @comment);" +
                 "SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@userId", userId),
                 new MySqlParameter("@destinationId", review.DestinationId),
                 new MySqlParameter("@rating", review.Rating),
-                new MySqlParameter("@comment", review.Comment),
-                new MySqlParameter("@create_at", DateTime.Now)
+                new MySqlParameter("@comment", review.Comment)
             };
             using (var connection = new MySqlConnection(_connectionString))
             {

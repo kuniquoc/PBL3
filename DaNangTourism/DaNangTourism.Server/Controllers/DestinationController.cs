@@ -181,6 +181,24 @@ namespace DaNangTourism.Server.Controllers
                 return StatusCode(500, new { message = e.Message });
             }
         }
+        [HttpGet("GetToUpdate/{id}")]
+        public IActionResult GetDestinationToUpdate([FromRoute] int id)
+        {
+            try
+            {
+                // xác thực admin
+                if (!_accountService.IsAdmin())
+                {
+                    return Unauthorized(new { message = "Can't access it, You aren't admin" });
+                }
+                var returnDes = _destinationService.GetDestinationToUpdate(id);
+                return StatusCode(200, new { message = "Get successful", data = returnDes });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { message = e.Message });
+            }
+        }
 
         [HttpPut("update/{id}")]
         public IActionResult UpdateDestination([FromRoute] int id, [FromBody] InputDestinationModel destination)

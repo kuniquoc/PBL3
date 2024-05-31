@@ -15,6 +15,7 @@ namespace DaNangTourism.Server.DAL
         IEnumerable<DestinationElement> GetDestinationElements(string sql, params MySqlParameter[] parameters);
         int GetDestinationCount(string sql, params MySqlParameter[] parameters);
         int AddDestination(InputDestinationModel destination);
+        InputDestinationModel GetDestinationToUpdate(int id);
         InputDestinationModel UpdateDestination(int id, InputDestinationModel destination);
         int DeleteDestination(int id);
         string GetName(int DestinationId);
@@ -219,21 +220,20 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int AddDestination(InputDestinationModel destination)
         {
-            string sql = "INSERT INTO Destinations(Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction, Created_At)" +
-                "VALUES (@name, @localName, @address, @googleMapUrl, @cost, @openTime, @closeTime, @images, @tags, @introduction, @created_at); SELECT LAST_INSERT_ID();";
+            string sql = "INSERT INTO Destinations(Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction)" +
+                "VALUES (@name, @localName, @address, @googleMapUrl, @cost, @openTime, @closeTime, @images, @tags, @introduction); SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters =
             [
-              new("@name", destination.Name),
-        new("@localName", destination.LocalName),
-        new("@address", destination.Address),
-        new("@googleMapUrl", destination.GoogleMapUrl),
-        new("@cost", destination.Cost),
-        new("@openTime", destination.OpenTime),
-        new("@closeTime", destination.CloseTime),
-        new("@images", string.Join(";",destination.Images)),
-        new("@tags", string.Join(";",destination.Tags)),
-        new("@introduction", destination.Introduction),
-        new("@created_at", TimeOnly.FromDateTime(DateTime.Now))
+                new("@name", destination.Name),
+                new("@localName", destination.LocalName),
+                new("@address", destination.Address),
+                new("@googleMapUrl", destination.GoogleMapUrl),
+                new("@cost", destination.Cost),
+                new("@openTime", destination.OpenTime),
+                new("@closeTime", destination.CloseTime),
+                new("@images", string.Join(";",destination.Images)),
+                new("@tags", string.Join(";",destination.Tags)),
+                new("@introduction", destination.Introduction),
             ];
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -242,6 +242,28 @@ namespace DaNangTourism.Server.DAL
                 {
                     command.Parameters.AddRange(parameters);
                     return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+        }
+
+        public InputDestinationModel GetDestinationToUpdate(int id)
+        {
+            string sql = "SELECT Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction FROM Destinations WHERE DestinationId = @id";
+            MySqlParameter parameter = new MySqlParameter("@id", id);
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new MySqlCommand(sql, connection))
+                {
+                    command.Parameters.Add(parameter);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new InputDestinationModel(reader);
+                        }
+                        throw new Exception("Destination doesn't exist");
+                    }
                 }
             }
         }
