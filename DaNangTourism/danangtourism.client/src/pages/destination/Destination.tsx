@@ -4,12 +4,14 @@ import DesImgSlider from './DesImgSlider'
 import { DestinationDetailProps } from '../../types/destination'
 import DesInfo from './DesInfo'
 import RandomExplore from './RandomExplore'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { PiCalendarPlusBold, PiHeartFill, PiShareFatFill } from 'react-icons/pi'
 import { ToggleButton, Button } from '../../components/Buttons'
 import Reviews from './Reviews'
 import Loader from '../../components/Loader'
+import { useToast } from '../../hook/useToast'
+import { UserContext } from '../../context/UserContext'
 
 const Destination: React.FC = () => {
 	const [destination, setDestination] = useState<
@@ -17,23 +19,27 @@ const Destination: React.FC = () => {
 	>(undefined)
 	const [loading, setLoading] = useState(true)
 	const { id } = useParams()
+	const toast = useToast()
 
 	const getDestination = async (id: string) => {
 		try {
-			setDestination(undefined)
-			const response = await axios.get(`/api/destination/id-${id}.json`)
-			// simulate delay
-			await new Promise((resolve) => setTimeout(resolve, 2500))
+			const response = await axios.get('/api/destination/detail/' + id)
+
 			setDestination(response.data.data)
-			console.log('response', response.data.data)
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error)
+			toast.error('Error', error.response.data.message)
 		}
 		setLoading(false)
 	}
 
 	useEffect(() => {
-		getDestination(id ?? '')
+		const parsedId = parseInt(id ?? '', 10)
+		if (isNaN(parsedId)) {
+			return
+		} else {
+			getDestination(parsedId.toString())
+		}
 	}, [id])
 
 	useEffect(() => {
@@ -60,6 +66,7 @@ const Destination: React.FC = () => {
 				</div>
 				<ButtonsBar
 					destinationId={id ? Number(id) : 0}
+					initFavorite={destination.favorite}
 					mapUrl={destination.googleMapUrl}
 				/>
 				<div className=" mt-3 flex w-full gap-5 pt-5">
@@ -74,13 +81,13 @@ const Destination: React.FC = () => {
 					</div>
 					<div className="flex w-[380px] flex-col items-center gap-4">
 						<DesInfo
-							localName={destination.information?.localName}
-							address={destination.information?.address}
-							rating={destination.generalReview?.rating}
-							cost={destination.information?.cost}
-							openTime={destination.information?.openTime}
-							closeTime={destination.information?.closeTime}
-							tags={destination.information?.tags}
+							localName={destination.information.localName}
+							address={destination.information.address}
+							rating={destination.generalReview.rating}
+							cost={destination.information.cost}
+							openTime={destination.information.openTime}
+							closeTime={destination.information.closeTime}
+							tags={destination.information.tags}
 						/>
 						<RandomExplore />
 					</div>
@@ -89,29 +96,47 @@ const Destination: React.FC = () => {
 					destinationId={id ? Number(id) : 0}
 					className="mb-5 w-full"
 					general={destination?.generalReview}
+					onChanged={() => getDestination(id ?? '')}
 				/>
 			</div>
 		)
 }
 
-const ButtonsBar: React.FC<{ destinationId: number; mapUrl?: string }> = ({
-	destinationId,
-	mapUrl,
-}) => {
-	const [favorited, setFavorited] = useState(false)
+const ButtonsBar: React.FC<{
+	destinationId: number
+	mapUrl?: string
+	initFavorite: boolean
+}> = ({ destinationId, mapUrl, initFavorite }) => {
+	const [favorite, setFavorite] = useState(initFavorite)
+	const { user } = useContext(UserContext)
+	const toast = useToast()
+	const handleChangeFavorite = async () => {
+		if (!user || user.id === 0) {
+			toast.error('Error', 'Please login to favorite this destination')
+			return
+		}
+		setFavorite(!favorite)
+		try {
+			await axios.put('/api/destination/favorite', {
+				destinationId,
+				favorite,
+			})
+		} catch (error: any) {
+			console.error(error)
+			toast.error('Error', error.response.data.message)
+		}
+	}
+
 	return (
 		<div className="flex w-full items-center justify-between ">
 			<div className="flex gap-3">
 				<ToggleButton
 					className="w-[120px] border-2 font-semibold"
-					onClick={() => {
-						setFavorited((prev) => !prev)
-						console.log('Favorite ', destinationId, !favorited)
-					}}
+					onClick={handleChangeFavorite}
 					text="Favorite"
 					toggledText="Favorited"
 					icon={<PiHeartFill className="text-xl" />}
-					initToggled={favorited}
+					initToggled={initFavorite}
 					btnColor="#ee685e"
 				/>
 

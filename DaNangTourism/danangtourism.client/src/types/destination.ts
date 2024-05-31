@@ -30,14 +30,18 @@ export interface GeneralReviewProps {
 	}
 }
 
-export interface DestinationEditorProps {
+export interface DestinationEditorProps extends DesInfoProps {
 	id: number
-	information: DesInfoProps
 	introduction: string
 	googleMapUrl: string
 }
 
 export interface DestinationDetailProps extends DestinationEditorProps {
+	id: number
+	favorite: boolean
+	information: DesInfoProps
+	introduction: string
+	googleMapUrl: string
 	generalReview: GeneralReviewProps
 }
 
@@ -54,7 +58,6 @@ export interface SortDesProps {
 	id: number
 	name: string
 	address: string
-	tags: string[]
 	rating: number
 	image: string
 }

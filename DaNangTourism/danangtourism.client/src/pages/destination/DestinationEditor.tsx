@@ -9,16 +9,14 @@ import axios from 'axios'
 
 const initDes = {
 	id: 0,
-	information: {
-		name: '',
-		localName: '',
-		address: '',
-		images: [],
-		cost: 0,
-		openTime: '',
-		closeTime: '',
-		tags: [],
-	},
+	name: '',
+	localName: '',
+	address: '',
+	images: [],
+	cost: 0,
+	openTime: '',
+	closeTime: '',
+	tags: [],
 	introduction: '',
 	googleMapUrl: '',
 }
@@ -40,37 +38,35 @@ const DestinationEditor: React.FC = () => {
 
 	const handleGetDes = async (desId: number) => {
 		try {
-			const response = await axios.get(`/api/destination/edit-${desId}.json`)
+			const response = await axios.get(`/api/destination/detail/${desId}`)
 			setDes(response.data.data)
 		} catch (error) {
 			console.error(error)
 		}
+		console.log('handleGetDes', des)
 	}
 
 	const [des, setDes] = useState<DestinationEditorProps>(initDes)
 	const [is247, setIs247] = useState(false)
 
 	useEffect(() => {
-		if (
-			des.information.openTime === '00:00' &&
-			des.information.closeTime === '23:59'
-		) {
+		if (des.openTime === '00:00' && des.closeTime === '23:59') {
 			setIs247(true)
 		} else {
 			setIs247(false)
 		}
-	}, [des.information.openTime, des.information.closeTime])
+	}, [des.openTime, des.closeTime])
 
 	const handleReset = () => {
 		setDes(initDes)
 	}
 
 	const validate = () => {
-		if (!des.information.name) {
+		if (!des.name) {
 			toast.error('Empty name', 'Please enter destination name')
 			return false
 		}
-		if (!des.information.address) {
+		if (!des.address) {
 			toast.error('Empty address', 'Please enter destination address')
 			return false
 		}
@@ -82,15 +78,15 @@ const DestinationEditor: React.FC = () => {
 			toast.error('Empty content', 'Please enter destination content')
 			return false
 		}
-		if (des.information.tags.length === 0) {
+		if (des.tags.length === 0) {
 			toast.error('Empty tags', 'Please enter destination tags')
 			return false
 		}
-		if (des.information.images.length === 0) {
+		if (des.images.length === 0) {
 			toast.error('Empty images', 'Please upload destination images')
 			return false
 		}
-		if (!is247 && (!des.information.openTime || !des.information.closeTime)) {
+		if (!is247 && (!des.openTime || !des.closeTime)) {
 			toast.error(
 				'Empty time',
 				'Please enter destination opening and closing time',
@@ -103,28 +99,9 @@ const DestinationEditor: React.FC = () => {
 	const handleSubmit = async () => {
 		if (!validate()) return
 
-		const openTimeObj = {
-			hour: des.information.openTime.split(':')[0],
-			minute: des.information.openTime.split(':')[1],
-		}
-
-		const closeTimeObj = {
-			hour: des.information.closeTime.split(':')[0],
-			minute: des.information.closeTime.split(':')[1],
-		}
-
 		if (editMode) {
 			try {
-				const response = await axios.post('/api/destination/update', {
-					id: des.id,
-					information: {
-						...des.information,
-						openTime: openTimeObj,
-						closeTime: closeTimeObj,
-					},
-					introduction: des.introduction,
-					googleMapUrl: des.googleMapUrl,
-				})
+				const response = await axios.post('/api/destination/update', des)
 				if (response.status === 200) {
 					toast.success('Update success', 'Destination updated successfully')
 					await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -136,15 +113,7 @@ const DestinationEditor: React.FC = () => {
 			}
 		} else {
 			try {
-				const response = await axios.post('/api/destination/create', {
-					information: {
-						...des.information,
-						openTime: openTimeObj,
-						closeTime: closeTimeObj,
-					},
-					introduction: des.introduction,
-					googleMapUrl: des.googleMapUrl,
-				})
+				const response = await axios.post('/api/destination/create', des)
 				if (response.status === 200) {
 					toast.success('Post success', 'Destination posted successfully')
 					await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -169,10 +138,7 @@ const DestinationEditor: React.FC = () => {
 		if (url) {
 			setDes({
 				...des,
-				information: {
-					...des.information,
-					images: [...des.information.images, url],
-				},
+				images: [...des.images, url],
 			})
 			toast.success('Upload success', 'Image uploaded successfully')
 		} else {
@@ -194,18 +160,32 @@ const DestinationEditor: React.FC = () => {
 							Name
 						</label>
 						<input
-							className="h-9 flex-1 border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
+							className="h-9 w-[440px] border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
 							id="des-name"
 							type="text"
 							placeholder="Enter destination name"
-							value={des?.information.name || ''}
+							value={des.name || ''}
 							onChange={(e) => {
 								setDes({
 									...des,
-									information: {
-										...des?.information,
-										name: e.target.value,
-									},
+									name: e.target.value,
+								})
+							}}
+							required
+						/>
+						<label className="ml-4 w-[106px] font-semibold" htmlFor="des-name">
+							Local Name
+						</label>
+						<input
+							className="h-9 flex-1 border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
+							id="des-local-name"
+							type="text"
+							placeholder="Enter destination local name"
+							value={des.localName || ''}
+							onChange={(e) => {
+								setDes({
+									...des,
+									localName: e.target.value,
 								})
 							}}
 							required
@@ -222,14 +202,11 @@ const DestinationEditor: React.FC = () => {
 									id="des-cost"
 									type="number"
 									placeholder="0"
-									value={des?.information.cost || 0}
+									value={des.cost || 0}
 									onChange={(e) => {
 										setDes({
 											...des,
-											information: {
-												...des?.information,
-												cost: Number(e.target.value),
-											},
+											cost: Number(e.target.value),
 										})
 									}}
 									required
@@ -246,11 +223,8 @@ const DestinationEditor: React.FC = () => {
 								onChange={(e) => {
 									setDes({
 										...des,
-										information: {
-											...des?.information,
-											openTime: e.target.checked ? '00:00' : '',
-											closeTime: e.target.checked ? '23:59' : '',
-										},
+										openTime: e.target.checked ? '00:00' : '',
+										closeTime: e.target.checked ? '23:59' : '',
 									})
 								}}
 							/>
@@ -268,14 +242,11 @@ const DestinationEditor: React.FC = () => {
 								className="h-9 invalid:focus:border-tertiary-1"
 								id="des-open"
 								type="time"
-								value={des?.information.openTime || ''}
+								value={des.openTime || ''}
 								onChange={(e) =>
 									setDes({
 										...des,
-										information: {
-											...des?.information,
-											openTime: e.target.value,
-										},
+										openTime: e.target.value,
 									})
 								}
 								required={!is247}
@@ -291,17 +262,14 @@ const DestinationEditor: React.FC = () => {
 								className="h-9 invalid:focus:border-tertiary-1"
 								id="des-close"
 								type="time"
-								value={des?.information.closeTime || ''}
+								value={des.closeTime || ''}
 								onChange={(e) =>
 									setDes({
 										...des,
-										information: {
-											...des?.information,
-											closeTime: e.target.value,
-										},
+										closeTime: e.target.value,
 									})
 								}
-								min={!is247 ? des.information.openTime : ''}
+								min={!is247 ? des.openTime : ''}
 								required={!is247}
 							/>
 						</div>
@@ -315,14 +283,11 @@ const DestinationEditor: React.FC = () => {
 							id="des-address"
 							type="text"
 							placeholder="Enter destination address"
-							value={des?.information.address || ''}
+							value={des.address || ''}
 							onChange={(e) => {
 								setDes({
 									...des,
-									information: {
-										...des?.information,
-										address: e.target.value,
-									},
+									address: e.target.value,
 								})
 							}}
 							required
@@ -352,13 +317,11 @@ const DestinationEditor: React.FC = () => {
 							Tags
 						</label>
 						<input
-							className={`h-9 w-[280px] border-borderCol-1 px-3 text-sm ${des.information.tags?.length === 3 && 'bg-[#f9f9f9] focus:border-tertiary-1'}`}
+							className={`h-9 w-[280px] border-borderCol-1 px-3 text-sm ${des.tags?.length === 3 && 'bg-[#f9f9f9] focus:border-tertiary-1'}`}
 							id="des-tags"
 							type="text"
 							placeholder={
-								des.information.tags?.length === 3
-									? 'Maximum tags reached'
-									: 'Enter tags'
+								des.tags?.length === 3 ? 'Maximum tags reached' : 'Enter tags'
 							}
 							onKeyDown={(e) => {
 								if (e.key === 'Enter') {
@@ -367,19 +330,16 @@ const DestinationEditor: React.FC = () => {
 									if (tag) {
 										setDes({
 											...des,
-											information: {
-												...des?.information,
-												tags: [...des.information.tags, tag],
-											},
+											tags: [...des.tags, tag],
 										})
 										tagInput.value = ''
 									}
 								}
 							}}
-							readOnly={des.information.tags?.length === 3}
+							readOnly={des.tags?.length === 3}
 						/>
 						<div className="inline-flex h-9 flex-1 items-center gap-2 overflow-x-auto">
-							{des.information.tags?.map((tag, index) => (
+							{des.tags?.map((tag, index) => (
 								<div
 									key={index}
 									className="flex items-center gap-1 rounded-full border border-[#cccccc] py-1 pl-3 pr-1 text-xs font-semibold hover:bg-[#2898c813]"
@@ -390,12 +350,7 @@ const DestinationEditor: React.FC = () => {
 										onClick={() => {
 											setDes({
 												...des,
-												information: {
-													...des?.information,
-													tags: des?.information.tags.filter(
-														(_, i) => i !== index,
-													),
-												},
+												tags: des.tags.filter((_, i) => i !== index),
 											})
 										}}
 									>
@@ -410,7 +365,7 @@ const DestinationEditor: React.FC = () => {
 							Images
 						</label>
 						<div className="flex h-full w-[280px] flex-col overflow-y-auto rounded-lg border border-borderCol-1 p-2 text-sm">
-							{des.information.images?.map((img, index) => (
+							{des.images?.map((img, index) => (
 								<div className="flex h-8 w-full items-center justify-between gap-2 rounded px-2 py-1.5 hover:bg-[#EDEDED]">
 									<a
 										className="line-clamp-1 w-full hover:text-primary-1 hover:underline"
@@ -424,12 +379,7 @@ const DestinationEditor: React.FC = () => {
 										onClick={() => {
 											setDes({
 												...des,
-												information: {
-													...des?.information,
-													images: des?.information.images.filter(
-														(_, i) => i !== index,
-													),
-												},
+												images: des.images.filter((_, i) => i !== index),
 											})
 										}}
 									>
