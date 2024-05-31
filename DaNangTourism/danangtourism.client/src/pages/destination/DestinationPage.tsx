@@ -9,17 +9,17 @@ import { DesListItemProps } from '../../types/destination'
 import { SortTypeButton, ToggleButton } from '../../components/Buttons'
 import { twMerge } from 'tailwind-merge'
 import { AnimatePresence, motion } from 'framer-motion'
-
+import noItemImg from '../../assets/no-item.png'
 const locations = [
 	'All',
-	'Hải Châu',
-	'Cẩm Lệ',
-	'Thanh Khê',
-	'Liên Chiểu',
-	'Ngũ Hành Sơn',
-	'Sơn Trà',
-	'Hòa Vang',
-	'Hoàng Sa',
+	'Hai Chau',
+	'Cam Le',
+	'Thanh Khe',
+	'Lien Chieu',
+	'Ngu Hanh Son',
+	'Son Tra',
+	'Hoa Vang',
+	'Hoang Sa',
 ]
 
 const sortBy = [
@@ -54,6 +54,7 @@ const initFilter = {
 }
 const DestinationPage: React.FC = () => {
 	const cardPerPage = 12
+	const [numbOfPages, setNumbOfPages] = useState(1)
 	const [destinations, setDestinations] = useState<DesListItemProps[]>()
 	const [searchValue, setSearchValue] = useState('')
 	const [sort, setSort] = useState({
@@ -63,38 +64,80 @@ const DestinationPage: React.FC = () => {
 	const [filter, setFilter] = useState(initFilter)
 	const [currentPage, setCurrentPage] = useState(1)
 	const [isFilterOpen, setIsFilterOpen] = useState(false)
+	const [loading, setLoading] = useState(false)
 
 	const navigate = useNavigate()
 	const toast = useToast()
 	document.title = 'Destinations | Danang Tourism'
 
 	useEffect(() => {
-		getDestinations(currentPage)
-	}, [currentPage])
+		getDestinations()
+	}, [currentPage, sort])
 
-	const getDestinations = async (page: number) => {
+	const getDestinations = async () => {
+		setLoading(true)
 		try {
-			setDestinations(undefined)
-			const response = await axios.get(`/api/destination/list-${page}.json`)
-			// simulate delay
-			await new Promise((resolve) => setTimeout(resolve, 2000))
-			setDestinations(response.data.data.items)
+			let params = {}
+			params = { ...params, page: currentPage, limit: cardPerPage }
+			if (searchValue) {
+				params = { ...params, search: searchValue }
+			}
+			if (sort.by) {
+				params = { ...params, sortBy: sortBy[sort.by].value }
+			}
+			if (sort.type) {
+				params = { ...params, sortType: sort.type }
+			}
+			if (filter.location !== 0) {
+				params = {
+					...params,
+					location: encodeURIComponent(locations[filter.location]),
+				}
+			}
+			if (filter.price.min !== -1) {
+				params = { ...params, costFrom: filter.price.min }
+			}
+			if (filter.price.max !== -1) {
+				params = { ...params, costTo: filter.price.max }
+			}
+			if (filter.rating.min !== -1) {
+				params = { ...params, ratingFrom: filter.rating.min }
+			}
+			if (filter.rating.max !== -1) {
+				params = { ...params, ratingTo: filter.rating.max }
+			}
+			const response = await axios.get('/api/destination/list', {
+				params: params,
+			})
+			const data = response.data.data
+			setDestinations(data.items)
+			setCurrentPage(data.page)
+			setNumbOfPages(Math.ceil(data.total / cardPerPage))
 		} catch (error: any) {
-			toast.error('Failed to fetch destinations', error.message)
+			if (error.response.status === 404) {
+				setDestinations(undefined)
+			} else {
+				console.log(error)
+				toast.error('Failed to fetch destinations', error.message)
+			}
 		}
+		setLoading(false)
 	}
 
-	const handleSearch = async () => {
+	const getAllDestinations = async () => {
+		setLoading(true)
 		try {
-			// setDestinations(undefined)
-			// const response = await axios.get(`/api/destination/search.json?query=${searchValue}`)
-			// await new Promise((resolve) => setTimeout(resolve, 2000))
-			// setDestinations(response.data.data.items)
-
-			console.log('searchValue', searchValue, 'sort', sort)
+			const response = await axios.get('/api/destination/list', {
+				params: { page: currentPage, limit: cardPerPage },
+			})
+			const data = response.data.data
+			setDestinations(data.items)
+			setCurrentPage(data.page)
+			setNumbOfPages(Math.ceil(data.total / cardPerPage))
 		} catch (error: any) {
 			toast.error('Failed to fetch destinations', error.message)
 		}
+		setLoading(false)
 	}
 
 	return (
@@ -104,7 +147,7 @@ const DestinationPage: React.FC = () => {
 					<SearchBox
 						className="h-9 w-[300px]"
 						onChangeValue={(event) => setSearchValue(event.target.value)}
-						onClickSearch={handleSearch}
+						onClickSearch={getDestinations}
 					/>
 					<div className="item-center relative flex gap-4">
 						<ToggleButton
@@ -153,17 +196,13 @@ const DestinationPage: React.FC = () => {
 										setFilter={setFilter}
 										className={isFilterOpen ? 'block' : 'hidden'}
 										onSubmit={() => {
-											console.log('filter', filter)
 											setIsFilterOpen(false)
-											toast.success(
-												'Filter applied',
-												'Filter applied successfully',
-											)
+											getDestinations()
 										}}
 										onReset={() => {
 											setFilter(initFilter)
 											setIsFilterOpen(false)
-											toast.success('Filter reset', 'Filter reset successfully')
+											getAllDestinations()
 										}}
 									/>
 								</motion.div>
@@ -171,27 +210,38 @@ const DestinationPage: React.FC = () => {
 						</AnimatePresence>
 					</div>
 				</div>
-				<div className="flex flex-wrap justify-between gap-y-6">
-					{destinations
-						? destinations.map((des, index) => (
-								<DesPreviewCard
-									key={index}
-									onVisit={() => navigate(`/destination/${des.id}`)}
-									{...des}
-								/>
-							))
-						: Array.from({ length: cardPerPage }).map((_, index) => (
-								<DPCLoading key={index} />
-							))}
-					<Pagination
-						className="mt-2 w-full justify-center"
-						numbOfPages={8}
-						currentPage={currentPage}
-						setCurrentPage={(numb) => {
-							setCurrentPage(numb)
-							console.log(numb)
-						}}
-					/>
+				<div className="flex flex-wrap justify-around gap-y-6">
+					{destinations ? (
+						destinations.map((des, index) => (
+							<DesPreviewCard
+								key={index}
+								onVisit={() => navigate(`/destination/${des.id}`)}
+								{...des}
+							/>
+						))
+					) : loading ? (
+						Array.from({ length: cardPerPage }).map((_, index) => (
+							<DPCLoading key={index} />
+						))
+					) : (
+						<div className="flex h-[480px] w-full flex-col items-center justify-center gap-5">
+							<img className="h-[320px]" src={noItemImg} alt="No item found" />
+							<p className="text-3xl font-semibold tracking-wide text-txtCol-3">
+								No destinations found
+							</p>
+						</div>
+					)}
+					{destinations && (
+						<Pagination
+							className="mt-2 w-full justify-center"
+							numbOfPages={numbOfPages}
+							currentPage={currentPage}
+							setCurrentPage={(numb) => {
+								setCurrentPage(numb)
+								console.log(numb)
+							}}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

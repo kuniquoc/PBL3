@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import PageNotFound from '../PageNotFound'
 import DesImgSlider from './DesImgSlider'
 import { DestinationDetailProps } from '../../types/destination'
@@ -6,7 +6,12 @@ import DesInfo from './DesInfo'
 import RandomExplore from './RandomExplore'
 import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { PiCalendarPlusBold, PiHeartFill, PiShareFatFill } from 'react-icons/pi'
+import {
+	PiCalendarPlusBold,
+	PiHeartFill,
+	PiPenFill,
+	PiShareFatFill,
+} from 'react-icons/pi'
 import { ToggleButton, Button } from '../../components/Buttons'
 import Reviews from './Reviews'
 import Loader from '../../components/Loader'
@@ -110,16 +115,12 @@ const ButtonsBar: React.FC<{
 	const [favorite, setFavorite] = useState(initFavorite)
 	const { user } = useContext(UserContext)
 	const toast = useToast()
-	const handleChangeFavorite = async () => {
-		if (!user || user.id === 0) {
-			toast.error('Error', 'Please login to favorite this destination')
-			return
-		}
-		setFavorite(!favorite)
+	const navigate = useNavigate()
+	const handleChangeFavorite = async (isFavorite: boolean) => {
 		try {
 			await axios.put('/api/destination/favorite', {
 				destinationId,
-				favorite,
+				isFavorite,
 			})
 		} catch (error: any) {
 			console.error(error)
@@ -130,16 +131,45 @@ const ButtonsBar: React.FC<{
 	return (
 		<div className="flex w-full items-center justify-between ">
 			<div className="flex gap-3">
-				<ToggleButton
-					className="w-[120px] border-2 font-semibold"
-					onClick={handleChangeFavorite}
-					text="Favorite"
-					toggledText="Favorited"
-					icon={<PiHeartFill className="text-xl" />}
-					initToggled={initFavorite}
-					btnColor="#ee685e"
-				/>
-
+				<div className="relative">
+					<ToggleButton
+						className="w-[132px] border-2 font-semibold"
+						onClick={() => {
+							setFavorite(!favorite)
+							handleChangeFavorite(!favorite)
+						}}
+						text="Favorite"
+						toggledText="Unfavorite"
+						icon={<PiHeartFill className="text-xl" />}
+						initToggled={initFavorite}
+						btnColor="#ee685e"
+						disabled={!user || user.id === 0}
+					/>
+					{(!user || user.id === 0) && (
+						<div
+							className="absolute left-0 top-0 h-full w-full cursor-pointer"
+							onClick={() => {
+								toast.error(
+									'Error',
+									'Please login to favorite this destination',
+								)
+							}}
+						></div>
+					)}
+				</div>
+			</div>
+			<div className="flex gap-3">
+				{user.role === 'admin' && (
+					<Button
+						className="border-2 border-txtCol-1 font-semibold text-txtCol-1 hover:bg-[#e8e8ff]"
+						onClick={() => {
+							navigate('/destination/edit/' + destinationId)
+						}}
+					>
+						<PiPenFill className="text-xl" />
+						Edit destination
+					</Button>
+				)}
 				<Button
 					className="w-[120px] border-2 border-secondary-1 font-semibold text-secondary-1 hover:bg-[#daf8f0]"
 					onClick={() => {
@@ -148,21 +178,11 @@ const ButtonsBar: React.FC<{
 				>
 					Google Map
 				</Button>
-			</div>
-			<div className="flex gap-3">
-				<Button
-					className="border-2 border-txtCol-1 font-semibold text-txtCol-1 hover:bg-[#e8e8ff]"
-					onClick={() => {
-						console.log('Add to schedule ', destinationId)
-					}}
-				>
-					<PiCalendarPlusBold className="text-xl" />
-					Add to schedule
-				</Button>
 				<Button
 					className="bg-primary-2 font-semibold text-white hover:bg-primary-1"
 					onClick={() => {
-						console.log('Share ', destinationId)
+						navigator.clipboard.writeText(window.location.href)
+						toast.success('Copied', 'Link copied to clipboard')
 					}}
 				>
 					<PiShareFatFill className="text-xl" />
