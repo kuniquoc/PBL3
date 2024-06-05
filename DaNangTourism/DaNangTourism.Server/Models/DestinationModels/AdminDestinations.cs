@@ -49,8 +49,8 @@ namespace DaNangTourism.Server.Models.DestinationModels
             Name = reader.GetString(reader.GetOrdinal("Name"));
             Address = reader.GetString(reader.GetOrdinal("Address"));
             Rating = reader.GetFloat(reader.GetOrdinal("Rating"));
-            CountOfReview = reader.GetInt32(reader.GetOrdinal("CountOfReview"));
-            CountOfFavorite = reader.GetInt32(reader.GetOrdinal("CountOfFavorite"));
+            CountOfReview = reader.GetInt32(reader.GetOrdinal("Review"));
+            CountOfFavorite = reader.GetInt32(reader.GetOrdinal("Favorite"));
             Created_At = reader.GetDateTime(reader.GetOrdinal("Created_At"));
         }
     }
