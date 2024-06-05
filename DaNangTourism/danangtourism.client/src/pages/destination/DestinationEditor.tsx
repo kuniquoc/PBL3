@@ -29,6 +29,8 @@ const DestinationEditor: React.FC = () => {
 	const [editMode, setEditMode] = useState(false)
 	const [loading, setLoading] = useState(true)
 	const [invalid, setInvalid] = useState(false)
+	const [des, setDes] = useState<DestinationEditorProps>(initDes)
+	const [is247, setIs247] = useState(false)
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -54,9 +56,6 @@ const DestinationEditor: React.FC = () => {
 		}
 		setLoading(false)
 	}
-
-	const [des, setDes] = useState<DestinationEditorProps>(initDes)
-	const [is247, setIs247] = useState(false)
 
 	useEffect(() => {
 		if (des.openTime === '00:00' && des.closeTime === '23:59') {

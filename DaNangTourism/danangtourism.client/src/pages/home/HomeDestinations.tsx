@@ -17,7 +17,7 @@ type HomeDestinationType = {
 	name: string
 	address: string
 	rating: number
-	thumbnail: string
+	image: string
 }
 
 const HomeDestinations: React.FC<HomeDestinationsProps> = ({ className }) => {
@@ -27,7 +27,7 @@ const HomeDestinations: React.FC<HomeDestinationsProps> = ({ className }) => {
 	const [isHovered, setIsHovered] = useState(false)
 	const getHomeDestinations = async () => {
 		try {
-			const response = await axios.get('/api/destination/home-des.json')
+			const response = await axios.get('/api/destination/home')
 			setDestinations(response.data.data)
 		} catch (error) {
 			console.error(error)
@@ -64,7 +64,7 @@ const HomeDestinations: React.FC<HomeDestinationsProps> = ({ className }) => {
 					<motion.img
 						key={destinations[sliderIndex]?.id}
 						className="h-full w-full rounded object-cover"
-						src={destinations[sliderIndex]?.thumbnail}
+						src={destinations[sliderIndex]?.image}
 						alt={`image ${sliderIndex}`}
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}

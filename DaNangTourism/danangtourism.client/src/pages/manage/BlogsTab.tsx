@@ -24,20 +24,21 @@ const sortBy = [
 		label: 'Title',
 	},
 	{
-		value: 'view',
-		label: 'View count',
+		value: 'views',
+		label: 'Views count',
 	},
 ]
 
 const blogStatus = [
+	{ value: 'all', label: 'All' },
 	{
 		value: 'pending',
 		label: 'Pending',
 	},
 	{
-		value: 'approved',
+		value: 'published',
 
-		label: 'Approved',
+		label: 'Published',
 	},
 	{
 		value: 'rejected',
@@ -58,15 +59,22 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
 	const [blogs, setBlogs] = useState<ManageBlogProps[]>()
-	const handleSearch = () => {
-		console.log(searchValue, sortBy[sort.by].value, sort.type)
-	}
+	const [loading, setLoading] = useState(true)
 
 	const handleGetBlogs = async () => {
 		setBlogs(undefined)
+		setLoading(true)
 		try {
-			const response = await axios.get(`api/blog/manage-${currentPage}.json`)
-			await new Promise((resolve) => setTimeout(resolve, 1000))
+			const response = await axios.get(`api/blog/managelist`, {
+				params: {
+					page: currentPage,
+					limit: limit,
+					sortBy: sortBy[sort.by].value,
+					sortType: sort.type,
+					...(status && { status: blogStatus[status].value }),
+					...(searchValue && { search: searchValue }),
+				},
+			})
 			const res = response.data.data
 			setBlogs(res.items)
 			setTotal(res.total)
@@ -74,11 +82,12 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 			toast.error('Error', 'Failed to get blogs')
 			console.log(error)
 		}
+		setLoading(false)
 	}
 
 	useEffect(() => {
 		handleGetBlogs()
-	}, [currentPage, sort, status])
+	}, [currentPage, sort, status, searchValue])
 
 	return (
 		<div
@@ -92,7 +101,7 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 					<SearchBox
 						className="h-9 w-[220px]"
 						onChangeValue={(event) => setSearchValue(event.target.value)}
-						onClickSearch={handleSearch}
+						onClickSearch={handleGetBlogs}
 					/>
 					<DropdownSelect
 						id="sort-by"
@@ -132,11 +141,17 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 				</div>
 			</div>
 			<div className="mb-3 flex w-full flex-col items-center border border-borderCol-1">
-				{blogs ? (
-					<BlogsTable blogs={blogs} />
+				{blogs && blogs.length > 0 ? (
+					<BlogsTable blogs={blogs} onUpdated={handleGetBlogs} />
 				) : (
 					<div className="flex h-[512.4px] w-full items-center justify-center bg-gray-50">
-						<Loader className="h-16 w-16" />
+						{loading ? (
+							<Loader className="h-16 w-16" />
+						) : (
+							<h3 className=" text-2xl font-semibold text-txtCol-3">
+								No blog found
+							</h3>
+						)}
 					</div>
 				)}
 			</div>
@@ -158,8 +173,43 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 	)
 }
 
-const BlogsTable: React.FC<{ blogs: ManageBlogProps[] }> = ({ blogs }) => {
+const BlogsTable: React.FC<{
+	blogs: ManageBlogProps[]
+	onUpdated: () => void
+}> = ({ blogs, onUpdated }) => {
 	const toast = useToast()
+	const handleApprove = async (id: number) => {
+		try {
+			await axios.put(`api/blog/updateStatus/${id}?status=2`)
+			toast.success('Success', 'Blog approved')
+			onUpdated()
+		} catch (error) {
+			toast.error('Error', 'Failed to approve blog')
+			console.log(error)
+		}
+	}
+
+	const handleReject = async (id: number) => {
+		try {
+			await axios.put(`api/blog/updateStatus/${id}?status=3`)
+			toast.success('Success', 'Blog rejected')
+			onUpdated()
+		} catch (error) {
+			toast.error('Error', 'Failed to reject blog')
+			console.log(error)
+		}
+	}
+
+	const handleDelete = async (id: number) => {
+		try {
+			await axios.delete(`api/blog/delete/${id}`)
+			toast.success('Success', 'Blog deleted')
+			onUpdated()
+		} catch (error) {
+			toast.error('Error', 'Failed to delete blog')
+			console.log(error)
+		}
+	}
 	return (
 		<table className="w-full border-spacing-2">
 			<thead className="border-b border-borderCol-1">
@@ -183,7 +233,7 @@ const BlogsTable: React.FC<{ blogs: ManageBlogProps[] }> = ({ blogs }) => {
 						</td>
 						<td className=" capitalize">{blog.type}</td>
 						<td className="line-clamp-1">{blog.author}</td>
-						<td>{NumberFormat(blog.view)}</td>
+						<td>{NumberFormat(blog.views)}</td>
 						<td>{toDisplayDateTime(blog.createdAt)}</td>
 						<td
 							className="capitalize"
@@ -206,13 +256,11 @@ const BlogsTable: React.FC<{ blogs: ManageBlogProps[] }> = ({ blogs }) => {
 							>
 								<PiEyeFill />
 							</CircleButton>
-							{blog.status == 'pending' && (
+							{blog.status !== 'approved' && (
 								<CircleButton
 									className="border-primary-2 bg-[#64B8DC3f] text-primary-2"
 									title="Approve blog"
-									onClick={() =>
-										window.open(`/blog/new?id=${blog.id}`, '_blank')
-									}
+									onClick={() => handleApprove(blog.id)}
 								>
 									<PiCheckBold />
 								</CircleButton>
@@ -221,9 +269,7 @@ const BlogsTable: React.FC<{ blogs: ManageBlogProps[] }> = ({ blogs }) => {
 								<CircleButton
 									className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
 									title="Delete blog"
-									onClick={() =>
-										toast.info('Call API', `Call delete API with id ${blog.id}`)
-									}
+									onClick={() => handleDelete(blog.id)}
 								>
 									<PiTrashSimpleFill />
 								</CircleButton>
@@ -231,9 +277,7 @@ const BlogsTable: React.FC<{ blogs: ManageBlogProps[] }> = ({ blogs }) => {
 								<CircleButton
 									className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
 									title="Reject blog"
-									onClick={() =>
-										toast.info('Call API', `Call API reject id ${blog.id}`)
-									}
+									onClick={() => handleReject(blog.id)}
 								>
 									<PiXBold />
 								</CircleButton>

@@ -21,6 +21,7 @@ export type BlogDetailType = {
 		avatar: string
 	}
 	createdAt: string
+	views: number
 	content: string
 }
 
@@ -51,5 +52,5 @@ export interface ManageBlogProps {
 	author: string
 	createdAt: string
 	status: string
-	view: number
+	views: number
 }

@@ -1,26 +1,28 @@
 import { useEffect, useState } from 'react'
 import { BlogDetailType } from '../../types/blog'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { Button, Loader } from '../../components'
 import PageNotFound from '../PageNotFound'
 import { BlogTypeColors } from '../../styles/Styles'
 import { timeAgo } from '../../utils/TimeFormatters'
-import { PiShareFatFill } from 'react-icons/pi'
+import { PiPenFill, PiShareFatFill } from 'react-icons/pi'
+import { useToast } from '../../hook/useToast'
+import useUser from '../../hook/useUser'
+import { NumberFormat } from '../../utils/Format'
 
 const Blog: React.FC = () => {
 	const [blog, setBlog] = useState<BlogDetailType | undefined>(undefined)
 	const [loading, setLoading] = useState(true)
 	const { id } = useParams()
-
+	const toast = useToast()
+	const navigate = useNavigate()
+	const { user } = useUser()
 	const getBlog = async (id: string) => {
 		try {
 			setBlog(undefined)
-			const response = await axios.get(`/api/blog/id-${id}.json`)
-			// simulate delay
-			await new Promise((resolve) => setTimeout(resolve, 2500))
+			const response = await axios.get(`/api/blog/detail/${id}`)
 			setBlog(response.data.data)
-			console.log(response.data.data)
 		} catch (error) {
 			console.error(error)
 		}
@@ -56,11 +58,13 @@ const Blog: React.FC = () => {
 						<div className="text-sm">{timeAgo(blog.createdAt)}</div>
 						<span className="h-1 w-1 rounded-full bg-txtCol-2"></span>
 						<img
-							className=" h- w-6 rounded-full object-cover"
+							className=" h-6 w-6 rounded-full object-cover"
 							src={blog.author.avatar}
 							alt={blog.author.name}
 						></img>
 						<div className="text-sm">by {blog.author.name}</div>
+						<span className="h-1 w-1 rounded-full bg-txtCol-2"></span>
+						<div className="text-sm">{NumberFormat(blog.views)} views</div>
 					</div>
 				</div>
 				<div className="relative mt-10 w-full rounded-lg bg-white px-20 py-10 shadow-[0_4px_20px_0px_rgba(0,0,0,0.25)]">
@@ -68,11 +72,23 @@ const Blog: React.FC = () => {
 						className="ql-editor flex w-full flex-col gap-1"
 						dangerouslySetInnerHTML={{ __html: blog.content }}
 					></div>
-					<div className="absolute right-10 top-0 translate-y-[-50%]">
+					<div className="absolute right-10 top-0 flex translate-y-[-50%] gap-4">
+						{user.id === blog.author.id && (
+							<Button
+								className="bg-secondary-1 text-white shadow-[0_4px_20px_0px_rgba(0,0,0,0.25)] hover:bg-secondary-0 "
+								onClick={() => {
+									navigate('/blog/edit/' + blog.id)
+								}}
+							>
+								<PiPenFill className="text-xl" />
+								Edit destination
+							</Button>
+						)}
 						<Button
 							className="bg-primary-2 text-white shadow-[0_4px_20px_0px_rgba(0,0,0,0.25)] hover:bg-primary-1"
 							onClick={() => {
-								console.log('Share')
+								navigator.clipboard.writeText(window.location.href)
+								toast.success('Copied', 'Link copied to clipboard')
 							}}
 						>
 							<PiShareFatFill />

@@ -64,6 +64,7 @@ function App() {
 						<>
 							<Route path="/account" element={<AccountPage />}></Route>
 							<Route path="/blog/new" element={<BlogEditor />}></Route>
+							<Route path="/blog/edit/:id" element={<BlogEditor />}></Route>
 						</>
 					)}
 					// private route

@@ -13,7 +13,7 @@ const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
 
 	const getBlogs = async () => {
 		try {
-			const response = await axios.get('/api/blog/home-blogs.json')
+			const response = await axios.get('/api/blog/home')
 			setBlogs(response.data.data)
 		} catch (error) {
 			console.error(error)

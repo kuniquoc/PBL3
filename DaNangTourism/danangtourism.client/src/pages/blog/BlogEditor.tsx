@@ -1,10 +1,12 @@
-import { Button, DropdownSelect } from '../../components'
+import { Button, DropdownSelect, Loader } from '../../components'
 import { useEffect, useState } from 'react'
 import TextEditor from '../../components/TextEditor'
 import { useToast } from '../../hook/useToast'
 import { PiUploadBold, PiXBold } from 'react-icons/pi'
 import { uploadToCloudinary } from '../../utils/Cloundinary'
-
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import PageNotFound from '../PageNotFound'
+import axios from 'axios'
 const EmptyBlog = {
 	title: '',
 	typeIndex: 0,
@@ -15,33 +17,172 @@ const EmptyBlog = {
 const BlogTypeOptions = ['All', 'Places', 'Tips']
 
 const BlogEditor: React.FC = () => {
-	document.title = 'New Blog | Danang Tourism'
+	const location = useLocation()
+	const { id } = useParams()
+	const [editMode, setEditMode] = useState(false)
 	const [blog, setBlog] = useState(EmptyBlog)
+	const [loading, setLoading] = useState(true)
 	const [imgFile, setImgFile] = useState<File>()
+	const [invalid, setInvalid] = useState(false)
 	const toast = useToast()
-	const handlePostBlog = async () => {
-		if (!blog.title || !blog.introduction || !blog.content) {
-			toast.error('Error', 'Please fill all fields to post blog')
-			return
-		}
-		if (!imgFile) {
-			toast.error('Error', 'Please upload an image to post blog')
-			return
-		}
-		toast.info('Uploading', 'Please wait while we upload your blog...')
-		blog.image = await uploadToCloudinary(imgFile)
-		console.log(blog)
-		toast.success('Success', 'Blog posted successfully')
-	}
-
-	const handleReset = () => {
-		setBlog(EmptyBlog)
-	}
+	const navigate = useNavigate()
 
 	useEffect(() => {
-		console.log(blog.content.replace(/"/g, '\\"'))
-	}, [blog.content])
+		const path = location.pathname.split('/')
+		if (path.includes('edit')) {
+			document.title = 'Edit Blog | Da Nang Explore'
+			setEditMode(true)
+			getBlog()
+		} else {
+			document.title = 'New Blog | Da Nang Explore'
+			setLoading(false)
+		}
+	}, [location])
 
+	const getBlog = async () => {
+		setLoading(true)
+		try {
+			const response = await axios.get(`/api/blog/GetToUpdate/${id}`)
+			setBlog(response.data.data)
+			await getImageBlob(response.data.data.image)
+			setLoading(false)
+		} catch (error) {
+			console.log(error)
+			setInvalid(true)
+			setLoading(false)
+		}
+	}
+	const getImageBlob = async (url: string) => {
+		const response = await fetch(url)
+		const blob = await response.blob()
+		const file = new File([blob], 'current-thumbnail.png', {
+			type: 'image/png',
+		})
+		setImgFile(file)
+	}
+
+	const validate = () => {
+		if (!blog.title) {
+			toast.error('Title is required', 'Please enter a title for your blog')
+			return false
+		}
+		if (!blog.introduction) {
+			toast.error(
+				'Introduction is required',
+				'Please enter a introduction for your blog',
+			)
+			return false
+		}
+		if (!blog.content) {
+			toast.error('Content is required', 'Please enter a content for your blog')
+			return false
+		}
+		if (!imgFile && !editMode) {
+			toast.error(
+				'Thumbnail is required',
+				'Please choose a thumbnail for your blog',
+			)
+			return false
+		}
+		return true
+	}
+
+	const handleUploadImage = async () => {
+		if (!imgFile) {
+			toast.error('Empty image', 'Please select an image to upload')
+			return
+		}
+		toast.info('Uploading image', 'Please wait while we upload your image')
+		const url = await uploadToCloudinary(imgFile)
+		if (url) {
+			setBlog({ ...blog, image: url })
+			toast.success(
+				'Upload image success',
+				'Your image has been uploaded successfully',
+			)
+		} else {
+			toast.error(
+				'Upload image failed',
+				'There was an error while uploading your image',
+			)
+		}
+	}
+
+	const createBlog = async () => {
+		try {
+			const response = await axios.post('/api/blog/create', blog)
+			toast.success(
+				'Request posting blog success',
+				'Your blog posting request has been sent successfully, please wait for admin to approve.',
+			)
+			navigate(`/blog/${response.data.id}`)
+		} catch (error) {
+			console.log(error)
+			toast.error(
+				'Request posting blog failed',
+				'There was an error while sending your blog posting request',
+			)
+		}
+	}
+
+	const updateBlog = async () => {
+		try {
+			await axios.put(`/api/blog/update/${id}`, blog)
+			toast.success(
+				'Update blog success',
+				'Your blog has been updated successfully',
+			)
+		} catch (error) {
+			console.log(error)
+			toast.error(
+				'Update blog failed',
+				'There was an error while updating your blog',
+			)
+		}
+	}
+
+	const deleteBlog = async () => {
+		try {
+			await axios.delete(`/api/blog/delete/${id}`)
+			toast.success(
+				'Delete blog success',
+				'Your blog has been deleted successfully',
+			)
+		} catch (error) {
+			console.log(error)
+			toast.error(
+				'Delete blog failed',
+				'There was an error while deleting your blog',
+			)
+		}
+	}
+
+	const handleSubmit = async () => {
+		if (!validate()) return
+		await handleUploadImage()
+		if (!editMode) {
+			await createBlog()
+		} else {
+			await updateBlog()
+		}
+	}
+
+	const handleNegative = () => {
+		if (editMode) {
+			setBlog(EmptyBlog)
+		} else {
+			deleteBlog()
+		}
+	}
+
+	if (loading) {
+		return (
+			<div className="mx-auto flex min-h-screen items-center justify-center xl:max-w-screen-xl">
+				<Loader />
+			</div>
+		)
+	}
+	if (!loading && editMode && invalid) return <PageNotFound />
 	return (
 		<div className="mx-auto min-h-screen xl:max-w-screen-xl">
 			<div className="w-full pb-5 pt-[72px]">
@@ -139,15 +280,15 @@ const BlogEditor: React.FC = () => {
 					<div className="flex w-full items-center justify-between pl-[116px]">
 						<Button
 							className="w-[120px] border-[2px] border-tertiary-2 font-semibold text-tertiary-2 hover:bg-[#ff201017]"
-							onClick={handleReset}
+							onClick={handleNegative}
 						>
-							Reset
+							{editMode ? 'Reset' : 'Delete'}
 						</Button>
 						<Button
-							onClick={handlePostBlog}
+							onClick={handleSubmit}
 							className="w-[120px] bg-primary-2 text-white hover:bg-primary-1"
 						>
-							Post
+							{editMode ? 'Update' : 'Post'}
 						</Button>
 					</div>
 				</div>

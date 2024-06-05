@@ -7,213 +7,237 @@ using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models
 {
-    [TypeConverter(typeof(BlogStatusTypeConverter))]
-    public enum BlogStatus
-    {
-        all,
-        pending,
-        published,
-        rejected
-    }
-    [TypeConverter(typeof(BlogTypeTypeConverter))]
-    public enum BlogType
-    {
-        all,
-        places,
-        tips
-    }
+  [TypeConverter(typeof(BlogStatusTypeConverter))]
+  public enum BlogStatus
+  {
+    all,
+    pending,
+    published,
+    rejected
+  }
+  [TypeConverter(typeof(BlogTypeTypeConverter))]
+  public enum BlogType
+  {
+    all,
+    places,
+    tips
+  }
 
-    public class BlogHome
+  public class BlogHome
+  {
+    public int id { get; set; }
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; }
+    public string title { get; set; }
+    public string image { get; set; }
+    public string author { get; set; }
+    [JsonPropertyName("createdAt")]
+    [JsonConverter(typeof(ConvertToISO8061DateTime))]
+    public DateTime createdAt { get; set; } = DateTime.Now;
+    public BlogHome(MySqlDataReader reader)
     {
-        public int id { get; set; }
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; }
-        public string title { get; set; }
-        public string image { get; set; }
-        public string author { get; set; }
-        [JsonPropertyName("createdAt")]
-        [JsonConverter(typeof(ConvertToISO8061DateTime))]
-        public DateTime createdAt { get; set; } = DateTime.Now;
-        public BlogHome(MySqlDataReader reader)
-        {
-            id = reader.GetInt32("blog_id");
-            type = Enum.Parse<BlogType>(reader.GetString("type"));
-            title = reader.GetString("title");
-            image = reader.GetString("image");
-            author = reader.GetString("author");
-            createdAt = reader.GetDateTime("created_at");
-        }
+      id = reader.GetInt32("blog_id");
+      type = Enum.Parse<BlogType>(reader.GetString("type"));
+      title = reader.GetString("title");
+      image = reader.GetString("image");
+      author = reader.GetString("author");
+      createdAt = reader.GetDateTime("created_at");
     }
-    public class BlogPageFilter
+  }
+  public class BlogPageFilter
+  {
+    public int page { get; set; } = 1;
+    public int limit { get; set; } = 5;
+    public string? search { get; set; }
+    public string? sortBy { get; set; } = "created_at";
+    public string? sortType { get; set; } = "desc";
+  }
+  public class BlogPage
+  {
+    public int id { get; set; }
+    public string title { get; set; } = "";
+    public string image { get; set; } = "";
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; } = BlogType.all;
+    public Author author { get; set; }
+    [JsonPropertyName("createdAt")]
+    [JsonConverter(typeof(ConvertToISO8061DateTime))]
+    public DateTime createdAt { get; set; } = DateTime.Now;
+    public int views { get; set; } = 0;
+    public string introduction { get; set; } = "";
+    public BlogPage(MySqlDataReader reader)
     {
-        public int page { get; set; } = 1;
-        public int limit { get; set; } = 5;
-        public string? search { get; set; }
-        public string? sortBy { get; set; } = "created_at";
-        public string? sortType { get; set; } = "desc";
+      id = reader.GetInt32("blog_id");
+      title = reader.GetString("title");
+      image = reader.GetString("image");
+      type = Enum.Parse<BlogType>(reader.GetString("type"));
+      createdAt = reader.GetDateTime("created_at");
+      views = reader.GetInt32("views");
+      introduction = reader.GetString("introduction");
+      author = new Author(reader);
     }
-    public class BlogPage
+  }
+  public class BlogPageData
+  {
+    public int total { get; set; }
+    public int page { get; set; } = 1;
+    public int limit { get; set; } = 5;
+    public List<BlogPage> items { get; set; }
+    public BlogPageData()
     {
-        public int id { get; set; }
-        public string title { get; set; } = "";
-        public string image { get; set; } = "";
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; } = BlogType.all;
-        public Author author { get; set; }
-        [JsonPropertyName("createdAt")]
-        [JsonConverter(typeof(ConvertToISO8061DateTime))]
-        public DateTime createdAt { get; set; } = DateTime.Now;
-        public int views { get; set; } = 0;
-        public string introduction { get; set; } = "";
-        public BlogPage(MySqlDataReader reader)
-        {
-            id = reader.GetInt32("blog_id");
-            title = reader.GetString("title");
-            image = reader.GetString("image");
-            type = Enum.Parse<BlogType>(reader.GetString("type"));
-            createdAt = reader.GetDateTime("created_at");
-            views = reader.GetInt32("views");
-            introduction = reader.GetString("introduction");
-            author = new Author(reader);
-        }
+      items = new List<BlogPage>();
     }
-    public class BlogPageData
-    {
-        public int total { get; set; }
-        public int page { get; set; } = 1;
-        public int limit { get; set; } = 5;
-        public List<BlogPage> items { get; set; }
-        public BlogPageData()
-        {
-            items = new List<BlogPage>();
-        }
-    }
+  }
 
-    public class BlogRandomFilter
-    {
-        public int limit { get; set; } = 5;
-    }
+  public class BlogRandomFilter
+  {
+    public int limit { get; set; } = 5;
+  }
 
-    public class BlogRandom
+  public class BlogRandom
+  {
+    public int id { get; set; }
+    public string title { get; set; } = "";
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; } = BlogType.all;
+    public string image { get; set; } = "";
+    public string author { get; set; } = "";
+    [JsonPropertyName("createdAt")]
+    [JsonConverter(typeof(ConvertToISO8061DateTime))]
+    public DateTime createdAt { get; set; } = DateTime.Now;
+    public BlogRandom() { }
+    public BlogRandom(MySqlDataReader reader)
     {
-        public int id { get; set; }
-        public string title { get; set; } = "";
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; } = BlogType.all;
-        public string image { get; set; } = "";
-        public string author { get; set; } = "";
-        [JsonPropertyName("createdAt")]
-        [JsonConverter(typeof(ConvertToISO8061DateTime))]
-        public DateTime createdAt { get; set; } = DateTime.Now;
-        public BlogRandom() { }
-        public BlogRandom(MySqlDataReader reader)
-        {
-            id = reader.GetInt32("blog_id");
-            title = reader.GetString("title");
-            type = Enum.Parse<BlogType>(reader.GetString("type"));
-            image = reader.GetString("image");
-            createdAt = reader.GetDateTime("created_at");
-            author = reader.GetString("author");
-        }
+      id = reader.GetInt32("blog_id");
+      title = reader.GetString("title");
+      type = Enum.Parse<BlogType>(reader.GetString("type"));
+      image = reader.GetString("image");
+      createdAt = reader.GetDateTime("created_at");
+      author = reader.GetString("author");
     }
+  }
 
-    public class BlogDetail
+  public class BlogDetail
+  {
+    public int id { get; set; }
+    public string title { get; set; } = "";
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; } = BlogType.all;
+    public Author author { get; set; }
+    [JsonPropertyName("createdAt")]
+    [JsonConverter(typeof(ConvertToISO8061DateTime))]
+    public DateTime createdAt { get; set; } = DateTime.Now;
+    public int views { get; set; }
+    public string content { get; set; } = "";
+    public BlogDetail(MySqlDataReader reader)
     {
-        public int id { get; set; }
-        public string title { get; set; } = "";
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; } = BlogType.all;
-        public Author author { get; set; }
-        [JsonPropertyName("createdAt")]
-        [JsonConverter(typeof(ConvertToISO8061DateTime))]
-        public DateTime createdAt { get; set; } = DateTime.Now;
-        public int views { get; set; }
-        public string content { get; set; } = "";
-        public BlogDetail(MySqlDataReader reader)
-        {
-            id = reader.GetInt32("blog_id");
-            title = reader.GetString("title");
-            type = Enum.Parse<BlogType>(reader.GetString("type"));
-            createdAt = reader.GetDateTime("created_at");
-            views = reader.GetInt32("views");
-            content = reader.GetString("content");
-            author = new Author(reader);
-        }
+      id = reader.GetInt32("blog_id");
+      title = reader.GetString("title");
+      type = Enum.Parse<BlogType>(reader.GetString("type"));
+      createdAt = reader.GetDateTime("created_at");
+      views = reader.GetInt32("views");
+      content = reader.GetString("content");
+      author = new Author(reader);
     }
+  }
 
-    public class BlogListAdminFilter
-    {
-        public int page { get; set; } = 1;
-        public int limit { get; set; } = 12;
-        public string search { get; set; } = "";
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; } = BlogType.all;
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogStatus>))]
-        public BlogStatus status { get; set; } = BlogStatus.all;
-        public string sortBy { get; set; } = "created_at";
-        public string sortType { get; set; } = "desc";
-    }
+  public class BlogListAdminFilter
+  {
+    public int page { get; set; } = 1;
+    public int limit { get; set; } = 12;
+    public string search { get; set; } = "";
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; } = BlogType.all;
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogStatus>))]
+    public BlogStatus status { get; set; } = BlogStatus.all;
+    public string sortBy { get; set; } = "created_at";
+    public string sortType { get; set; } = "desc";
+  }
 
-    public class BlogList
+  public class BlogList
+  {
+    public int id { get; set; }
+    public string title { get; set; } = "";
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; } = BlogType.all;
+    public string author { get; set; }
+    [JsonPropertyName("createdAt")]
+    [JsonConverter(typeof(ConvertToISO8061DateTime))]
+    public DateTime createdAt { get; set; } = DateTime.Now;
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogStatus>))]
+    public BlogStatus status { get; set; }
+    public int views { get; set; } = 0;
+    public BlogList(MySqlDataReader reader)
     {
-        public int id { get; set; }
-        public string title { get; set; } = "";
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; } = BlogType.all;
-        public string author { get; set; }
-        [JsonPropertyName("createdAt")]
-        [JsonConverter(typeof(ConvertToISO8061DateTime))]
-        public DateTime createdAt { get; set; } = DateTime.Now;
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogStatus>))]
-        public BlogStatus status { get; set; }
-        public BlogList(MySqlDataReader reader)
-        {
-            id = reader.GetInt32("blog_id");
-            title = reader.GetString("title");
-            type = Enum.Parse<BlogType>(reader.GetString("type"));
-            author = reader.GetString("author");
-            createdAt = reader.GetDateTime("created_at");
-            status = Enum.Parse<BlogStatus>(reader.GetString("status"));
-        }
+      id = reader.GetInt32("blog_id");
+      title = reader.GetString("title");
+      type = Enum.Parse<BlogType>(reader.GetString("type"));
+      author = reader.GetString("author");
+      createdAt = reader.GetDateTime("created_at");
+      status = Enum.Parse<BlogStatus>(reader.GetString("status"));
+      views = reader.GetInt32("views");
     }
-    public class BLogListData
+  }
+  public class BLogListData
+  {
+    public int total { get; set; }
+    public int page { get; set; } = 1;
+    public int limit { get; set; } = 12;
+    public List<BlogList>? items { get; set; }
+    public BLogListData()
     {
-        public int total { get; set; }
-        public int page { get; set; } = 1;
-        public int limit { get; set; } = 12;
-        public List<BlogList>? items { get; set; }
-        public BLogListData()
-        {
-            items = new List<BlogList>();
-        }
+      items = new List<BlogList>();
     }
+  }
 
-    public class BlogAdd
+  public class BlogAdd
+  {
+    public string title { get; set; }
+    public int typeIndex { get; set; } = 0;
+    public string image { get; set; }
+    public string introduction { get; set; }
+    public string content { get; set; }
+
+    public BlogType type
     {
-        public string title { get; set; }
-        [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
-        public BlogType type { get; set; }
-        public string image { get; set; }
-        public string introduction { get; set; }
-        public string content { get; set; }
-        public BlogAdd(MySqlDataReader reader)
+      get
+      {
+        if (typeIndex < 0 || typeIndex >= Enum.GetValues(typeof(BlogType)).Length)
         {
-            title = reader.GetString("title");
-            type = Enum.Parse<BlogType>(reader.GetString("type"));
-            image = reader.GetString("image");
-            introduction = reader.GetString("introduction");
-            content = reader.GetString("content");
+          return BlogType.all;
         }
+        return (BlogType)typeIndex;
+      }
     }
-    
-    public class BlogReturn<T>
+  }
+
+  public class BlogForEdit
+  {
+    public string title { get; set; }
+    [JsonConverter(typeof(EnumToStringJsonConverter<BlogType>))]
+    public BlogType type { get; set; }
+    public string image { get; set; }
+    public string introduction { get; set; }
+    public string content { get; set; }
+
+    public BlogForEdit(MySqlDataReader reader)
     {
-        public int status { get; set; } = 200;
-        public string message { get; set; } = "Sucess";
-        public T data { get; set; }
-        public BlogReturn(T blog)
-        {
-            this.data = blog;
-        }
+      title = reader.GetString("title");
+      type = Enum.Parse<BlogType>(reader.GetString("type"));
+      image = reader.GetString("image");
+      introduction = reader.GetString("introduction");
+      content = reader.GetString("content");
     }
+  }
+
+  public class BlogReturn<T>
+  {
+    public int status { get; set; } = 200;
+    public string message { get; set; } = "Sucess";
+    public T data { get; set; }
+    public BlogReturn(T blog)
+    {
+      this.data = blog;
+    }
+  }
 }

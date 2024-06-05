@@ -21,8 +21,7 @@ const BlogSlider: React.FC<{
 	const getBlogs = async () => {
 		setBlogs(undefined)
 		try {
-			const response = await axios.get('/api/blog/blogs-recommend.json')
-			await new Promise((resolve) => setTimeout(resolve, 3000))
+			const response = await axios.get('/api/blog/random')
 			setBlogs(response.data.data)
 		} catch (error) {
 			console.error(error)
@@ -63,7 +62,7 @@ const BlogSlider: React.FC<{
 			<div className="absolute left-0 top-0 flex h-full w-full select-none flex-col items-center justify-between bg-[#00000050] p-4">
 				<div className="w-full">
 					<div className="mb-1 w-full text-right text-xs text-white">
-						Editor's Pick
+						Random blogs
 					</div>
 					<div className="w-full rounded bg-[#ffffffa4] p-3">
 						<div className="flex items-center gap-2">
