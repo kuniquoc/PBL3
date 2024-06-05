@@ -63,6 +63,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
 	icon,
 	btnColor,
 	id,
+	disabled,
 }) => {
 	const [toggled, setToggled] = useState(initToggled)
 
@@ -80,7 +81,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
 			style={{ borderColor: btnColor }}
 			whileHover="hover"
 			whileTap="tap"
-			variants={buttonVariants}
+			variants={disabled ? undefined : buttonVariants}
 			animate={
 				toggled
 					? {
@@ -93,6 +94,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
 				onClick()
 				setToggled(!toggled)
 			}}
+			disabled={disabled}
 		>
 			{icon}
 			{toggled ? toggledText : text}

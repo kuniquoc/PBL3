@@ -47,7 +47,7 @@ const RandomCard: React.FC<SortDesProps> = ({
 			className=" flex cursor-pointer items-center gap-3 rounded-lg border border-borderCol-1 bg-white p-2 transition-colors hover:bg-[#52cbff0e]"
 			onClick={() => console.log('Go to des', id)}
 		>
-			<img className="h-20 w-20 rounded" src={image} />
+			<img className="h-20 w-20 rounded object-cover" src={image} />
 			<div className="flex h-full w-full flex-col justify-between py-0.5">
 				<div className="text-left font-semibold text-slate-950">{name}</div>
 				<div className="mb-2 line-clamp-1 text-[13px] font-normal text-slate-950">

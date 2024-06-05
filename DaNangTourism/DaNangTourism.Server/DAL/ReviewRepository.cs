@@ -3,159 +3,159 @@ using DaNangTourism.Server.Models.ReviewModels;
 
 namespace DaNangTourism.Server.DAL
 {
-    public interface IReviewRepository
+  public interface IReviewRepository
+  {
+    Dictionary<int, int> GetReviewsCountByDesIdGroupedByRating(int destinationId);
+    IEnumerable<DestinationReview> GetReviewsByDestinationId(string sql, params MySqlParameter[] parameters);
+    int GetReviewCount(string sql, params MySqlParameter[] parameters);
+    int AddReview(int userId, InputReviewModel review);
+    int DeleteReview(int userId);
+  }
+  public class ReviewRepository : IReviewRepository
+  {
+    private readonly string _connectionString;
+    public ReviewRepository(string connectionString)
     {
-        Dictionary<int, int> GetReviewsCountByDesIdGroupedByRating(int destinationId);
-        IEnumerable<DestinationReview> GetReviewsByDestinationId(string sql, params MySqlParameter[] parameters);
-        int GetReviewCount(string sql, params MySqlParameter[] parameters);
-        int AddReview(int userId, InputReviewModel review);
-        int DeleteReview(int userId);
+      _connectionString = connectionString;
     }
-    public class ReviewRepository : IReviewRepository
+
+    /// <summary>
+    /// Get counts of reviews by rating for a specific destination.
+    /// </summary>
+    /// <param name="destinationId">The ID of the destination.</param>
+    /// <returns>A dictionary with ratings as keys and counts as values.</returns>
+    public Dictionary<int, int> GetReviewsCountByDesIdGroupedByRating(int destinationId)
     {
-        private readonly string _connectionString;
-        public ReviewRepository(string connectionString)
+      // SQL query to count reviews grouped by rating
+      string sql = "SELECT Rating, COUNT(*) AS Count FROM Reviews WHERE DestinationId = @destinationId GROUP BY Rating";
+      var parameter = new MySqlParameter("@destinationId", destinationId);
+
+      // Create a dictionary to store the results
+      var reviewCountsByRating = new Dictionary<int, int>();
+
+      using (var connection = new MySqlConnection(_connectionString))
+      {
+        connection.Open();
+
+        using (var command = new MySqlCommand(sql, connection))
         {
-            _connectionString = connectionString;
-        }
+          command.Parameters.Add(parameter);
 
-        /// <summary>
-        /// Get counts of reviews by rating for a specific destination.
-        /// </summary>
-        /// <param name="destinationId">The ID of the destination.</param>
-        /// <returns>A dictionary with ratings as keys and counts as values.</returns>
-        public Dictionary<int, int> GetReviewsCountByDesIdGroupedByRating(int destinationId)
-        {
-            // SQL query to count reviews grouped by rating
-            string sql = "SELECT Rating, COUNT(*) AS Count FROM Reviews WHERE DestinationId = @destinationId GROUP BY Rating";
-            var parameter = new MySqlParameter("@destinationId", destinationId);
-
-            // Create a dictionary to store the results
-            var reviewCountsByRating = new Dictionary<int, int>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+          // Execute the query and read the results
+          using (var reader = command.ExecuteReader())
+          {
+            while (reader.Read())
             {
-                connection.Open();
+              int rating = reader.GetInt32("Rating");
+              int count = reader.GetInt32("Count");
 
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.Add(parameter);
-
-                    // Execute the query and read the results
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int rating = reader.GetInt32("Rating");
-                            int count = reader.GetInt32("Count");
-
-                            // Add the count to the dictionary
-                            reviewCountsByRating[rating] = count;
-                        }
-                    }
-                }
+              // Add the count to the dictionary
+              reviewCountsByRating[rating] = count;
             }
-
-            return reviewCountsByRating;
+          }
         }
+      }
 
-        /// <summary>
-        /// Get reviews by destination ID.
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public IEnumerable<DestinationReview> GetReviewsByDestinationId(string sql, params MySqlParameter[] parameters)
+      return reviewCountsByRating;
+    }
+
+    /// <summary>
+    /// Get reviews by destination ID.
+    /// </summary>
+    /// <param name="sql"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public IEnumerable<DestinationReview> GetReviewsByDestinationId(string sql, params MySqlParameter[] parameters)
+    {
+      using (var connection = new MySqlConnection(_connectionString))
+      {
+        connection.Open();
+        using (var command = new MySqlCommand(sql, connection))
         {
-            using (var connection = new MySqlConnection(_connectionString))
+          command.Parameters.AddRange(parameters);
+          using (var reader = command.ExecuteReader())
+          {
+            var reviews = new List<DestinationReview>();
+            while (reader.Read())
             {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.AddRange(parameters);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        var reviews = new List<DestinationReview>();
-                        while (reader.Read())
-                        {
-                            var review = new DestinationReview(reader);
-                            reviews.Add(review);
-                        }
-                        return reviews;
-                    }
-                }
+              var review = new DestinationReview(reader);
+              reviews.Add(review);
             }
+            return reviews;
+          }
         }
+      }
+    }
 
-        /// <summary>
-        /// Get review count
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        public int GetReviewCount(string sql, params MySqlParameter[] parameters)
+    /// <summary>
+    /// Get review count
+    /// </summary>
+    /// <param name="sql"></param>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    public int GetReviewCount(string sql, params MySqlParameter[] parameters)
+    {
+      using (var connection = new MySqlConnection(_connectionString))
+      {
+        connection.Open();
+        using (var command = new MySqlCommand(sql, connection))
         {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.AddRange(parameters);
-                    return Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
+          command.Parameters.AddRange(parameters);
+          return Convert.ToInt32(command.ExecuteScalar());
         }
+      }
+    }
 
-        /// <summary>
-        /// Add review with destinationId, userId
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="destinationId"></param>
-        /// <param name="review"></param>
-        /// <returns>
-        /// Return id of added review
-        /// </returns>
-        public int AddReview(int userId, InputReviewModel review)
-        {
-            string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment, Created_At) values (@userId, @destinationId, @rating, @comment);" +
-                "SELECT LAST_INSERT_ID();";
-            MySqlParameter[] parameters = 
-            {
-                new ("@userId", userId),
-                new ("@destinationId", review.DestinationId),
-                new ("@rating", review.Rating),
-                new ("@comment", review.Comment)
+    /// <summary>
+    /// Add review with destinationId, userId
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="destinationId"></param>
+    /// <param name="review"></param>
+    /// <returns>
+    /// Return id of added review
+    /// </returns>
+    public int AddReview(int userId, InputReviewModel review)
+    {
+      string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment) values (@userId, @destinationId, @rating, @comment);" +
+      "SELECT LAST_INSERT_ID();";
+      MySqlParameter[] parameters =
+      {
+              new ("@userId", userId),
+              new ("@destinationId", review.DestinationId),
+              new ("@rating", review.Rating),
+              new ("@comment", review.Comment)
             };
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.AddRange(parameters);
-                    return Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Delete review by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public int DeleteReview(int id)
+      using (var connection = new MySqlConnection(_connectionString))
+      {
+        connection.Open();
+        using (var command = new MySqlCommand(sql, connection))
         {
-            string sql = "DELETE FROM Reviews WHERE ReviewId = @id";
-            var parameter = new MySqlParameter("@id", id);
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.Add(parameter);
-                    return command.ExecuteNonQuery();
-                }
-            }
+          command.Parameters.AddRange(parameters);
+          return Convert.ToInt32(command.ExecuteScalar());
         }
-
+      }
     }
+
+    /// <summary>
+    /// Delete review by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public int DeleteReview(int id)
+    {
+      string sql = "DELETE FROM Reviews WHERE ReviewId = @id";
+      var parameter = new MySqlParameter("@id", id);
+      using (var connection = new MySqlConnection(_connectionString))
+      {
+        connection.Open();
+        using (var command = new MySqlCommand(sql, connection))
+        {
+          command.Parameters.Add(parameter);
+          return command.ExecuteNonQuery();
+        }
+      }
+    }
+
+  }
 }

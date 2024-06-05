@@ -68,5 +68,5 @@ export interface ManageDesProps {
 	rating: number
 	review: number
 	favorite: number
-	createdAt: string
+	created_at: string
 }

@@ -1,10 +1,11 @@
-import { Button, TextEditor } from '../../components'
+import { Button, Loader, TextEditor } from '../../components'
 import { useEffect, useState } from 'react'
 import { PiXBold } from 'react-icons/pi'
 import { uploadToCloudinary } from '../../utils/Cloundinary'
 import { useToast } from '../../hook/useToast'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { DestinationEditorProps } from '../../types/destination'
+import PageNotFound from '../PageNotFound'
 import axios from 'axios'
 
 const initDes = {
@@ -22,28 +23,36 @@ const initDes = {
 }
 
 const DestinationEditor: React.FC = () => {
-	document.title = 'New Destination | Da Nang Explore'
 	const toast = useToast()
 	const location = useLocation()
 	const { id } = useParams()
 	const [editMode, setEditMode] = useState(false)
+	const [loading, setLoading] = useState(true)
+	const [invalid, setInvalid] = useState(false)
 	const navigate = useNavigate()
+
 	useEffect(() => {
 		const path = location.pathname.split('/')
 		if (path.includes('edit')) {
+			document.title = 'Edit Destination | Da Nang Explore'
 			setEditMode(true)
 			handleGetDes(Number(id))
+		} else {
+			document.title = 'New Destination | Da Nang Explore'
+			setLoading(false)
 		}
 	}, [location])
 
 	const handleGetDes = async (desId: number) => {
+		setLoading(true)
 		try {
-			const response = await axios.get(`/api/destination/detail/${desId}`)
+			const response = await axios.get(`/api/destination/GetToUpdate/${desId}`)
 			setDes(response.data.data)
 		} catch (error) {
-			console.error(error)
+			setInvalid(true)
+			toast.error('Invalid destination', 'Destination not found')
 		}
-		console.log('handleGetDes', des)
+		setLoading(false)
 	}
 
 	const [des, setDes] = useState<DestinationEditorProps>(initDes)
@@ -57,8 +66,12 @@ const DestinationEditor: React.FC = () => {
 		}
 	}, [des.openTime, des.closeTime])
 
-	const handleReset = () => {
-		setDes(initDes)
+	const handleNegative = () => {
+		if (editMode) {
+			handleDelete()
+		} else {
+			setDes(initDes)
+		}
 	}
 
 	const validate = () => {
@@ -101,24 +114,21 @@ const DestinationEditor: React.FC = () => {
 
 		if (editMode) {
 			try {
-				const response = await axios.post('/api/destination/update', des)
+				const response = await axios.put(
+					'/api/destination/update/' + Number(id),
+					des,
+				)
 				if (response.status === 200) {
 					toast.success('Update success', 'Destination updated successfully')
-					await new Promise((resolve) => setTimeout(resolve, 1000))
-					navigate('/destination' + response.data.data.id)
 				}
 			} catch (error) {
 				toast.error('Update failed', 'Failed to update destination')
-				console.error(error)
 			}
 		} else {
 			try {
 				const response = await axios.post('/api/destination/create', des)
-				if (response.status === 200) {
-					toast.success('Post success', 'Destination posted successfully')
-					await new Promise((resolve) => setTimeout(resolve, 1000))
-					navigate('/destination' + response.data.data.id)
-				}
+				toast.success('Post success', 'Destination posted successfully')
+				navigate('/destination/' + response.data.data.id)
 			} catch (error) {
 				toast.error('Post failed', 'Failed to post destination')
 				console.error(error)
@@ -148,12 +158,35 @@ const DestinationEditor: React.FC = () => {
 		setUploading(false)
 	}
 
+	const handleDelete = async () => {
+		try {
+			const response = await axios.delete(
+				'/api/destination/delete/' + Number(id),
+			)
+			if (response.status === 200) {
+				toast.success('Delete success', 'Destination deleted successfully')
+				navigate('/destination')
+			}
+		} catch (error) {
+			toast.error('Delete failed', 'Failed to delete destination')
+			console.error(error)
+		}
+	}
+
+	if (loading) {
+		return (
+			<div className="mx-auto flex min-h-screen items-center justify-center xl:max-w-screen-xl">
+				<Loader />
+			</div>
+		)
+	}
+	if (!loading && editMode && invalid) return <PageNotFound />
 	return (
 		<div className="mx-auto min-h-screen xl:max-w-screen-xl">
 			<div className="w-full pb-5 pt-[72px]">
 				<div className="flex w-full flex-col gap-5 rounded-lg border border-borderCol-1 bg-white p-10 pb-5 shadow-custom">
 					<div className="w-full text-center text-xl font-bold tracking-wider">
-						Create new destination
+						{editMode ? 'Edit Destination' : 'New Destination'}
 					</div>
 					<div className="flex w-full items-center gap-4">
 						<label className="w-[100px] font-semibold" htmlFor="des-name">
@@ -164,7 +197,7 @@ const DestinationEditor: React.FC = () => {
 							id="des-name"
 							type="text"
 							placeholder="Enter destination name"
-							value={des.name || ''}
+							value={des.name}
 							onChange={(e) => {
 								setDes({
 									...des,
@@ -181,7 +214,7 @@ const DestinationEditor: React.FC = () => {
 							id="des-local-name"
 							type="text"
 							placeholder="Enter destination local name"
-							value={des.localName || ''}
+							value={des.localName}
 							onChange={(e) => {
 								setDes({
 									...des,
@@ -202,7 +235,7 @@ const DestinationEditor: React.FC = () => {
 									id="des-cost"
 									type="number"
 									placeholder="0"
-									value={des.cost || 0}
+									value={des.cost}
 									onChange={(e) => {
 										setDes({
 											...des,
@@ -242,7 +275,7 @@ const DestinationEditor: React.FC = () => {
 								className="h-9 invalid:focus:border-tertiary-1"
 								id="des-open"
 								type="time"
-								value={des.openTime || ''}
+								value={des.openTime}
 								onChange={(e) =>
 									setDes({
 										...des,
@@ -262,7 +295,7 @@ const DestinationEditor: React.FC = () => {
 								className="h-9 invalid:focus:border-tertiary-1"
 								id="des-close"
 								type="time"
-								value={des.closeTime || ''}
+								value={des.closeTime}
 								onChange={(e) =>
 									setDes({
 										...des,
@@ -283,7 +316,7 @@ const DestinationEditor: React.FC = () => {
 							id="des-address"
 							type="text"
 							placeholder="Enter destination address"
-							value={des.address || ''}
+							value={des.address}
 							onChange={(e) => {
 								setDes({
 									...des,
@@ -302,7 +335,7 @@ const DestinationEditor: React.FC = () => {
 							id="des-map"
 							type="text"
 							placeholder="Enter google map URL"
-							value={des?.googleMapUrl || ''}
+							value={des?.googleMapUrl}
 							onChange={(e) => {
 								setDes({
 									...des,
@@ -423,15 +456,15 @@ const DestinationEditor: React.FC = () => {
 					<div className="flex w-full items-center justify-between pl-[116px]">
 						<Button
 							className="w-[120px] border-[2px] border-tertiary-2 font-semibold text-tertiary-2 hover:bg-[#ff201017]"
-							onClick={handleReset}
+							onClick={handleNegative}
 						>
-							Reset
+							{editMode ? 'Delete' : 'Clear'}
 						</Button>
 						<Button
 							onClick={handleSubmit}
 							className="w-[120px] bg-primary-2 text-white hover:bg-primary-1"
 						>
-							Post
+							{editMode ? 'Update' : 'Post'}
 						</Button>
 					</div>
 				</div>

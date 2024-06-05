@@ -42,29 +42,36 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
 	const [destinations, setDestinations] = useState<ManageDesProps[]>()
-	const handleSearch = () => {
-		console.log(searchValue, sortBy[sort.by].value, sort.type)
-	}
+	const [loading, setLoading] = useState(true)
 
 	const handleGetDestinations = async () => {
 		setDestinations(undefined)
+		setLoading(true)
 		try {
-			const response = await axios.get(
-				`api/destination/manage-${currentPage}.json`,
-			)
-			await new Promise((resolve) => setTimeout(resolve, 1000))
+			const response = await axios.get(`api/destination/manageList`, {
+				params: {
+					page: currentPage,
+					limit,
+					sortBy: sortBy[sort.by].value,
+					sortType: sort.type,
+					...(searchValue && { search: searchValue }),
+				},
+			})
 			const res = response.data.data
 			setDestinations(res.items)
 			setTotal(res.total)
-		} catch (error) {
-			toast.error('Error', 'Failed to get destinations')
-			console.log(error)
+		} catch (error: any) {
+			if (error.response.status !== 404) {
+				toast.error('Error', 'Failed to get destinations')
+				console.log(error)
+			}
 		}
+		setLoading(false)
 	}
 
 	useEffect(() => {
 		handleGetDestinations()
-	}, [currentPage, sort])
+	}, [currentPage, sort, searchValue])
 
 	return (
 		<div
@@ -78,7 +85,7 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 					<SearchBox
 						className="h-9 px-4"
 						onChangeValue={(event) => setSearchValue(event.target.value)}
-						onClickSearch={handleSearch}
+						onClickSearch={handleGetDestinations}
 					/>
 					<Button
 						className="h-9 bg-secondary-1 text-white hover:bg-[#42a186]"
@@ -118,10 +125,19 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 			</div>
 			<div className="mb-3 flex w-full flex-col items-center border border-borderCol-1">
 				{destinations ? (
-					<DesTable destinations={destinations} />
+					<DesTable
+						destinations={destinations}
+						onDeleted={handleGetDestinations}
+					/>
 				) : (
 					<div className="flex h-[512.4px] w-full items-center justify-center bg-gray-50">
-						<Loader className="h-16 w-16" />
+						{loading ? (
+							<Loader className="h-16 w-16" />
+						) : (
+							<h3 className=" text-2xl font-semibold text-txtCol-3">
+								No destination found
+							</h3>
+						)}
 					</div>
 				)}
 			</div>
@@ -143,10 +159,21 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 	)
 }
 
-const DesTable: React.FC<{ destinations: ManageDesProps[] }> = ({
-	destinations,
-}) => {
+const DesTable: React.FC<{
+	destinations: ManageDesProps[]
+	onDeleted: () => void
+}> = ({ destinations, onDeleted }) => {
 	const toast = useToast()
+	const handleDeleteDestination = async (id: number) => {
+		try {
+			await axios.delete(`api/destination/delete/${id}`)
+			toast.success('Success', 'Destination deleted')
+			onDeleted()
+		} catch (error) {
+			toast.error('Error', 'Failed to delete destination')
+			console.log(error)
+		}
+	}
 	return (
 		<table className="w-full border-spacing-2">
 			<thead className="border-b border-borderCol-1">
@@ -165,10 +192,10 @@ const DesTable: React.FC<{ destinations: ManageDesProps[] }> = ({
 					<tr key={des.id} className="h-10 text-center text-sm">
 						<td className="pl-2">{des.id}</td>
 						<td className="text-left">{des.name}</td>
-						<td>{des.rating}</td>
+						<td>{des.rating.toFixed(2)}</td>
 						<td>{des.review}</td>
 						<td>{des.favorite}</td>
-						<td>{toDisplayDateTime(des.createdAt)}</td>
+						<td>{toDisplayDateTime(des.created_at)}</td>
 						<td className="flex h-10 items-center justify-center gap-3 pr-2">
 							<CircleButton
 								className="border-secondary-1 bg-[#76C8933f] text-secondary-1"
@@ -186,9 +213,7 @@ const DesTable: React.FC<{ destinations: ManageDesProps[] }> = ({
 							</CircleButton>
 							<CircleButton
 								className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
-								onClick={() =>
-									toast.info('Call API', `Call delete API with id ${des.id}`)
-								}
+								onClick={() => handleDeleteDestination(des.id)}
 							>
 								<PiTrashSimpleFill />
 							</CircleButton>
