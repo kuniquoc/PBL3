@@ -16,10 +16,10 @@ const PublicScheduleItem: React.FC<{
 		>
 			<div className="flex items-center gap-3 py-1">
 				<div
-					className={`flex h-6 w-[72px] items-center justify-center gap-[6px] rounded-full bg-secondary-2 text-[11px] text-white`}
+					className={`flex h-6 w-[80px] items-center justify-center gap-[6px] rounded-full bg-secondary-2 text-[11px] text-white`}
 				>
 					<span className="h-[5px] w-[5px] rounded-full bg-white"></span>
-					Shared
+					Sharing
 				</div>
 				<h3 className="line-clamp-1 text-xl font-semibold">{schedule.title}</h3>
 			</div>

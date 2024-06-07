@@ -3,12 +3,12 @@ import { MyScheduleItemProps } from '../../types/schedule'
 import { timeAgo } from '../../utils/TimeFormatters'
 import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
+import { ScheduleStatus } from '../../types/schedule'
 
 const MyScheduleItem: React.FC<{
 	schedule: MyScheduleItemProps
 	className?: string
-	statusColor?: string
-}> = ({ schedule, className, statusColor = 'bg-[#d4d4d4]' }) => {
+}> = ({ schedule, className = 'bg-[#d4d4d4]' }) => {
 	const navigate = useNavigate()
 	return (
 		<div
@@ -18,7 +18,11 @@ const MyScheduleItem: React.FC<{
 		>
 			<div className="flex items-center gap-3 py-1">
 				<div
-					className={`flex h-6 w-[88px] items-center justify-center gap-[6px] rounded-full text-[11px] text-white ${statusColor}`}
+					className={`flex h-6 w-[88px] items-center justify-center gap-[6px] rounded-full text-[11px] capitalize text-white ${
+						ScheduleStatus.find(
+							(status) => status.status.toLowerCase() == schedule.status,
+						)?.color || 'bg-[#eeeeee]'
+					}`}
 				>
 					<span className="h-[5px] w-[5px] rounded-full bg-white"></span>
 					{schedule.status}
@@ -30,16 +34,20 @@ const MyScheduleItem: React.FC<{
 				<div className="flex flex-1 flex-col gap-1">
 					<div className="flex w-full items-center gap-2 overflow-hidden">
 						<h5 className="text-sm font-semibold">Destinations: </h5>
-						{schedule.destinations.map((destination, index) => {
-							return (
-								<span
-									className="rounded-full border border-borderCol-1 px-2 py-0.5 text-xs transition-all hover:bg-[#0000000e]"
-									key={index}
-								>
-									{destination}
-								</span>
-							)
-						})}
+						{schedule.destinations.length > 0 ? (
+							schedule.destinations.map((destination, index) => {
+								return (
+									<span
+										className="rounded-full border border-borderCol-1 px-2 py-0.5 text-xs transition-all hover:bg-[#0000000e]"
+										key={index}
+									>
+										{destination}
+									</span>
+								)
+							})
+						) : (
+							<p className="text-sm">Empty</p>
+						)}
 					</div>
 					<div className="flex w-full items-center gap-5 overflow-hidden text-sm">
 						<div className="inline-flex gap-2">

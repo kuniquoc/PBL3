@@ -1,14 +1,17 @@
-export interface DesListItemProps {
+export interface SimpleDesProps {
 	id: number
 	name: string
 	address: string
-	image: string
-	rating: number
-	cost: number
 	openTime: string
 	closeTime: string
-	tags: string[]
+	cost: number
+	rating: number
 	favorite: boolean
+}
+
+export interface DesListItemProps extends SimpleDesProps {
+	image: string
+	tags: string[]
 }
 
 export interface DesInfoProps {

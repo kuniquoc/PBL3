@@ -2,86 +2,120 @@ import { twMerge } from 'tailwind-merge'
 import {
 	Button,
 	DropdownSelect,
+	Pagination,
 	SearchBox,
+	SortTypeButton,
 	ToggleButton,
 } from '../../components'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { SimpleDesProps } from '../../types/destination'
+import { useToast } from '../../hook/useToast'
 
-const SortOptions = [
-	'Sort by',
-	'Rating Ascending',
-	'Rating Descending',
-	'Price Ascending',
-	'Price Descending',
+const sortBy = [
+	{
+		value: 'name',
+		label: 'Name',
+	},
+	{
+		value: 'rating',
+		label: 'Avg. Rating',
+	},
+	{
+		value: 'cost',
+		label: 'Avg. Cost',
+	},
 ]
-
-type DestinationType = {
-	id: number
-	name: string
-	address: string
-	openingTime: string
-	closingTime: string
-	cost: number
-	rating: number
-	favorite: boolean
-}
 
 const AddDestinationModal: React.FC<{
 	className?: string
 	onCancel: () => void
-}> = ({ className = '', onCancel }) => {
+	scheduleId: number
+	onSubmitted: () => void
+}> = ({ className = '', onCancel, scheduleId, onSubmitted }) => {
 	const [searchValue, setSearchValue] = useState('')
-	const [sortIndex, setSortIndex] = useState(0)
-	const [isFavorite, setIsFavorite] = useState(false)
-	const [destinations, setDestinations] = useState<DestinationType[]>([])
+	const [sort, setSort] = useState({
+		by: 0,
+		type: 'asc',
+	})
+	const [isFavorite, setIsFavorite] = useState<boolean>(false)
+	const [destinations, setDestinations] = useState<SimpleDesProps[]>()
+	const limit = 9
+	const [currentPage, setCurrentPage] = useState(1)
+	const [total, setTotal] = useState(0)
+	const toast = useToast()
 
 	const getDestinations = async () => {
 		try {
-			const response = await axios.get('/api/destination/page-1.json')
-			setDestinations(response.data.data)
-			console.log(response.data.data)
+			const response = await axios.get('/api/destination/list', {
+				params: {
+					page: currentPage,
+					limit,
+					sortBy: sortBy[sort.by].value,
+					sortType: sort.type,
+					...(isFavorite ? { isFavorite: true } : {}),
+					...(searchValue !== '' ? { search: searchValue } : {}),
+				},
+			})
+			const data = response.data.data
+			setDestinations(data.items)
+			setTotal(data.total)
 		} catch (error) {
 			console.error(error)
 		}
 	}
 
-	const [scheduleDestination, setScheduleDestination] = useState({
-		destination_id: 0,
+	const [sDestination, setSDestination] = useState({
+		destinationId: 0,
 		date: '',
-		arrival_time: '',
-		departure_time: '',
+		arrivalTime: '',
+		leaveTime: '',
+		budget: 0,
+		note: '',
 	})
 
-	const handleAddDestination = () => {
-		if (scheduleDestination.destination_id === 0) {
-			window.alert('Please select a destination')
-			return
+	const validate = () => {
+		if (
+			sDestination.date === '' ||
+			sDestination.arrivalTime === '' ||
+			sDestination.leaveTime === ''
+		) {
+			toast.error('Empty field', 'Please fill in all required fields')
+			return false
 		}
 
-		if (
-			scheduleDestination.date === '' ||
-			scheduleDestination.arrival_time === '' ||
-			scheduleDestination.departure_time === ''
-		) {
-			window.alert('Please fill in all fields')
-			return
+		if (sDestination.leaveTime <= sDestination.arrivalTime) {
+			toast.error(
+				'Invalid time',
+				'Departure time must be later than arrival time',
+			)
+			return false
 		}
 
-		if (
-			scheduleDestination.arrival_time >= scheduleDestination.departure_time
-		) {
-			window.alert('Arrival time must be before departure time')
-			return
+		return true
+	}
+
+	const handleAddDestination = async () => {
+		if (!validate()) return
+		try {
+			await axios.post('/api/schedule/addDestination', {
+				scheduleId,
+				...sDestination,
+			})
+			toast.success(
+				'Add destination success',
+				'Destination has been added to schedule',
+			)
+			onSubmitted()
+		} catch (error) {
+			console.error(error)
+			toast.error('Add destination failed', 'Please try again later')
 		}
-		// send data to server
-		window.location.reload()
-		console.log('Add destination:', scheduleDestination)
 	}
 
 	useEffect(() => {
 		getDestinations()
-	}, [])
+	}, [searchValue, sort, isFavorite])
 	return (
 		<div
 			className={twMerge(
@@ -100,6 +134,7 @@ const AddDestinationModal: React.FC<{
 							console.log('Searching for:', searchValue)
 						}}
 					/>
+
 					<div className="flex items-center gap-4">
 						<ToggleButton
 							onClick={() => {
@@ -112,60 +147,98 @@ const AddDestinationModal: React.FC<{
 							className="h-8 w-[80px]"
 						></ToggleButton>
 						<DropdownSelect
-							id={''}
-							className="h-8 w-[172px]"
-							options={SortOptions}
-							value={sortIndex}
+							id="sort-by"
+							className="h-8 w-[140px]"
+							options={sortBy.map((item) => item.label)}
+							value={sort.by}
 							onChange={(event) => {
-								setSortIndex(Number(event.target.value))
+								setSort({
+									...sort,
+									by: Number(event.target.value),
+								})
 							}}
-						></DropdownSelect>
+						/>
+						<SortTypeButton
+							id="sort-type"
+							className="h-8 w-8"
+							value={sort.type}
+							onClick={() => {
+								setSort({
+									...sort,
+									type: sort.type === 'asc' ? 'desc' : 'asc',
+								})
+							}}
+						/>
 					</div>
 				</div>
-				<div className="w-full rounded border border-borderCol-1 py-2 pr-1">
-					<div className="flex w-full items-center gap-2 pr-3 text-center text-sm font-semibold">
-						<div className="w-[212px]">Destination name</div>
-						<div className="flex-1">Address</div>
-						<div className="w-[92px]">Open time</div>
-						<div className="w-[92px]">Close time</div>
-						<div className="w-[84px]">Avg. cost</div>
-						<div className="w-[84px]">Avg. rating</div>
-					</div>
-					<div className="h-[400px] overflow-y-auto pt-2">
-						{destinations?.map((destination, index) => (
-							<div
+				<table className="w-full border-spacing-2 rounded border border-borderCol-1 py-2 pr-1">
+					<thead className="border-b border-borderCol-1">
+						<tr className="h-8 text-center text-sm [&_*]:font-semibold">
+							<th className="w-[212px] pl-2">Destination name</th>
+							<th>Address</th>
+							<th className="w-[92px]">Open time</th>
+							<th className="w-[92px]">Close time</th>
+							<th className="w-[84px]">Avg. cost</th>
+							<th className="w-[84px] pr-2">Avg. rating</th>
+						</tr>
+					</thead>
+					<tbody className="overflow-y-auto pt-2 [&>*:nth-child(odd)]:bg-gray-100 hover:[&_tr]:bg-[#64ccdc3f]">
+						{destinations?.map((destination) => (
+							<tr
 								key={destination.id}
 								className={twMerge(
-									`flex w-full items-center gap-2 py-2 pl-2 text-center text-sm ${index % 2 === 0 ? 'bg-[#0000000d]' : 'bg-white'} ${scheduleDestination.destination_id === destination.id && 'bg-[#2898c82a] font-semibold'}`,
+									`h-10 text-center text-sm ${sDestination.destinationId === destination.id && 'bg-[#2898c82a] font-semibold'}`,
 								)}
 								onClick={() => {
-									setScheduleDestination({
-										...scheduleDestination,
-										destination_id: destination.id,
+									setSDestination({
+										...sDestination,
+										destinationId: destination.id,
 									})
 								}}
 							>
-								<a
-									className={`line-clamp-1 w-[212px] text-left hover:text-primary-1 hover:underline`}
-									title={destination.name}
-									href={`/destination/${destination.id}`}
-									target="_blank"
-								>
-									{destination.name}
-								</a>
-								<div
-									className="line-clamp-1 flex-1 text-left"
-									title={destination.address}
-								>
-									{destination.address}
-								</div>
-								<div className="w-[92px]">{destination.openingTime}</div>
-								<div className="w-[92px]">{destination.closingTime}</div>
-								<div className="w-[84px]">${destination.cost}</div>
-								<div className="w-[84px]">{destination.rating}</div>
-							</div>
+								<td className="pl-2 ">
+									<a
+										className={`line-clamp-1 text-left hover:text-primary-1 hover:underline`}
+										title={destination.name}
+										href={`/destination/${destination.id}`}
+										target="_blank"
+									>
+										{destination.name}
+									</a>
+								</td>
+								<td>
+									<a className="line-clamp-1 text-left">
+										{destination.address}
+									</a>
+								</td>
+								<td>{destination.openTime}</td>
+								<td>{destination.closeTime}</td>
+								<td>${destination.cost}</td>
+								<td className="pr-2">{destination.rating.toFixed(2)}</td>
+							</tr>
 						))}
+						<tr
+							style={
+								destinations && {
+									height: `${(limit - destinations.length) * 40}px`,
+								}
+							}
+						></tr>
+					</tbody>
+				</table>
+				<div className="flex w-full justify-between">
+					<div className="flex h-8 items-center rounded border border-borderCol-1 px-3 text-txtCol-2">
+						{(currentPage - 1) * limit + 1}
+						{' - '}
+						{currentPage * limit > total ? total : currentPage * limit}
+						{' of '}
+						{total}
 					</div>
+					<Pagination
+						numbOfPages={Math.ceil(total / limit)}
+						currentPage={currentPage}
+						setCurrentPage={setCurrentPage}
+					/>
 				</div>
 				<div className="flex w-full justify-between">
 					<div className="flex items-center gap-3 text-sm">
@@ -173,10 +246,10 @@ const AddDestinationModal: React.FC<{
 						<input
 							className="h-8 bg-bgCol-1"
 							type="date"
-							value={scheduleDestination.date}
+							value={sDestination.date}
 							onChange={(event) =>
-								setScheduleDestination({
-									...scheduleDestination,
+								setSDestination({
+									...sDestination,
 									date: event.target.value,
 								})
 							}
@@ -185,11 +258,11 @@ const AddDestinationModal: React.FC<{
 						<input
 							className="h-8 bg-bgCol-1"
 							type="time"
-							value={scheduleDestination.arrival_time}
+							value={sDestination.arrivalTime}
 							onChange={(event) =>
-								setScheduleDestination({
-									...scheduleDestination,
-									arrival_time: event.target.value,
+								setSDestination({
+									...sDestination,
+									arrivalTime: event.target.value,
 								})
 							}
 						/>
@@ -197,11 +270,11 @@ const AddDestinationModal: React.FC<{
 						<input
 							className="h-8 bg-bgCol-1"
 							type="time"
-							value={scheduleDestination.departure_time}
+							value={sDestination.leaveTime}
 							onChange={(event) =>
-								setScheduleDestination({
-									...scheduleDestination,
-									departure_time: event.target.value,
+								setSDestination({
+									...sDestination,
+									leaveTime: event.target.value,
 								})
 							}
 						/>

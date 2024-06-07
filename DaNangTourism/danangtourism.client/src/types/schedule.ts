@@ -1,6 +1,6 @@
 export const ScheduleStatus = [
 	{
-		status: 'Status',
+		status: 'All',
 		color: undefined,
 	},
 	{
@@ -16,7 +16,7 @@ export const ScheduleStatus = [
 		color: 'bg-[#8187DC]',
 	},
 	{
-		status: 'Cancelled',
+		status: 'Canceled',
 		color: 'bg-tertiary-1',
 	},
 ]
@@ -42,7 +42,7 @@ export interface PublicScheduleItemProps extends ScheduleItemProps {
 
 export interface ScheduleDestinationProps {
 	id: number
-	desId: number
+	destinationId: number
 	name: string
 	address: string
 	arrivalTime: string
@@ -63,4 +63,11 @@ export interface ScheduleDetailProps extends ScheduleItemProps {
 	isPublic: boolean
 	numbOfDes: number
 	days: ScheduleDayProps[]
+}
+
+export interface ScheduleGeneralProps {
+	title: string
+	description: string
+	isPublic: boolean
+	status: string
 }

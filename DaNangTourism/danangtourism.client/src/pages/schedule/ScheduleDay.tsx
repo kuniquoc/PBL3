@@ -15,11 +15,13 @@ import {
 	PiXBold,
 } from 'react-icons/pi'
 import { useToast } from '../../hook/useToast'
+import axios from 'axios'
 
 const ScheduleDay: React.FC<{
 	scheduleDay: ScheduleDayProps
 	className?: string
-}> = ({ scheduleDay, className = '' }) => {
+	onChanged: () => void
+}> = ({ scheduleDay, className = '', onChanged }) => {
 	const date = dateDecay(scheduleDay.date)
 	const day = dayOfWeek(scheduleDay.date)
 	const numbOfDes = scheduleDay.destinations.length
@@ -49,7 +51,12 @@ const ScheduleDay: React.FC<{
 			>
 				{scheduleDay.destinations.map((destination, index) => (
 					<div className={`w-full`} key={index}>
-						<ScheduleDestination className="w-full" destination={destination} />
+						<ScheduleDestination
+							className="w-full"
+							destination={destination}
+							onChanged={onChanged}
+							date={scheduleDay.date}
+						/>
 						{index < numbOfDes - 1 && (
 							<span className="mt-6 block h-px w-full bg-txtCol-2"></span>
 						)}
@@ -62,15 +69,30 @@ const ScheduleDay: React.FC<{
 
 const ScheduleDestination: React.FC<{
 	className?: string
+	date: string
 	destination: ScheduleDestinationProps
-}> = ({ className = '', destination }) => {
+	onChanged: () => void
+}> = ({ className = '', date, destination, onChanged }) => {
 	const [editable, setEditable] = useState(false)
 	const [des, setDes] = useState<ScheduleDestinationProps>(destination)
 	const [isHovered, setIsHovered] = useState(false)
 	const toast = useToast()
-	const handleSave = () => {
+	const handleSave = async () => {
 		setEditable(false)
-		toast.success('Success', 'Destination saved')
+		try {
+			await axios.put(`/api/schedule/updateDestination/${des.id}`, {
+				date: date,
+				arrivalTime: des.arrivalTime,
+				leaveTime: des.leaveTime,
+				budget: des.budget,
+				note: des.note,
+			})
+			toast.success('Success', 'Destination saved successfully')
+			onChanged()
+		} catch (error) {
+			toast.error('Error', 'Failed to save destination')
+			console.error(error)
+		}
 	}
 
 	const handleCancel = () => {
@@ -78,12 +100,14 @@ const ScheduleDestination: React.FC<{
 		setEditable(false)
 	}
 
-	const handleRemove = (id: number) => {
-		const confirm = window.confirm(
-			'Are you sure you want to remove this destination?',
-		)
-		if (confirm) {
-			toast.success('Success', `Destination removed ${id}`)
+	const handleRemove = async () => {
+		try {
+			await axios.delete(`/api/schedule/removeDestination/${des.id}`)
+			toast.success('Success', 'Destination removed successfully')
+			onChanged()
+		} catch (error) {
+			toast.error('Error', 'Failed to remove destination')
+			console.error(error)
 		}
 	}
 
@@ -139,7 +163,7 @@ const ScheduleDestination: React.FC<{
 				</div>
 				<a
 					className="absolute right-1 top-0 p-1.5 hover:text-primary-1"
-					href={`/destination/${des.desId}`}
+					href={`/destination/${des.destinationId}`}
 					target="_blank"
 					title="View destination"
 				>
@@ -196,7 +220,7 @@ const ScheduleDestination: React.FC<{
 								</Button>
 								<Button
 									className="rounded-full bg-tertiary-1 p-2 text-white shadow-custom"
-									onClick={() => handleRemove(des.id)}
+									onClick={handleRemove}
 								>
 									<PiTrashSimpleFill className="text-lg" />
 								</Button>

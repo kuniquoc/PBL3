@@ -15,7 +15,7 @@ const ScheduleOverview: React.FC<{
 			<h3 className="mb-2 text-lg font-semibold text-primary-1">Overview</h3>
 			<div className="flex w-full items-center gap-4 border-b border-txtCol-1 py-1 text-sm">
 				<p className="w-[172px] font-semibold">Number of destinations</p>
-				<p className="flex-1">{numbOfDes}</p>
+				<p className="flex-1">{numbOfDes} places</p>
 			</div>
 			<div className="flex w-full items-center gap-4 border-b border-txtCol-1 py-1 text-sm">
 				<p className="w-[172px] font-semibold">Total estimated time</p>

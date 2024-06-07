@@ -3,50 +3,107 @@ import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { Button, DropdownSelect, ToggleButton } from '../../components'
 import { useNavigate } from 'react-router-dom'
-
-const StatusArray = ['Planning', 'Ongoing', 'Completed', 'Cancelled']
+import { useToast } from '../../hook/useToast'
+import { ScheduleGeneralProps, ScheduleStatus } from '../../types/schedule'
 
 const AddDestinationModal: React.FC<{
 	scheduleId?: number
+	general?: ScheduleGeneralProps
 	className?: string
-	onCancel: () => void
-}> = ({ scheduleId = 0, className = '', onCancel }) => {
-	const [scheduleGeneral, setScheduleGeneral] = useState({
+	onCancel: (changed: boolean) => void
+}> = ({ scheduleId = 0, className = '', onCancel, general }) => {
+	const [scheduleGeneral, setScheduleGeneral] = useState<ScheduleGeneralProps>({
 		title: '',
 		description: '',
 		isPublic: false,
-		status: 'Planing',
+		status: 'Planning',
 	})
-	const getScheduleGeneral = async (id: number) => {
-		try {
-			const response = await axios.get(`/api/schedule/id-${id}.json`)
-			setScheduleGeneral(response.data.data)
-		} catch (error) {
-			console.error(error)
-		}
-	}
+	const StatusArray = ScheduleStatus.filter(
+		(item) => item.status !== 'All',
+	).map((item) => item.status)
+
+	const toast = useToast()
+
 	const navigate = useNavigate()
-	const handleSave = (id: number) => {
-		if (id === 0) {
-			handleCreate()
+	const handleSubmit = () => {
+		if (scheduleId === 0) {
+			createSchedule()
 		} else {
-			// Update schedule
-			window.location.reload()
+			updateSchedule()
 		}
 	}
 
-	const handleCreate = () => {
+	const validate = () => {
 		if (scheduleGeneral.title === '' || scheduleGeneral.description === '') {
-			alert('Please fill in all fields')
-			return
+			toast.error('Empty field', 'Please fill in all required fields')
+			return false
 		}
-		console.log('Create new schedule:', scheduleGeneral)
-		navigate(`/schedule/30000001`)
+		if (scheduleGeneral.description.length > 255) {
+			toast.error(
+				'Description is too long',
+				'Please enter a shorter description',
+			)
+			return false
+		}
+		return true
+	}
+	const createSchedule = async () => {
+		if (!validate()) return
+		try {
+			const response = await axios.post(`/api/schedule/create`, {
+				title: scheduleGeneral.title,
+				description: scheduleGeneral.description,
+				isPublic: scheduleGeneral.isPublic,
+			})
+			toast.success(
+				'Create schedule success',
+				'You have created a new schedule',
+			)
+			navigate(`/schedule/${response.data.data.id}`)
+		} catch (error) {
+			console.error(error)
+			toast.error('Create schedule failed', 'Please try again later')
+		}
+	}
+
+	const updateSchedule = async () => {
+		if (!validate()) return
+		try {
+			await axios.put(`/api/schedule/update/${scheduleId}`, {
+				title: scheduleGeneral.title,
+				description: scheduleGeneral.description,
+				isPublic: scheduleGeneral.isPublic,
+				status: StatusArray.indexOf(scheduleGeneral.status) + 1,
+			})
+			toast.success('Update schedule success', 'You have updated the schedule')
+			onCancel(true)
+		} catch (error) {
+			console.error(error)
+			toast.error('Update schedule failed', 'Please try again later')
+		}
+	}
+
+	const handleDelete = async () => {
+		try {
+			await axios.delete(`/api/schedule/delete/${scheduleId}`)
+			toast.success('Delete schedule success', 'You have deleted the schedule')
+			navigate(`/schedule`)
+		} catch (error) {
+			console.error(error)
+			toast.error('Delete schedule failed', 'Please try again later')
+		}
 	}
 
 	useEffect(() => {
-		if (scheduleId !== 0) getScheduleGeneral(scheduleId)
-	}, [scheduleId])
+		if (general)
+			setScheduleGeneral({
+				title: general.title,
+				description: general.description,
+				isPublic: general.isPublic,
+				status:
+					general.status.charAt(0).toUpperCase() + general.status.slice(1),
+			})
+	}, [general])
 
 	return (
 		<div
@@ -66,6 +123,7 @@ const AddDestinationModal: React.FC<{
 						onChange={(e) =>
 							setScheduleGeneral({ ...scheduleGeneral, title: e.target.value })
 						}
+						maxLength={100}
 					/>
 				</div>
 				<div className="flex w-full flex-1 items-start gap-4">
@@ -80,6 +138,7 @@ const AddDestinationModal: React.FC<{
 								description: e.target.value,
 							})
 						}
+						maxLength={255}
 					/>
 				</div>
 				<div className="flex w-full items-center gap-4">
@@ -119,15 +178,7 @@ const AddDestinationModal: React.FC<{
 					{scheduleId !== 0 ? (
 						<Button
 							className="h-8 w-[100px] bg-tertiary-1 text-white"
-							onClick={() => {
-								const isDelete = window.confirm(
-									'Are you sure you want to delete this schedule?',
-								)
-								if (isDelete) {
-									console.log('Delete schedule:', scheduleId)
-									window.location.reload()
-								}
-							}}
+							onClick={handleDelete}
 						>
 							Delete
 						</Button>
@@ -137,13 +188,13 @@ const AddDestinationModal: React.FC<{
 					<div className="flex items-center gap-5">
 						<Button
 							className="h-8 w-[100px] border-[2px] border-tertiary-1 text-tertiary-1 hover:bg-[#e75b5125]"
-							onClick={onCancel}
+							onClick={() => onCancel(false)}
 						>
 							Cancel
 						</Button>
 						<Button
 							className="h-8 w-[100px] bg-primary-2 text-white hover:bg-primary-1"
-							onClick={() => handleSave(scheduleId)}
+							onClick={handleSubmit}
 						>
 							{scheduleId === 0 ? 'Create' : 'Save'}
 						</Button>

@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Button, DropdownSelect, Pagination, SearchBox } from '../../components'
+import {
+	Button,
+	DropdownSelect,
+	Pagination,
+	SearchBox,
+	SortTypeButton,
+} from '../../components'
 import { PiCalendarPlusBold } from 'react-icons/pi'
 import {
 	MyScheduleItemProps,
@@ -11,12 +17,20 @@ import MyScheduleItem from './MyScheduleItem'
 import PublicScheduleItem from './PublicScheduleItem'
 import LoadingScheduleItem from './LoadingScheduleItem'
 import SetupModal from './SetupModal'
-
-const SortOptions = [
-	'Sort by',
-	'Last updated',
-	'Start date (ascending)',
-	'Start date (descending)',
+import noItemImg from '../../assets/no-item.png'
+const SortBys = [
+	{
+		label: 'Updated at',
+		value: 'updatedAt',
+	},
+	{
+		label: 'Title',
+		value: 'title',
+	},
+	{
+		label: 'Start date',
+		value: 'startDate',
+	},
 ]
 
 const SchedulePage: React.FC = () => {
@@ -27,52 +41,78 @@ const SchedulePage: React.FC = () => {
 		useState<PublicScheduleItemProps[]>()
 	const StatusArray = ScheduleStatus.map((item) => item.status)
 	const [statusIndex, setStatusIndex] = useState(0)
-	const [sortIndex, setSortIndex] = useState(0)
+	const [sort, setSort] = useState({
+		by: 0,
+		type: 'desc',
+	})
 	const [searchValue, setSearchValue] = useState('')
 	const [loading, setLoading] = useState(true)
 	const [isNewScheduleModalOpen, setIsNewScheduleModalOpen] = useState(false)
-	const numbOfPages = 5
+	const [numbOfPages, setNumbOfPages] = useState(1)
 	const [currentPage, setCurrentPage] = useState(1)
+	const limit = 5
 
-	const getMySchedules = async (page: number) => {
+	const getMySchedules = async () => {
+		setLoading(true)
+		setMySchedules(undefined)
 		try {
-			setLoading(true)
-			setMySchedules(undefined)
-			const response = await axios.get(
-				`/api/schedule/my-schedules-${page}.json`,
-			)
-			await new Promise((resolve) => setTimeout(resolve, 1500))
-			if (response.data.status === 200) {
-				setMySchedules(response.data.data.items)
-				setLoading(false)
-			}
+			const response = await axios.get(`/api/schedule/mySchedule`, {
+				params: {
+					page: currentPage,
+					limit: limit,
+					status: statusIndex,
+					sortBy: SortBys[sort.by].value,
+					sortType: sort.type,
+					...(searchValue && { search: searchValue }),
+				},
+			})
+			const data = response.data.data
+			setMySchedules(data.items)
+			setNumbOfPages(Math.ceil(data.total / limit))
 		} catch (error) {
 			console.error(error)
 		}
+		setLoading(false)
 	}
 
-	const getPublicSchedules = async (page: number) => {
+	const getPublicSchedules = async () => {
+		setLoading(true)
+		setPublicSchedules(undefined)
 		try {
-			setLoading(true)
-			setPublicSchedules(undefined)
-			const response = await axios.get(
-				`/api/schedule/public-schedules-${page}.json`,
-			)
-			await new Promise((resolve) => setTimeout(resolve, 3000))
-			if (response.data.status === 200) {
-				setPublicSchedules(response.data.data.items)
-				setLoading(false)
-			}
-			console.log(response.data.data)
+			const response = await axios.get(`/api/schedule/sharedSchedule`, {
+				params: {
+					page: currentPage,
+					limit: limit,
+					sortBy: SortBys[sort.by].value,
+					sortType: sort.type,
+					...(searchValue && { search: searchValue }),
+				},
+			})
+			const data = response.data.data
+			setPublicSchedules(data.items)
+			setNumbOfPages(Math.ceil(data.total / limit))
 		} catch (error) {
 			console.error(error)
 		}
+		setLoading(false)
 	}
 
 	useEffect(() => {
-		if (tabIndex === 0) getMySchedules(currentPage)
-		else getPublicSchedules(currentPage)
-	}, [tabIndex, currentPage])
+		if (tabIndex === 0) getMySchedules()
+		else getPublicSchedules()
+	}, [tabIndex, currentPage, statusIndex, sort])
+
+	const handleSearch = () => {
+		if (tabIndex === 0) getMySchedules()
+		else getPublicSchedules()
+	}
+
+	useEffect(() => {
+		if (searchValue === '') {
+			handleSearch()
+		}
+	}, [searchValue])
+
 	return (
 		<div className="mx-auto flex min-h-screen justify-center gap-4 pb-6 pt-[72px] text-txtCol-1 xl:max-w-screen-xl">
 			<div className="flex w-full items-start justify-center gap-4">
@@ -97,22 +137,38 @@ const SchedulePage: React.FC = () => {
 								id="schedule-sort"
 								className="h-9 w-[200px]"
 								title="sort-blog"
-								options={SortOptions}
-								value={sortIndex}
+								options={SortBys.map((item) => item.label)}
+								value={sort.by}
 								onChange={(event) => {
-									setSortIndex(Number(event.target.value))
+									setSort({
+										by: Number(event.target.value),
+										type: sort.type,
+									})
 								}}
 							/>
-							<DropdownSelect
-								id="schedule-status"
-								className="h-9 w-[120px]"
-								title="status-blog"
-								options={StatusArray}
-								value={statusIndex}
-								onChange={(event) => {
-									setStatusIndex(Number(event.target.value))
+							<SortTypeButton
+								id="sort-type"
+								className="mr-2 h-9 w-9"
+								value={sort.type}
+								onClick={() => {
+									setSort({
+										...sort,
+										type: sort.type === 'asc' ? 'desc' : 'asc',
+									})
 								}}
 							/>
+							{tabIndex === 0 && (
+								<DropdownSelect
+									id="schedule-status"
+									className="h-9 w-[120px]"
+									title="status-blog"
+									options={StatusArray}
+									value={statusIndex}
+									onChange={(event) => {
+										setStatusIndex(Number(event.target.value))
+									}}
+								/>
+							)}
 						</div>
 						<div className="flex gap-4">
 							<SearchBox
@@ -120,9 +176,7 @@ const SchedulePage: React.FC = () => {
 								onChangeValue={(event) => {
 									setSearchValue(event.target.value)
 								}}
-								onClickSearch={() => {
-									console.log('Searching for:', searchValue)
-								}}
+								onClickSearch={handleSearch}
 							/>
 							<Button
 								className="h-9 bg-secondary-1 text-white hover:bg-[#42a186]"
@@ -137,7 +191,7 @@ const SchedulePage: React.FC = () => {
 					</div>
 					<div className="mt-4 flex w-full flex-col gap-4">
 						{loading &&
-							Array.from({ length: 4 }, (_, index) => (
+							Array.from({ length: 3 }, (_, index) => (
 								<LoadingScheduleItem key={index} />
 							))}
 						{tabIndex === 0 &&
@@ -147,11 +201,6 @@ const SchedulePage: React.FC = () => {
 									className="w-full"
 									key={schedule.id}
 									schedule={schedule}
-									statusColor={
-										ScheduleStatus.find(
-											(item) => item.status === schedule.status,
-										)?.color
-									}
 								/>
 							))}
 						{tabIndex === 1 &&
@@ -163,14 +212,29 @@ const SchedulePage: React.FC = () => {
 									schedule={schedule}
 								/>
 							))}
-						<Pagination
-							className="mt-4 w-full justify-center"
-							numbOfPages={numbOfPages}
-							currentPage={currentPage}
-							setCurrentPage={(numb) => {
-								setCurrentPage(numb)
-							}}
-						/>
+						{!loading &&
+						((tabIndex === 0 && !mySchedules) ||
+							(tabIndex === 1 && !publicSchedules)) ? (
+							<div className="flex h-[480px] w-full flex-col items-center justify-center gap-5">
+								<img
+									className="h-[320px]"
+									src={noItemImg}
+									alt="No item found"
+								/>
+								<p className="text-3xl font-semibold tracking-wide text-txtCol-3">
+									No schedule found
+								</p>
+							</div>
+						) : (
+							<Pagination
+								className="mt-4 w-full justify-center"
+								numbOfPages={numbOfPages}
+								currentPage={currentPage}
+								setCurrentPage={(numb) => {
+									setCurrentPage(numb)
+								}}
+							/>
+						)}
 					</div>
 				</div>
 			</div>

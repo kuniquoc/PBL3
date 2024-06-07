@@ -20,14 +20,17 @@ const Schedule: React.FC = () => {
 	const getSchedule = async (id: string) => {
 		try {
 			setSchedule(undefined)
-			const response = await axios.get(`/api/schedule/id-${id}.json`)
-			// simulate delay
-			await new Promise((resolve) => setTimeout(resolve, 1000))
+			const response = await axios.get(`/api/schedule/detail/${id}`)
 			setSchedule(response.data.data)
 		} catch (error) {
 			console.error(error)
 		}
 		setLoading(false)
+	}
+
+	const handleModalClose = (changed: boolean) => {
+		setIsSetupModalOpen(false)
+		if (changed) getSchedule(id ?? '')
 	}
 
 	useEffect(() => {
@@ -73,6 +76,7 @@ const Schedule: React.FC = () => {
 								className="mb-2 w-full"
 								key={index}
 								scheduleDay={day}
+								onChanged={() => getSchedule(id ?? '')}
 							/>
 						))}
 					</div>
@@ -86,7 +90,10 @@ const Schedule: React.FC = () => {
 						</Button>
 						<ScheduleOverview
 							className="w-full"
-							numbOfDes={schedule.numbOfDes}
+							numbOfDes={schedule.days.reduce(
+								(total, day) => total + day.destinations.length,
+								0,
+							)}
 							totalTime={schedule.totalDays}
 							totalBudget={schedule.totalBudget}
 						/>
@@ -97,13 +104,24 @@ const Schedule: React.FC = () => {
 				<AddDestinationModal
 					className="fixed left-0 top-0 z-10 h-screen w-screen"
 					onCancel={() => setIsAddModalOpen(false)}
+					onSubmitted={() => {
+						setIsAddModalOpen(false)
+						getSchedule(id ?? '')
+					}}
+					scheduleId={schedule.id}
 				/>
 			)}
 			{isSetupModalOpen && (
 				<SetupModal
 					scheduleId={schedule.id}
+					general={{
+						title: schedule.title,
+						description: schedule.description,
+						isPublic: schedule.isPublic,
+						status: schedule.status,
+					}}
 					className="fixed left-0 top-0 z-10 h-screen w-screen"
-					onCancel={() => setIsSetupModalOpen(false)}
+					onCancel={handleModalClose}
 				/>
 			)}
 		</div>
