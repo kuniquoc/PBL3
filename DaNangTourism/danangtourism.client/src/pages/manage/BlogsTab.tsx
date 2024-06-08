@@ -1,19 +1,24 @@
-import { twMerge } from 'tailwind-merge'
-import { DropdownSelect, Loader, Pagination, SearchBox } from '../../components'
 import React, { useEffect, useState } from 'react'
-import { CircleButton, SortTypeButton } from '../../components/Buttons'
-import { ManageBlogProps } from '../../types/blog'
-import { useToast } from '../../hook/useToast'
+import axios from 'axios'
+import { twMerge } from 'tailwind-merge'
 import {
 	PiCheckBold,
 	PiEyeFill,
 	PiTrashSimpleFill,
 	PiXBold,
 } from 'react-icons/pi'
-import axios from 'axios'
+import {
+	CircleButton,
+	SortTypeButton,
+	DropdownSelect,
+	Loader,
+	Pagination,
+	SearchBox,
+} from '../../components'
+import { IBlogManage } from '../../interfaces/blog'
+import { useToast, useConfirm } from '../../hook'
 import { toDisplayDateTime } from '../../utils/TimeFormatters'
 import { NumberFormat } from '../../utils/Format'
-import useConfirm from '../../hook/useConfirm'
 
 const sortBy = [
 	{
@@ -59,7 +64,7 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 	const limit = 12
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-	const [blogs, setBlogs] = useState<ManageBlogProps[]>()
+	const [blogs, setBlogs] = useState<IBlogManage[]>()
 	const [loading, setLoading] = useState(true)
 
 	const handleGetBlogs = async () => {
@@ -175,7 +180,7 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 }
 
 const BlogsTable: React.FC<{
-	blogs: ManageBlogProps[]
+	blogs: IBlogManage[]
 	onUpdated: () => void
 }> = ({ blogs, onUpdated }) => {
 	const toast = useToast()

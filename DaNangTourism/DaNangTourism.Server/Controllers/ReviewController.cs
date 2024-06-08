@@ -29,7 +29,7 @@ namespace DaNangTourism.Server.Controllers
         var reviews = _reviewService.GetReviewsByDestinationId(destinationId, reviewFilter);
         if (reviews.Items.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No review found" });
         }
         else return StatusCode(200, new { message = "Success", data = reviews });
       }

@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import axios from 'axios'
 import {
 	PiClock,
 	PiClockAfternoonFill,
@@ -5,11 +7,8 @@ import {
 	PiHeartFill,
 	PiStarFill,
 } from 'react-icons/pi'
-import { useState } from 'react'
-import { DesListItemProps } from '../../types/destination'
-import axios from 'axios'
-import { useToast } from '../../hook/useToast'
-import useUser from '../../hook/useUser'
+import { DesListItemProps } from '../../interfaces/destination'
+import { useToast, useUser } from '../../hook'
 
 interface DesPreviewCardProps extends DesListItemProps {
 	className?: string

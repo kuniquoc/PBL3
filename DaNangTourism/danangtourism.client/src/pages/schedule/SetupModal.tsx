@@ -1,19 +1,18 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import { Button, DropdownSelect, ToggleButton } from '../../components'
-import { useNavigate } from 'react-router-dom'
-import { useToast } from '../../hook/useToast'
-import { ScheduleGeneralProps, ScheduleStatus } from '../../types/schedule'
-import useConfirm from '../../hook/useConfirm'
+import { useToast, useConfirm } from '../../hook'
+import { IScheduleGeneral, ScheduleStatus } from '../../interfaces/schedule'
 
 const AddDestinationModal: React.FC<{
 	scheduleId?: number
-	general?: ScheduleGeneralProps
+	general?: IScheduleGeneral
 	className?: string
 	onCancel: (changed: boolean) => void
 }> = ({ scheduleId = 0, className = '', onCancel, general }) => {
-	const [scheduleGeneral, setScheduleGeneral] = useState<ScheduleGeneralProps>({
+	const [scheduleGeneral, setScheduleGeneral] = useState<IScheduleGeneral>({
 		title: '',
 		description: '',
 		isPublic: false,

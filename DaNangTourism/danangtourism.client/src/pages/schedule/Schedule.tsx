@@ -1,24 +1,24 @@
 import { useParams } from 'react-router-dom'
-import { ScheduleDetailProps, ScheduleStatus } from '../../types/schedule'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Button, Loader } from '../../components'
-import PageNotFound from '../PageNotFound'
-import { timeAgo } from '../../utils/TimeFormatters'
-import ScheduleOverview from './ScheduleOverview'
-import ScheduleDay, { NoDestination } from './ScheduleDay'
 import {
 	PiGearFill,
 	PiGlobeHemisphereWestFill,
 	PiLockFill,
 	PiMapPinLineFill,
 } from 'react-icons/pi'
+import { Button, Loader } from '../../components'
+import PageNotFound from '../PageNotFound'
+import { timeAgo } from '../../utils/TimeFormatters'
+import ScheduleOverview from './ScheduleOverview'
+import ScheduleDay, { NoDestination } from './ScheduleDay'
+import { IScheduleDetail, ScheduleStatus } from '../../interfaces/schedule'
 import AddDestinationModal from './AddDestinationModal'
 import SetupModal from './SetupModal'
 
 const Schedule: React.FC = () => {
 	const { id } = useParams()
-	const [schedule, setSchedule] = useState<ScheduleDetailProps>()
+	const [schedule, setSchedule] = useState<IScheduleDetail>()
 	const [loading, setLoading] = useState(true)
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 	const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)

@@ -5,6 +5,7 @@ import {
 	TabButton,
 	SortTypeButton,
 } from './Buttons'
+import ConfirmDialog from './ConfirmDialog'
 import DropdownSelect from './DropdownSelect'
 import Loader from './Loader'
 import Pagination from './Pagination'
@@ -15,10 +16,11 @@ import TextEditor from './TextEditor'
 
 export {
 	Button,
-	CircleButton,
-	SortTypeButton,
-	TabButton,
 	ToggleButton,
+	CircleButton,
+	TabButton,
+	SortTypeButton,
+	ConfirmDialog,
 	DropdownSelect,
 	Loader,
 	Pagination,

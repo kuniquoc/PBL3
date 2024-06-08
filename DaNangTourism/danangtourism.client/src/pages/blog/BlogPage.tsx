@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { PiPenFill } from 'react-icons/pi'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import {
 	SearchBox,
 	Button,
@@ -6,15 +9,11 @@ import {
 	DropdownSelect,
 	SortTypeButton,
 } from '../../components'
-import { PiPenFill } from 'react-icons/pi'
-import axios from 'axios'
-import { BlogLineProps } from '../../types/blog'
-import BlogItem, { LoadingBlogItem } from './BlogItem'
 import BlogSlider from './BlogSlider'
-import { useNavigate } from 'react-router-dom'
+import BlogItem, { LoadingBlogItem } from './BlogItem'
+import { IBlogLine } from '../../interfaces/blog'
+import { useToast, useUser } from '../../hook'
 import noItemImg from '../../assets/no-item.png'
-import useUser from '../../hook/useUser'
-import { useToast } from '../../hook/useToast'
 
 const sortBy = [
 	{ value: 'created_at', label: 'Created Time' },
@@ -30,7 +29,7 @@ const BlogPage: React.FC = () => {
 		type: 'desc',
 	})
 	const [searchValue, setSearchValue] = useState('')
-	const [blogs, setBlogs] = useState<BlogLineProps[]>()
+	const [blogs, setBlogs] = useState<IBlogLine[]>()
 	const [loading, setLoading] = useState(true)
 	const [currentPage, setCurrentPage] = useState(1)
 	const [numbOfPages, setNumbOfPages] = useState(1)

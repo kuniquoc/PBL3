@@ -1,13 +1,19 @@
-import { twMerge } from 'tailwind-merge'
-import { DropdownSelect, Loader, Pagination, SearchBox } from '../../components'
 import React, { useEffect, useState } from 'react'
-import { Button, CircleButton, SortTypeButton } from '../../components/Buttons'
-import { ManageDesProps } from '../../types/destination'
-import { useToast } from '../../hook/useToast'
 import { PiEyeFill, PiPenFill, PiTrashSimpleFill } from 'react-icons/pi'
 import axios from 'axios'
+import { twMerge } from 'tailwind-merge'
+import {
+	Button,
+	CircleButton,
+	SortTypeButton,
+	DropdownSelect,
+	Loader,
+	Pagination,
+	SearchBox,
+} from '../../components'
+import { ManageDesProps } from '../../interfaces/destination'
+import { useToast, useConfirm } from '../../hook'
 import { toDisplayDateTime } from '../../utils/TimeFormatters'
-import useConfirm from '../../hook/useConfirm'
 
 const sortBy = [
 	{

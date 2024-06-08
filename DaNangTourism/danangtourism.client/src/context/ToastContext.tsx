@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, useReducer } from 'react'
 import { toastReducer } from '../reducers/ToastReducer'
-import { Toast } from '../types/global'
+import { Toast } from '../interfaces/global'
 import ToastContainer from '../components/ToastContainer'
 
 export const ToastContext = createContext({

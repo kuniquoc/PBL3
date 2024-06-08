@@ -4,6 +4,6 @@ export interface Toast {
 	message: string
 }
 
-export interface ToastProps extends Toast {
+export interface IToast extends Toast {
 	id: number
 }

@@ -1,13 +1,13 @@
-import { Button, Loader, TextEditor } from '../../components'
 import { useEffect, useState } from 'react'
-import { PiXBold } from 'react-icons/pi'
-import { uploadToCloudinary } from '../../utils/Cloundinary'
-import { useToast } from '../../hook/useToast'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { DestinationEditorProps } from '../../types/destination'
-import PageNotFound from '../PageNotFound'
 import axios from 'axios'
-import useConfirm from '../../hook/useConfirm'
+import { PiXBold } from 'react-icons/pi'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+
+import PageNotFound from '../PageNotFound'
+import { Button, Loader, TextEditor } from '../../components'
+import { IDesEditor } from '../../interfaces/destination'
+import { uploadToCloudinary } from '../../utils/Cloudinary'
+import { useToast, useConfirm } from '../../hook'
 
 const initDes = {
 	id: 0,
@@ -30,7 +30,7 @@ const DestinationEditor: React.FC = () => {
 	const [editMode, setEditMode] = useState(false)
 	const [loading, setLoading] = useState(true)
 	const [invalid, setInvalid] = useState(false)
-	const [des, setDes] = useState<DestinationEditorProps>(initDes)
+	const [des, setDes] = useState<IDesEditor>(initDes)
 	const [is247, setIs247] = useState(false)
 	const navigate = useNavigate()
 	const confirm = useConfirm()

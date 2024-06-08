@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { useToast } from '../../hook/useToast'
-import { SimpleDesProps } from '../../types/destination'
+import { useToast, useConfirm } from '../../hook'
+import { SimpleDesProps } from '../../interfaces/destination'
 import axios from 'axios'
 import {
-	Button,
 	CircleButton,
 	DropdownSelect,
 	Loader,
@@ -12,9 +11,8 @@ import {
 	SearchBox,
 	SortTypeButton,
 } from '../../components'
-import { PiEyeFill, PiPenFill, PiHeartBreakFill } from 'react-icons/pi'
+import { PiEyeFill, PiHeartBreakFill } from 'react-icons/pi'
 import { NumberFormat } from '../../utils/Format'
-import useConfirm from '../../hook/useConfirm'
 
 const sortBy = [
 	{

@@ -1,8 +1,8 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 import { Stars } from '../../components'
-import { SortDesProps } from '../../types/destination'
-import { useToast } from '../../hook/useToast'
+import { SortDesProps } from '../../interfaces/destination'
+import { useToast } from '../../hook'
 
 const RandomExplore: React.FC = () => {
 	const [randomDess, setRandomDess] = useState<SortDesProps[]>([])

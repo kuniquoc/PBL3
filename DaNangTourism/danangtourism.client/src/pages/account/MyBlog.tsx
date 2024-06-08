@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { useToast } from '../../hook/useToast'
-import { MyBlogProps } from '../../types/blog'
+import { useToast, useConfirm } from '../../hook'
+import { IMyBlog } from '../../interfaces/blog'
 import axios from 'axios'
 import {
 	SearchBox,
@@ -14,7 +14,6 @@ import {
 import { PiEyeFill, PiTrashSimpleFill, PiPenFill } from 'react-icons/pi'
 import { NumberFormat } from '../../utils/Format'
 import { toDisplayDateTime } from '../../utils/TimeFormatters'
-import useConfirm from '../../hook/useConfirm'
 
 const sortBy = [
 	{
@@ -60,7 +59,7 @@ const MyBlog: React.FC<{ className?: string }> = ({ className }) => {
 	const limit = 12
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-	const [blogs, setBlogs] = useState<MyBlogProps[]>()
+	const [blogs, setBlogs] = useState<IMyBlog[]>()
 	const [loading, setLoading] = useState(true)
 
 	const handleGetBlogs = async () => {
@@ -171,7 +170,7 @@ const MyBlog: React.FC<{ className?: string }> = ({ className }) => {
 }
 
 const BlogsTable: React.FC<{
-	blogs: MyBlogProps[]
+	blogs: IMyBlog[]
 	onUpdated: () => void
 }> = ({ blogs, onUpdated }) => {
 	const toast = useToast()

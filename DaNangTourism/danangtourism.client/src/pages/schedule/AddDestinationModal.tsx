@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 import { twMerge } from 'tailwind-merge'
 import {
 	Button,
@@ -7,10 +9,8 @@ import {
 	SortTypeButton,
 	ToggleButton,
 } from '../../components'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { SimpleDesProps } from '../../types/destination'
-import { useToast } from '../../hook/useToast'
+import { SimpleDesProps } from '../../interfaces/destination'
+import { useToast } from '../../hook'
 
 const sortBy = [
 	{
@@ -262,6 +262,11 @@ const AddDestinationModal: React.FC<{
 									date: event.target.value,
 								})
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleAddDestination()
+								}
+							}}
 						/>
 						<div className="ml-2 font-semibold">Arrival time</div>
 						<input
@@ -274,6 +279,11 @@ const AddDestinationModal: React.FC<{
 									arrivalTime: event.target.value,
 								})
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleAddDestination()
+								}
+							}}
 						/>
 						<div className="ml-2 font-semibold">Departure time</div>
 						<input
@@ -286,6 +296,11 @@ const AddDestinationModal: React.FC<{
 									leaveTime: event.target.value,
 								})
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleAddDestination()
+								}
+							}}
 						/>
 					</div>
 					<div className="flex items-center gap-5">

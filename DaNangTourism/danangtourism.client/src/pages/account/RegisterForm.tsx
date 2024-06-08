@@ -1,13 +1,15 @@
-/* eslint-disable no-useless-escape */
-import { twMerge } from 'tailwind-merge'
-import { Button } from '../../components'
 import { useEffect, useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 import { motion } from 'framer-motion'
-import { useToast } from '../../hook/useToast'
-import ReCAPTCHA from 'react-google-recaptcha'
-import { variantsDefault, variantsY } from '../../styles/variants'
 import axios from 'axios'
+import ReCAPTCHA from 'react-google-recaptcha'
+
+import { Button } from '../../components'
+import { useToast } from '../../hook'
+import { variantsDefault, variantsY } from '../../styles/variants'
+
 // 6LcV0uYpAAAAABNE0DW6qJ8fPNjoydVhG_HYKo7u
+
 const RegisterForm: React.FC<{
 	className?: string
 	onClose: () => void
@@ -134,6 +136,11 @@ const RegisterForm: React.FC<{
 							onChange={(e) =>
 								setFormData({ ...formData, email: e.target.value })
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleSignUp()
+								}
+							}}
 						/>
 						<p className="text-sm text-tertiary-1">{warnings.email}</p>
 					</div>
@@ -150,6 +157,11 @@ const RegisterForm: React.FC<{
 							onChange={(e) =>
 								setFormData({ ...formData, password: e.target.value })
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleSignUp()
+								}
+							}}
 						/>
 						<p className="text-sm text-tertiary-1">{warnings.password}</p>
 					</div>
@@ -166,6 +178,11 @@ const RegisterForm: React.FC<{
 							onChange={(e) =>
 								setFormData({ ...formData, confirm: e.target.value })
 							}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleSignUp()
+								}
+							}}
 						/>
 						<p className="text-sm text-tertiary-1">{warnings.confirm}</p>
 					</div>

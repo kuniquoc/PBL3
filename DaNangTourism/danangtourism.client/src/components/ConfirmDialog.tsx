@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { variantsDefault, variantsY } from '../styles/variants'
 import { twMerge } from 'tailwind-merge'
 import { Button } from './Buttons'
+import { useEffect } from 'react'
 
 interface ConfirmDialogProps {
 	className?: string
@@ -12,6 +13,19 @@ interface ConfirmDialogProps {
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = (props) => {
+	useEffect(() => {
+		const handleEsc = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				props.onCancel()
+			} else if (e.key === 'Enter') {
+				e.preventDefault()
+				props.onOk()
+			}
+		}
+		window.addEventListener('keydown', handleEsc)
+		return () => window.removeEventListener('keydown', handleEsc)
+	}, [])
+
 	return (
 		<motion.div
 			className={twMerge(

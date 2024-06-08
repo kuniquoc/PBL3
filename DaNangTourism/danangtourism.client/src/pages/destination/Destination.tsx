@@ -1,23 +1,21 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import PageNotFound from '../PageNotFound'
-import DesImgSlider from './DesImgSlider'
-import { DestinationDetailProps } from '../../types/destination'
-import DesInfo from './DesInfo'
-import RandomExplore from './RandomExplore'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
 import { PiHeartFill, PiPenFill, PiShareFatFill } from 'react-icons/pi'
 
-import { ToggleButton, Button } from '../../components/Buttons'
+import PageNotFound from '../PageNotFound'
+import DesImgSlider from './DesImgSlider'
+import DesInfo from './DesInfo'
+import RandomExplore from './RandomExplore'
 import Reviews from './Reviews'
-import Loader from '../../components/Loader'
-import { useToast } from '../../hook/useToast'
-import useUser from '../../hook/useUser'
+import { IDesDetail } from '../../interfaces/destination'
+import { ToggleButton, Button, Loader } from '../../components'
+import { useToast, useUser } from '../../hook'
 
 const Destination: React.FC = () => {
-	const [destination, setDestination] = useState<
-		DestinationDetailProps | undefined
-	>(undefined)
+	const [destination, setDestination] = useState<IDesDetail | undefined>(
+		undefined,
+	)
 	const [loading, setLoading] = useState(true)
 	const { id } = useParams()
 	const toast = useToast()

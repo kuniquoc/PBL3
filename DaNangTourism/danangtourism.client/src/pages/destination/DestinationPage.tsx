@@ -1,14 +1,21 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, DropdownSelect, Pagination, SearchBox } from '../../components'
 import { PiSlidersFill } from 'react-icons/pi'
-import DesPreviewCard, { DPCLoading } from './DesPreviewCard'
-import axios from 'axios'
-import { useToast } from '../../hook/useToast'
-import { DesListItemProps } from '../../types/destination'
-import { SortTypeButton, ToggleButton } from '../../components/Buttons'
 import { twMerge } from 'tailwind-merge'
 import { AnimatePresence, motion } from 'framer-motion'
+import axios from 'axios'
+
+import DesPreviewCard, { DPCLoading } from './DesPreviewCard'
+import {
+	Button,
+	SortTypeButton,
+	ToggleButton,
+	DropdownSelect,
+	Pagination,
+	SearchBox,
+} from '../../components'
+import { DesListItemProps } from '../../interfaces/destination'
+import { useToast } from '../../hook'
 import noItemImg from '../../assets/no-item.png'
 
 const locations = [

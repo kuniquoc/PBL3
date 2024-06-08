@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { TabButton } from '../../components/Buttons'
 import { PiHardDrivesBold, PiMapPinBold, PiUserBold } from 'react-icons/pi'
 import MyAccount from './MyAccount'
-import { useLocation, useNavigate } from 'react-router-dom'
-import FavoriteDes from './FavoriteDes'
 import MyBlog from './MyBlog'
+import FavoriteDes from './FavoriteDes'
 
 const AccountPage: React.FC = () => {
 	document.title = 'My Account | Da Nang Explore'

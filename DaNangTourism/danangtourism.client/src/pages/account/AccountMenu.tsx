@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
 import { twMerge } from 'tailwind-merge'
-import { UserContext, defaultUser } from '../../context/UserContext'
-import { useContext } from 'react'
-import Cookies from 'js-cookie'
+import { defaultUser } from '../../context/UserContext'
+import { useConfirm, useToast, useUser } from '../../hook'
 import {
 	PiHardDrivesFill,
 	PiMapPinFill,
@@ -11,14 +10,12 @@ import {
 } from 'react-icons/pi'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { useToast } from '../../hook/useToast'
-import useConfirm from '../../hook/useConfirm'
 
 const AccountMenu: React.FC<{
 	className?: string
 	onClose: () => void
 }> = ({ className = '', onClose }) => {
-	const { user, setUser } = useContext(UserContext)
+	const { user, setUser } = useUser()
 	const toast = useToast()
 	const navigate = useNavigate()
 	const confirm = useConfirm()
@@ -32,7 +29,6 @@ const AccountMenu: React.FC<{
 		try {
 			await axios.get('/api/auth/logout')
 			setUser(defaultUser.user)
-			Cookies.remove('token')
 			onClose()
 			toast.info('Goodbye!', 'You have been signed out')
 			navigate('/')

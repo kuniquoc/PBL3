@@ -1,11 +1,10 @@
-import { twMerge } from 'tailwind-merge'
-import {
-	ScheduleDayProps,
-	ScheduleDestinationProps,
-} from '../../types/schedule'
-import { dateDecay, dayOfWeek } from '../../utils/TimeFormatters'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { twMerge } from 'tailwind-merge'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { IScheduleDay, IScheduleDes } from '../../interfaces/schedule'
+import { dateDecay, dayOfWeek } from '../../utils/TimeFormatters'
 import { Button } from '../../components'
 import {
 	PiArrowSquareOutBold,
@@ -14,12 +13,10 @@ import {
 	PiTrashSimpleFill,
 	PiXBold,
 } from 'react-icons/pi'
-import { useToast } from '../../hook/useToast'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useToast } from '../../hook'
 
 const ScheduleDay: React.FC<{
-	scheduleDay: ScheduleDayProps
+	scheduleDay: IScheduleDay
 	className?: string
 	onChanged: () => void
 }> = ({ scheduleDay, className = '', onChanged }) => {
@@ -71,11 +68,11 @@ const ScheduleDay: React.FC<{
 const ScheduleDestination: React.FC<{
 	className?: string
 	date: string
-	destination: ScheduleDestinationProps
+	destination: IScheduleDes
 	onChanged: () => void
 }> = ({ className = '', date, destination, onChanged }) => {
 	const [editable, setEditable] = useState(false)
-	const [des, setDes] = useState<ScheduleDestinationProps>(destination)
+	const [des, setDes] = useState<IScheduleDes>(destination)
 	const [isHovered, setIsHovered] = useState(false)
 	const { id } = useParams()
 	const toast = useToast()
@@ -194,6 +191,11 @@ const ScheduleDestination: React.FC<{
 						onChange={(event) =>
 							setDes({ ...des, budget: Number(event.target.value) })
 						}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								handleSave()
+							}
+						}}
 						className={`w-[72px] rounded ${editable ? 'focus:border focus:border-primary-2' : 'bg-[#f9f9f9] focus:border-borderCol-1'}`}
 						readOnly={!editable}
 					/>
@@ -204,6 +206,11 @@ const ScheduleDestination: React.FC<{
 						type="text"
 						value={des.note}
 						onChange={(event) => setDes({ ...des, note: event.target.value })}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								handleSave()
+							}
+						}}
 						className={`flex-1 rounded italic text-primary-1 ${editable ? 'focus:border focus:border-primary-2' : 'bg-[#f9f9f9] focus:border-borderCol-1'}`}
 						readOnly={!editable}
 					/>

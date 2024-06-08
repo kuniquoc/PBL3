@@ -6,8 +6,8 @@ import {
 	PiXBold,
 	PiXCircleFill,
 } from 'react-icons/pi'
-import { ToastProps } from '../types/global'
-import { useToast } from '../hook/useToast'
+import { IToast } from '../interfaces/global'
+import { useToast } from '../hook'
 import { useEffect } from 'react'
 
 const ToastTypes = {
@@ -29,7 +29,7 @@ const ToastTypes = {
 	},
 }
 
-const Toast: React.FC<ToastProps> = ({ type, title, message, id }) => {
+const Toast: React.FC<IToast> = ({ type, title, message, id }) => {
 	const { icon, color } = ToastTypes[type]
 	const toast = useToast()
 	useEffect(() => {

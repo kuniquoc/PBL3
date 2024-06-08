@@ -1,12 +1,10 @@
-/* eslint-disable no-useless-escape */
 import { twMerge } from 'tailwind-merge'
+import axios from 'axios'
 import { Button } from '../../components'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { variantsDefault, variantsY } from '../../styles/variants'
-import axios from 'axios'
-import { useToast } from '../../hook/useToast'
-import { UserContext } from '../../context/UserContext'
+import { useToast, useUser } from '../../hook'
 
 const LoginForm: React.FC<{
 	className?: string
@@ -51,7 +49,7 @@ const LoginForm: React.FC<{
 
 		return isValid
 	}
-	const { setUser } = useContext(UserContext)
+	const { setUser } = useUser()
 	const handleLogin = async () => {
 		setFirstMount(false)
 		if (!validateData()) return
@@ -65,6 +63,7 @@ const LoginForm: React.FC<{
 					isRemember: formData.rememberMe,
 				})
 				onClose()
+				window.location.reload()
 			} else {
 				toast.error('Login failed', res.data.message)
 			}

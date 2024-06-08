@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react'
 import ReactQuill from 'react-quill'
-import { uploadToCloudinary } from '../utils/Cloundinary'
+import { uploadToCloudinary } from '../utils/Cloudinary'
 import { twMerge } from 'tailwind-merge'
-import { useToast } from '../hook/useToast'
+import { useToast } from '../hook'
 
 const TextEditor: React.FC<{
 	className?: string

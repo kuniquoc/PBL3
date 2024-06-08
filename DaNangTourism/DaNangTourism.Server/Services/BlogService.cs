@@ -14,7 +14,7 @@ namespace DaNangTourism.Server.Services
     int IncreaseView(int id);
     BlogPageData GetBlogPage(BlogPageFilter blogPF);
     List<BlogRandom> GetRandomBlog(BlogRandomFilter blogRF);
-    BlogDetail? GetBlogDetail(int id);
+    BlogDetail? GetBlogDetail(int id, bool isAdmin = false, int uid = 0);
     int AddBlog(BlogAdd blogAdd, int uid);
     BlogForEdit GetBlogToUpdate(int id);
     bool CheckBlogBelongToUser(int blogId, int uid);
@@ -93,18 +93,19 @@ namespace DaNangTourism.Server.Services
     // random blog
     public List<BlogRandom> GetRandomBlog(BlogRandomFilter blogRF)
     {
-      StringBuilder filter = new StringBuilder();
-      List<MySqlParameter> parameters = new List<MySqlParameter>();
-      filter.Append(" limit @limit");
-      parameters.Add(new MySqlParameter("@limit", blogRF.limit));
-      return _blogRepository.GetRandomBlog(filter.ToString(), parameters);
+      return _blogRepository.GetRandomBlog(blogRF.limit);
     }
 
 
     // chi tiết blog
-    public BlogDetail? GetBlogDetail(int id)
+    public BlogDetail? GetBlogDetail(int id, bool isAdmin = false, int uid = 0)
     {
-      return _blogRepository.GetBlogDetail(id);
+      bool isAdminOrOwner = isAdmin;
+      if (uid != 0 && !isAdmin)
+      {
+        isAdminOrOwner = _blogRepository.CheckBlogBelongToUser(id, uid);
+      }
+      return _blogRepository.GetBlogDetail(id, isAdminOrOwner);
     }
 
 

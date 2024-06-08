@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { PiCalendarPlusBold } from 'react-icons/pi'
 import {
 	Button,
 	DropdownSelect,
@@ -6,20 +8,18 @@ import {
 	SearchBox,
 	SortTypeButton,
 } from '../../components'
-import { PiCalendarPlusBold } from 'react-icons/pi'
 import {
-	MyScheduleItemProps,
-	PublicScheduleItemProps,
+	IMySchedule,
+	IPublicSchedule,
 	ScheduleStatus,
-} from '../../types/schedule'
-import axios from 'axios'
+} from '../../interfaces/schedule'
 import MyScheduleItem from './MyScheduleItem'
 import PublicScheduleItem from './PublicScheduleItem'
 import LoadingScheduleItem from './LoadingScheduleItem'
 import SetupModal from './SetupModal'
 import noItemImg from '../../assets/no-item.png'
-import useUser from '../../hook/useUser'
-import { useToast } from '../../hook/useToast'
+import { useToast, useUser } from '../../hook'
+
 const SortBys = [
 	{
 		label: 'Updated at',
@@ -38,9 +38,8 @@ const SortBys = [
 const SchedulePage: React.FC = () => {
 	document.title = 'Schedules | Danang Tourism'
 	const [tabIndex, setTabIndex] = useState(0)
-	const [mySchedules, setMySchedules] = useState<MyScheduleItemProps[]>()
-	const [publicSchedules, setPublicSchedules] =
-		useState<PublicScheduleItemProps[]>()
+	const [mySchedules, setMySchedules] = useState<IMySchedule[]>()
+	const [publicSchedules, setPublicSchedules] = useState<IPublicSchedule[]>()
 	const StatusArray = ScheduleStatus.map((item) => item.status)
 	const [statusIndex, setStatusIndex] = useState(0)
 	const [sort, setSort] = useState({

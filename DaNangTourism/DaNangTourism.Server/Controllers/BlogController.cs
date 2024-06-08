@@ -29,14 +29,15 @@ namespace DaNangTourism.Server.Controllers
 
         if (blogHomes == null || blogHomes.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No blog found" });
         }
         var blogReturn = new BlogReturn<List<BlogHome>>(blogHomes);
         return Ok(blogReturn);
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -48,14 +49,15 @@ namespace DaNangTourism.Server.Controllers
         var blogPageData = _blogService.GetBlogPage(blogPageFilter);
         if (blogPageData.items.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No blog found" });
         }
         var blogReturn = new BlogReturn<BlogPageData>(blogPageData);
         return Ok(blogReturn);
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -67,14 +69,15 @@ namespace DaNangTourism.Server.Controllers
         List<BlogRandom> blogRandoms = _blogService.GetRandomBlog(blogRandomFilter);
         if (blogRandoms.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No blog found" });
         }
         var blogReturn = new BlogReturn<List<BlogRandom>>(blogRandoms);
         return Ok(blogReturn);
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -83,10 +86,22 @@ namespace DaNangTourism.Server.Controllers
     {
       try
       {
-        BlogDetail? blogDetail = _blogService.GetBlogDetail(id);
+        int uid;
+        try
+        {
+          uid = _accountService.GetUserIdFromToken();
+        }
+        catch (Exception ex)
+        {
+          uid = 0;
+        }
+        bool isAdmin = _accountService.IsAdmin();
+        BlogDetail? blogDetail = null;
+
+        blogDetail = _blogService.GetBlogDetail(id, isAdmin, uid);
         if (blogDetail == null)
         {
-          return NotFound();
+          return NotFound(new { message = "Blog not found" });
         }
         _blogService.IncreaseView(id);
         var blogReturn = new BlogReturn<BlogDetail>(blogDetail);
@@ -94,7 +109,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -120,7 +136,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -146,7 +163,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -177,7 +195,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -216,7 +235,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -246,7 +266,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -271,7 +292,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -300,7 +322,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception e)
       {
-        return StatusCode(500, new { message = e.Message });
+        Console.WriteLine(e.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
   }

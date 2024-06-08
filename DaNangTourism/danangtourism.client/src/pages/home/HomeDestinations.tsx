@@ -1,12 +1,10 @@
-import { PiCaretRightBold } from 'react-icons/pi'
-import { twMerge } from 'tailwind-merge'
-import Stars from '../../components/Stars'
-import { Button } from '../../components/Buttons'
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { AnimatePresence, motion } from 'framer-motion'
-import SliderNav from '../../components/SliderNav'
+import { twMerge } from 'tailwind-merge'
+import { useNavigate } from 'react-router-dom'
+import { PiCaretRightBold } from 'react-icons/pi'
+import { Button, SliderNav, Stars } from '../../components'
 
 type HomeDestinationsProps = {
 	className?: string

@@ -1,9 +1,7 @@
-﻿using DaNangTourism.Server.DAL;
-using DaNangTourism.Server.Models;
+﻿using DaNangTourism.Server.Models;
 using DaNangTourism.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace DaNangTourism.Server.Controllers
 {
@@ -19,26 +17,6 @@ namespace DaNangTourism.Server.Controllers
     }
 
     #region HTTP Methods
-
-    /* Login
-    request body:
-    {
-      "email": "example@email.com",
-      "password": "123456"
-    }
-    response body:
-    {
-      "status": 200,
-      "message": "Login successful",
-      "data": {
-        "id": 10000001,
-        "name": "John Doe",
-        "avatar": "https://example.com/avatar.jpg",
-        "email": "example@email.com",
-        "role": "user"
-          }
-    }
-    */
 
     [HttpPost("login")]
     public ActionResult Login([FromBody] AccountLoginModel account)
@@ -74,20 +52,6 @@ namespace DaNangTourism.Server.Controllers
     }
 
 
-    /* Register
-    request body:
-    {
-        "name": "John Doe",
-        "email": "example@email.com",
-        "password": "123456"
-    }
-    response body:
-    {
-        "status": 201,
-        "message": "Register successful"
-    }
-    */
-
     [HttpPost("register")]
     public ActionResult Register([FromBody] AccountRegisterModel account)
     {
@@ -96,7 +60,7 @@ namespace DaNangTourism.Server.Controllers
         // Kiểm tra xem email đã tồn tại hay chưa
         if (_accountService.GetAccountByEmail(account.Email) != null)
         {
-          return Conflict("Email already exists");
+          return Conflict(new { message = "Email already exists" });
         }
 
         // Tạo hash và salt cho mật khẩu
@@ -125,8 +89,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception ex)
       {
-        // Xử lý các ngoại lệ và trả về mã lỗi 500 Internal Server Error cùng với thông điệp lỗi
-        return StatusCode(500, new { message = $"Register failed: {ex.Message}" });
+        Console.WriteLine(ex.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
@@ -142,23 +106,6 @@ namespace DaNangTourism.Server.Controllers
       return Ok(response);
     }
 
-
-    /* Authenticed user by token
-    request header:
-    token: {token}
-    response body:
-    {
-        "status": 200,
-        "message": "Authenticated",
-        "data": {
-        "id": 10000001,
-        "name": "John Doe",
-        "avatar": "https://example.com/avatar.jpg",
-        "email": "example@email.com",
-        "role": "user"
-        }
-    }
-    */
     [HttpGet("authenticated")]
     public ActionResult Authenticated()
     {
@@ -170,7 +117,7 @@ namespace DaNangTourism.Server.Controllers
         // Kiểm tra xem có tồn tại id trong cookie không
         if (!claims.ContainsKey("id"))
         {
-          return Unauthorized("Invalid authentication data");
+          return Unauthorized(new { message = "Invalid authentication data" });
         }
 
         // Lấy tài khoản dựa trên id từ cookie
@@ -180,7 +127,7 @@ namespace DaNangTourism.Server.Controllers
         // Kiểm tra xem tài khoản có tồn tại không
         if (account == null)
         {
-          return NotFound("Account not found");
+          return NotFound(new { message = "Account not found" });
         }
 
         // Tạo đối tượng userData từ thông tin tài khoản
@@ -203,26 +150,17 @@ namespace DaNangTourism.Server.Controllers
         // Trả về mã 200 OK cùng với thông điệp phản hồi
         return Ok(response);
       }
+      catch (UnauthorizedAccessException uae)
+      {
+        return Unauthorized(new { message = uae.Message });
+      }
       catch (Exception ex)
       {
-        // Xử lý các ngoại lệ và trả về mã lỗi 401 Unauthorized cùng với thông điệp lỗi
-        return Unauthorized($"Authentication failed: {ex.Message}");
+        Console.WriteLine(ex.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 
-
-    /* Change password
-    request header:
-    {
-        "oldPassword": "123456",
-        "newPassword": "654321"
-    }
-    response body:
-    {
-        "status": 200,
-        "message": "Change password successful"
-    }
-    */
     [HttpPut("update/password")]
     public ActionResult ChangePassword([FromBody] AccountChangePasswordModel account)
     {
@@ -272,8 +210,8 @@ namespace DaNangTourism.Server.Controllers
       }
       catch (Exception ex)
       {
-        // Trả về mã lỗi 401 Unauthorized cùng với thông điệp lỗi
-        return Unauthorized(new { message = $"Change password failed: {ex.Message}" });
+        Console.WriteLine(ex.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
       }
     }
 

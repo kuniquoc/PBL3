@@ -1,12 +1,12 @@
-import { ToastProps } from '../types/global'
+import { IToast } from '../interfaces/global'
 
 interface State {
-	toasts: ToastProps[]
+	toasts: IToast[]
 }
 
 interface Action {
 	type: string
-	payload: ToastProps
+	payload: IToast
 }
 
 export const toastReducer = (state: State, action: Action) => {
@@ -18,7 +18,7 @@ export const toastReducer = (state: State, action: Action) => {
 			}
 		case 'REMOVE_TOAST': {
 			const updatedToasts = state.toasts.filter(
-				(toast: ToastProps) => toast.id !== action.payload.id,
+				(toast: IToast) => toast.id !== action.payload.id,
 			)
 			return {
 				...state,

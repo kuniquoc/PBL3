@@ -39,7 +39,7 @@ namespace DaNangTourism.Server.Controllers
         var schedules = _scheduleService.GetListSchedule(userId, scheduleFilter);
         if (schedules.Items.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No schedule found" });
         }
         return StatusCode(200, new { message = "Success", data = schedules });
       }
@@ -69,7 +69,7 @@ namespace DaNangTourism.Server.Controllers
         var schedules = _scheduleService.GetPublicSchedule(scheduleFilter, userId);
         if (schedules.Items.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No schedule found" });
         }
         return StatusCode(200, new { message = "Success", data = schedules });
       }
@@ -98,7 +98,7 @@ namespace DaNangTourism.Server.Controllers
         var schedule = _scheduleService.GetScheduleDetail(userId, id);
         if (schedule == null)
         {
-          return NotFound();
+          return NotFound(new { message = "No schedule found" });
         }
         return StatusCode(200, new { message = "Success", data = schedule });
       }

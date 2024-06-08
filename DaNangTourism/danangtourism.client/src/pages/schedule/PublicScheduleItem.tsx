@@ -1,13 +1,12 @@
+import axios from 'axios'
 import { twMerge } from 'tailwind-merge'
-import { PublicScheduleItemProps } from '../../types/schedule'
+import { IPublicSchedule } from '../../interfaces/schedule'
 import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { useToast } from '../../hook/useToast'
-import useUser from '../../hook/useUser'
+import { useToast, useUser } from '../../hook'
 
 const PublicScheduleItem: React.FC<{
-	schedule: PublicScheduleItemProps
+	schedule: IPublicSchedule
 	className?: string
 }> = ({ schedule, className }) => {
 	const navigate = useNavigate()

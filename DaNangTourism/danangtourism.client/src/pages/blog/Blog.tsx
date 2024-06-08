@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
-import { BlogDetailType } from '../../types/blog'
 import { useNavigate, useParams } from 'react-router-dom'
+import { PiPenFill, PiShareFatFill } from 'react-icons/pi'
 import axios from 'axios'
+
+import { IBlogDetail } from '../../interfaces/blog'
 import { Button, Loader } from '../../components'
 import PageNotFound from '../PageNotFound'
 import { BlogTypeColors } from '../../styles/Styles'
 import { timeAgo } from '../../utils/TimeFormatters'
-import { PiPenFill, PiShareFatFill } from 'react-icons/pi'
-import { useToast } from '../../hook/useToast'
-import useUser from '../../hook/useUser'
+import { useToast, useUser } from '../../hook'
 import { NumberFormat } from '../../utils/Format'
 
 const Blog: React.FC = () => {
-	const [blog, setBlog] = useState<BlogDetailType | undefined>(undefined)
+	const [blog, setBlog] = useState<IBlogDetail | undefined>(undefined)
 	const [loading, setLoading] = useState(true)
 	const { id } = useParams()
 	const toast = useToast()

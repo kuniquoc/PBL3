@@ -21,7 +21,7 @@ export const ScheduleStatus = [
 	},
 ]
 
-export interface ScheduleItemProps {
+export interface IScheduleItem {
 	id: number
 	title: string
 	description: string
@@ -31,16 +31,16 @@ export interface ScheduleItemProps {
 	totalBudget: number
 }
 
-export interface MyScheduleItemProps extends ScheduleItemProps {
+export interface IMySchedule extends IScheduleItem {
 	status: string
 	updatedAt: string
 }
 
-export interface PublicScheduleItemProps extends ScheduleItemProps {
+export interface IPublicSchedule extends IScheduleItem {
 	creator: string
 }
 
-export interface ScheduleDestinationProps {
+export interface IScheduleDes {
 	id: number
 	destinationId: number
 	name: string
@@ -51,21 +51,21 @@ export interface ScheduleDestinationProps {
 	note: string
 }
 
-export interface ScheduleDayProps {
+export interface IScheduleDay {
 	date: string
-	destinations: ScheduleDestinationProps[]
+	destinations: IScheduleDes[]
 }
 
-export interface ScheduleDetailProps extends ScheduleItemProps {
+export interface IScheduleDetail extends IScheduleItem {
 	status: string
 	updatedAt: string
 	creator: string
 	isPublic: boolean
 	numbOfDes: number
-	days: ScheduleDayProps[]
+	days: IScheduleDay[]
 }
 
-export interface ScheduleGeneralProps {
+export interface IScheduleGeneral {
 	title: string
 	description: string
 	isPublic: boolean

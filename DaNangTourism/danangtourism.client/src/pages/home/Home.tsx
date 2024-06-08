@@ -1,9 +1,9 @@
 import { PiCaretCircleDoubleDown } from 'react-icons/pi'
+import { motion } from 'framer-motion'
 import { Button } from '../../components/Buttons'
 import HomeDestinations from './HomeDestinations'
 import HomeBlogs from './HomeBlogs'
 import HomeSchedule from './HomeSchedule'
-import { motion } from 'framer-motion'
 
 const Home: React.FC = () => {
 	document.title = 'Da Nang Explore'

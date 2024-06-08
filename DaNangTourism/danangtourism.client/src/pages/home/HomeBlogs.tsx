@@ -1,15 +1,15 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { PiCaretRightBold } from 'react-icons/pi'
-import { twMerge } from 'tailwind-merge'
-import { Button } from '../../components/Buttons'
+import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { timeAgo } from '../../utils/TimeFormatters'
+import { twMerge } from 'tailwind-merge'
 import { motion } from 'framer-motion'
-import { HomeBlogProps } from '../../types/blog'
+import { PiCaretRightBold } from 'react-icons/pi'
+import { Button } from '../../components/Buttons'
+import { IHomeBlog } from '../../interfaces/blog'
+import { timeAgo } from '../../utils/TimeFormatters'
 
 const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
-	const [blogs, setBlogs] = useState<HomeBlogProps[]>([])
+	const [blogs, setBlogs] = useState<IHomeBlog[]>([])
 
 	const getBlogs = async () => {
 		try {
@@ -49,7 +49,7 @@ const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
 	)
 }
 
-const FirstBlog: React.FC<{ blog: HomeBlogProps; className?: string }> = ({
+const FirstBlog: React.FC<{ blog: IHomeBlog; className?: string }> = ({
 	blog,
 	className,
 }) => {
@@ -131,7 +131,7 @@ const FirstBlog: React.FC<{ blog: HomeBlogProps; className?: string }> = ({
 	)
 }
 
-const BlogCard: React.FC<{ blog: HomeBlogProps; className?: string }> = ({
+const BlogCard: React.FC<{ blog: IHomeBlog; className?: string }> = ({
 	blog,
 	className,
 }) => {

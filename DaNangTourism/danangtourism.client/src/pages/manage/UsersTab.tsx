@@ -1,17 +1,16 @@
-import { twMerge } from 'tailwind-merge'
-import { DropdownSelect, Loader, Pagination, SearchBox } from '../../components'
 import React, { useEffect, useState } from 'react'
-import { CircleButton, SortTypeButton } from '../../components/Buttons'
-import { useToast } from '../../hook/useToast'
+import axios from 'axios'
+import { twMerge } from 'tailwind-merge'
 import {
 	PiShieldCheckFill,
 	PiUserFill,
 	PiTrashSimpleFill,
 } from 'react-icons/pi'
-import axios from 'axios'
+import { DropdownSelect, Loader, Pagination, SearchBox } from '../../components'
+import { CircleButton, SortTypeButton } from '../../components/Buttons'
+import { useToast, useConfirm } from '../../hook'
 import { toDisplayDateTime } from '../../utils/TimeFormatters'
-import { ManageUserProps } from '../../types/user'
-import useConfirm from '../../hook/useConfirm'
+import { IUserManage } from '../../interfaces/user'
 
 const sortBy = [
 	{
@@ -50,7 +49,7 @@ const UsersTab: React.FC<{ className?: string }> = ({ className }) => {
 	const limit = 12
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-	const [users, setUsers] = useState<ManageUserProps[]>()
+	const [users, setUsers] = useState<IUserManage[]>()
 
 	const handleSearch = () => {
 		handleGetUsers()
@@ -160,7 +159,7 @@ const UsersTab: React.FC<{ className?: string }> = ({ className }) => {
 }
 
 const UserTable: React.FC<{
-	users: ManageUserProps[]
+	users: IUserManage[]
 	onReload: () => void
 }> = ({ users, onReload }) => {
 	const toast = useToast()

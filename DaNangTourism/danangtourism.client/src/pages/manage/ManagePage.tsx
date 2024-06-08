@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { TabButton } from '../../components/Buttons'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { PiHardDrivesBold, PiMapPinBold, PiUsersBold } from 'react-icons/pi'
 import DestinationsTab from './DestinationsTab'
+import { TabButton } from '../../components'
 import BlogsTab from './BlogsTab'
 import UsersTab from './UsersTab'
-import { useLocation, useNavigate } from 'react-router-dom'
 
 const ManagePage: React.FC = () => {
 	document.title = 'Manage | Danang Tourism'

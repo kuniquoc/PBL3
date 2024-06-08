@@ -1,15 +1,16 @@
-import { twMerge } from 'tailwind-merge'
-import { BlogLineProps } from '../../types/blog'
-import { timeAgo } from '../../utils/TimeFormatters'
-import { Button } from '../../components'
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { twMerge } from 'tailwind-merge'
+import { useNavigate } from 'react-router-dom'
+
+import { IBlogLine } from '../../interfaces/blog'
 import { BlogTypeColors } from '../../styles/Styles'
+import { Button } from '../../components'
+import { timeAgo } from '../../utils/TimeFormatters'
 import { NumberFormat } from '../../utils/Format'
 
 const BlogItem: React.FC<{
 	className?: string
-	blog: BlogLineProps
+	blog: IBlogLine
 }> = ({ className, blog }) => {
 	const navigate = useNavigate()
 	const [imgLoaded, setImgLoaded] = useState(false)

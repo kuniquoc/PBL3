@@ -13,8 +13,8 @@ namespace DaNangTourism.Server.DAL
     int IncreaseView(params MySqlParameter[] parameters);
     List<BlogPage> GetBlogPage(string sql, List<MySqlParameter> parameters);
     int GetBlogCount(string sql, List<MySqlParameter> parameters);
-    List<BlogRandom> GetRandomBlog(string filter, List<MySqlParameter> parameters);
-    BlogDetail? GetBlogDetail(int id);
+    List<BlogRandom> GetRandomBlog(int limit = 5);
+    BlogDetail? GetBlogDetail(int id, bool isAdminOrOwner = false);
     int AddBlog(BlogAdd blogAdd, int uid);
     BlogForEdit GetBlogToUpdate(int id);
     bool CheckBlogBelongToUser(int blogId, int uid);
@@ -109,10 +109,16 @@ namespace DaNangTourism.Server.DAL
     }
 
     // lấy random blog
-    public List<BlogRandom> GetRandomBlog(string filter, List<MySqlParameter> parameters)
+    public List<BlogRandom> GetRandomBlog(int limit = 5)
     {
-      string sql = "Select blog_id, title, type, image, user_id, created_at, (SELECT full_name FROM users WHERE users.user_id = blogs.user_id) as author" +
-          " from blogs order by rand()" + filter;
+      string sql = "Select blog_id, title, type, image, user_id, status, created_at, (SELECT full_name FROM users WHERE users.user_id = blogs.user_id) as author " +
+        "FROM blogs WHERE status = @status ORDER BY RAND() LIMIT @limit";
+
+      MySqlParameter[] parameters =
+      {
+        new ("@status", BlogStatus.published),
+        new ("@limit", limit)
+      };
 
       using (var con = new MySqlConnection(_connectionString))
       {
@@ -135,18 +141,27 @@ namespace DaNangTourism.Server.DAL
 
 
     //lấy blog dựa vào id // để hiển thị bài blog
-    public BlogDetail? GetBlogDetail(int id)
+    public BlogDetail? GetBlogDetail(int id, bool isAdminOrOwner = false)
     {
-      string sql = "SELECT blog_id, title, type, blogs.created_at as created_at, views, content, blogs.user_id AS id, full_name AS name, avatar_url AS avatar " +
+      string sql = "SELECT blog_id, title, type, blogs.created_at as created_at, views, content, status, blogs.user_id AS id, full_name AS name, avatar_url AS avatar " +
           "FROM blogs INNER JOIN users ON blogs.user_id = users.user_id WHERE blog_id = @id";
-      var parameter = new MySqlParameter("@id", id);
+      List<MySqlParameter> parameters = new List<MySqlParameter>
+      {
+        new MySqlParameter("@id", id)
+      };
+
+      if (!isAdminOrOwner)
+      {
+        sql += " AND status = @status";
+        parameters.Add(new MySqlParameter("@status", BlogStatus.published));
+      }
 
       using (var con = new MySqlConnection(_connectionString))
       {
         con.Open();
         using (var cmd = new MySqlCommand(sql, con))
         {
-          cmd.Parameters.Add(parameter);
+          cmd.Parameters.AddRange(parameters.ToArray());
           using (var reader = cmd.ExecuteReader())
           {
             if (reader.Read())

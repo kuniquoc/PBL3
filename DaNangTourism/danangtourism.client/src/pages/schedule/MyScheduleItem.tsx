@@ -1,12 +1,12 @@
 import { twMerge } from 'tailwind-merge'
-import { MyScheduleItemProps } from '../../types/schedule'
-import { timeAgo } from '../../utils/TimeFormatters'
-import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
-import { ScheduleStatus } from '../../types/schedule'
+import { Button } from '../../components'
+import { IMySchedule } from '../../interfaces/schedule'
+import { timeAgo } from '../../utils/TimeFormatters'
+import { ScheduleStatus } from '../../interfaces/schedule'
 
 const MyScheduleItem: React.FC<{
-	schedule: MyScheduleItemProps
+	schedule: IMySchedule
 	className?: string
 }> = ({ schedule, className = 'bg-[#d4d4d4]' }) => {
 	const navigate = useNavigate()

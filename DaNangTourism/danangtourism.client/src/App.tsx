@@ -23,7 +23,6 @@ import ScrollToTop from './utils/ScrollToTop'
 import { AnimatePresence } from 'framer-motion'
 import { Loader } from './components'
 import useUser from './hook/useUser'
-import ConfirmDialog from './components/ConfirmDialog'
 function App() {
 	const [accountModal, setAccountModal] = useState(0)
 	const [loading, setLoading] = useState(true)

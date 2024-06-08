@@ -13,10 +13,10 @@ import {
 	PiCalendarBlankBold,
 	PiTableBold,
 } from 'react-icons/pi'
-import { useContext, useState } from 'react'
-import { UserContext } from '../context/UserContext'
+import { useUser } from '../hook'
 import { Button } from '../components'
 import AccountMenu from './account/AccountMenu'
+import { useState } from 'react'
 
 const NavItems = [
 	{
@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignUp, onLogin }) => {
 		else setHidden(false)
 	})
 
-	const { user } = useContext(UserContext)
+	const { user } = useUser()
 
 	return (
 		<motion.nav

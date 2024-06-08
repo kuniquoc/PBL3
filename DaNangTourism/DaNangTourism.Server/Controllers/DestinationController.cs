@@ -25,7 +25,7 @@ namespace DaNangTourism.Server.Controllers
         var destinations = _destinationService.GetHomeDestinations();
         if (destinations.Count() == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No destination found" });
         }
         else return StatusCode(200, new { message = "Success", data = destinations });
       }
@@ -55,7 +55,7 @@ namespace DaNangTourism.Server.Controllers
         var destinations = _destinationService.GetListDestinations(destinationFilter, userId);
         if (destinations.Items.Count() == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No destination found" });
         }
         else return StatusCode(200, new { message = "Success", data = destinations });
       }
@@ -84,7 +84,7 @@ namespace DaNangTourism.Server.Controllers
         var destination = _destinationService.GetDestinationDetail(id, userId);
         if (destination == null)
         {
-          return NotFound();
+          return NotFound(new { message = "No destination found" });
         }
         else return StatusCode(200, new { message = "Success", data = destination });
       }
@@ -108,9 +108,8 @@ namespace DaNangTourism.Server.Controllers
         }
         catch (Exception ex)
         {
-          userId = 0;
+          return Unauthorized(new { message = ex.Message });
         }
-
 
         _destinationService.UpdateFavDes(userId, favorite.DestinationId, favorite.IsFavorite);
         return StatusCode(200, "Favorite updated");
@@ -130,7 +129,7 @@ namespace DaNangTourism.Server.Controllers
         var destinations = _destinationService.GetRandomDestinations(limit);
         if (destinations.Count() == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No destination found" });
         }
         else return StatusCode(200, new { message = "Success", data = destinations });
       }
@@ -165,7 +164,7 @@ namespace DaNangTourism.Server.Controllers
         AdminDestinations adminDestinations = _destinationService.GetDestinationElements(adminDestinationFilter);
         if (adminDestinations.Items.Count == 0)
         {
-          return NotFound();
+          return NotFound(new { message = "No destination found" });
         }
         else return StatusCode(200, new { message = "Success", data = adminDestinations });
       }

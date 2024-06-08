@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion'
-import { ToastProps } from '../types/global'
+import { IToast } from '../interfaces/global'
 import Toast from './Toast'
 
 const ToastContainer: React.FC<{
-	toasts: ToastProps[]
+	toasts: IToast[]
 	children: React.ReactNode
 }> = ({ toasts, children }) => {
 	return (

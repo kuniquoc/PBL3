@@ -1,13 +1,12 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import { GeneralReviewProps, ReviewProps } from '../../types/destination'
 import axios from 'axios'
-import { PiDotsThreeVerticalBold, PiStarFill } from 'react-icons/pi'
-import { Button, DropdownSelect, Pagination, Stars } from '../../components'
 import { twMerge } from 'tailwind-merge'
+import { PiDotsThreeVerticalBold, PiStarFill } from 'react-icons/pi'
+import { IGeneralReview, IReview } from '../../interfaces/destination'
+import { Button, DropdownSelect, Pagination, Stars } from '../../components'
 import { NumberFormat } from '../../utils/Format'
 import { timeAgo } from '../../utils/TimeFormatters'
-import { useToast } from '../../hook/useToast'
-import useUser from '../../hook/useUser'
+import { useToast, useUser } from '../../hook'
 
 const SortOptions = [
 	{
@@ -47,10 +46,10 @@ const SortOptions = [
 const Reviews: React.FC<{
 	destinationId: number
 	className?: string
-	general: GeneralReviewProps
+	general: IGeneralReview
 	onChanged: () => void
 }> = ({ destinationId, className, general, onChanged }) => {
-	const [reviews, setReviews] = useState<ReviewProps[]>()
+	const [reviews, setReviews] = useState<IReview[]>()
 	const [sortOption, setSortOption] = useState(0)
 	const [currentPage, setCurrentPage] = useState(1)
 	const [numbOfPages, setNumbOfPages] = useState(1)
@@ -134,7 +133,7 @@ const Reviews: React.FC<{
 }
 
 const Review: React.FC<{
-	review: ReviewProps
+	review: IReview
 	onDeleted: () => void
 }> = ({
 	review: { id, author, avatar, rating, comment, createdAt },
@@ -193,7 +192,7 @@ const Review: React.FC<{
 
 const GeneralReview: React.FC<{
 	className?: string
-	general: GeneralReviewProps
+	general: IGeneralReview
 }> = ({ className, general }) => {
 	return (
 		<div

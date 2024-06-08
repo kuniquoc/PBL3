@@ -1,17 +1,17 @@
-import { twMerge } from 'tailwind-merge'
-import { BlogCardProps } from '../../types/blog'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import { timeAgo } from '../../utils/TimeFormatters'
-import { Button, SliderNav } from '../../components'
+import { twMerge } from 'tailwind-merge'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { Button, SliderNav } from '../../components'
 import { BlogTypeColors } from '../../styles/Styles'
+import { IBlogCard } from '../../interfaces/blog'
+import { timeAgo } from '../../utils/TimeFormatters'
 
 const BlogSlider: React.FC<{
 	className?: string
 }> = ({ className }) => {
-	const [blogs, setBlogs] = useState<BlogCardProps[]>()
+	const [blogs, setBlogs] = useState<IBlogCard[]>()
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const navigate = useNavigate()
 	useEffect(() => {

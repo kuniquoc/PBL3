@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { PiInfo, PiPencilSimpleLineBold } from 'react-icons/pi'
-import { twMerge } from 'tailwind-merge'
-import { uploadToCloudinary } from '../../utils/Cloundinary'
-import { useToast } from '../../hook/useToast'
 import axios from 'axios'
-import { UserDetailsProps } from '../../types/user'
-import { Button } from '../../components'
+import { twMerge } from 'tailwind-merge'
 import { motion } from 'framer-motion'
-import useConfirm from '../../hook/useConfirm'
+import { PiInfo, PiPencilSimpleLineBold } from 'react-icons/pi'
+
+import { uploadToCloudinary } from '../../utils/Cloudinary'
+import { IUserDetail } from '../../interfaces/user'
+import { Button } from '../../components'
+import { useToast, useConfirm } from '../../hook'
 
 const initUserDetails = {
 	id: 0,
@@ -27,8 +27,7 @@ const initPwd = {
 const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 	const [imgHover, setImgHover] = useState(false)
 	const imgRef = useRef<HTMLInputElement>(null)
-	const [userDetails, setUserDetails] =
-		useState<UserDetailsProps>(initUserDetails)
+	const [userDetails, setUserDetails] = useState<IUserDetail>(initUserDetails)
 	const [imgFile, setImgFile] = useState<File>()
 	const toast = useToast()
 	const confirm = useConfirm()
@@ -201,6 +200,11 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 						onChange={(e) =>
 							setUserDetails({ ...userDetails, name: e.target.value })
 						}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								handleUpdateInfo()
+							}
+						}}
 						disabled={!editInfo}
 						maxLength={200}
 					/>
@@ -213,6 +217,11 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 						value={userDetails?.dateOfBirth.split('T')[0]}
 						onChange={(e) => {
 							setUserDetails({ ...userDetails, dateOfBirth: e.target.value })
+						}}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter') {
+								handleUpdateInfo()
+							}
 						}}
 						disabled={!editInfo}
 					/>
@@ -246,6 +255,11 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 							onChange={(e) => {
 								setPasswords({ ...passwords, current: e.target.value })
 							}}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleChangePwd()
+								}
+							}}
 						/>
 					</div>
 					<div className="w-full">
@@ -257,6 +271,11 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 							onChange={(e) => {
 								setPasswords({ ...passwords, new: e.target.value })
 							}}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleChangePwd()
+								}
+							}}
 						/>
 					</div>
 					<div className="w-full">
@@ -267,6 +286,11 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 							value={passwords?.confirm}
 							onChange={(e) => {
 								setPasswords({ ...passwords, confirm: e.target.value })
+							}}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter') {
+									handleChangePwd()
+								}
 							}}
 						/>
 					</div>
