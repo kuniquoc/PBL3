@@ -13,6 +13,7 @@ namespace DaNangTourism.Server.DAL
     int CloneSchedule(int userId, string creator, int scheduleId);
     bool IsCreator(int userId, int scheduleId);
     void UpdateSchedule(int userId, int scheduleId, UpdateScheduleModel schedule);
+    void DeleteSchedule(int scheduleId);
   }
   public class ScheduleRepository : IScheduleRepository
   {
@@ -169,15 +170,15 @@ namespace DaNangTourism.Server.DAL
     /// <returns></returns>
     public int CloneSchedule(int userId, string creator, int scheduleId)
     {
-      string sql = "INSERT INTO Schedules (UserId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, Creator, IsPublic) " +
-          "(SELECT @userId, Status, Title, Description, StartDate, TotalDays, TotalBudget, UpdatedAt, @creator, IsPublic FROM Schedules WHERE ScheduleId = @scheduleId); " +
+      string sql = "INSERT INTO Schedules (UserId, Title, Description, StartDate, TotalDays, TotalBudget, Creator) " +
+          "(SELECT @userId, Title, Description, StartDate, TotalDays, TotalBudget, @creator FROM Schedules WHERE ScheduleId = @scheduleId); " +
           "SELECT LAST_INSERT_ID();";
       MySqlParameter[] parameters =
       {
-                new ("@userId", userId),
-                new ("@creator", creator),
-                new ("@scheduleId", scheduleId)
-            };
+        new ("@userId", userId),
+        new ("@creator", creator),
+        new ("@scheduleId", scheduleId)
+      };
       using (var connection = new MySqlConnection(_connectionString))
       {
         connection.Open();
@@ -225,6 +226,24 @@ namespace DaNangTourism.Server.DAL
                 new ("@userId", userId),
                 new ("@scheduleId", scheduleId)
             };
+      using (var connection = new MySqlConnection(_connectionString))
+      {
+        connection.Open();
+        using (var command = new MySqlCommand(sql, connection))
+        {
+          command.Parameters.AddRange(parameters);
+          command.ExecuteNonQuery();
+        }
+      }
+    }
+
+    public void DeleteSchedule(int scheduleId)
+    {
+      string sql = "DELETE FROM Schedules WHERE ScheduleId = @scheduleId";
+      MySqlParameter[] parameters =
+      {
+        new ("@scheduleId", scheduleId)
+      };
       using (var connection = new MySqlConnection(_connectionString))
       {
         connection.Open();

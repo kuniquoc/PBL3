@@ -12,7 +12,7 @@ import { ToggleButton, Button } from '../../components/Buttons'
 import Reviews from './Reviews'
 import Loader from '../../components/Loader'
 import { useToast } from '../../hook/useToast'
-import { UserContext } from '../../context/UserContext'
+import useUser from '../../hook/useUser'
 
 const Destination: React.FC = () => {
 	const [destination, setDestination] = useState<
@@ -109,10 +109,15 @@ const ButtonsBar: React.FC<{
 	initFavorite: boolean
 }> = ({ destinationId, mapUrl, initFavorite }) => {
 	const [favorite, setFavorite] = useState(initFavorite)
-	const { user } = useContext(UserContext)
+	const { user } = useUser()
 	const toast = useToast()
 	const navigate = useNavigate()
 	const handleChangeFavorite = async (isFavorite: boolean) => {
+		if (!user || user.id === 0) {
+			toast.error('Login required', 'Please login to favorite this destination')
+			return
+		}
+
 		try {
 			await axios.put('/api/destination/favorite', {
 				destinationId,
@@ -145,8 +150,8 @@ const ButtonsBar: React.FC<{
 						<div
 							className="absolute left-0 top-0 h-full w-full cursor-pointer"
 							onClick={() => {
-								toast.error(
-									'Error',
+								toast.info(
+									'Login required',
 									'Please login to favorite this destination',
 								)
 							}}

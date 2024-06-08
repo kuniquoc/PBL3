@@ -18,6 +18,8 @@ import PublicScheduleItem from './PublicScheduleItem'
 import LoadingScheduleItem from './LoadingScheduleItem'
 import SetupModal from './SetupModal'
 import noItemImg from '../../assets/no-item.png'
+import useUser from '../../hook/useUser'
+import { useToast } from '../../hook/useToast'
 const SortBys = [
 	{
 		label: 'Updated at',
@@ -52,9 +54,13 @@ const SchedulePage: React.FC = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 	const limit = 5
 
+	const { user } = useUser()
+	const toast = useToast()
+
 	const getMySchedules = async () => {
 		setLoading(true)
 		setMySchedules(undefined)
+
 		try {
 			const response = await axios.get(`/api/schedule/mySchedule`, {
 				params: {
@@ -97,14 +103,32 @@ const SchedulePage: React.FC = () => {
 		setLoading(false)
 	}
 
+	const handleSearch = () => {
+		if (tabIndex === 0) getPublicSchedules()
+		else getMySchedules()
+	}
+
 	useEffect(() => {
-		if (tabIndex === 0) getMySchedules()
-		else getPublicSchedules()
+		handleSearch()
 	}, [tabIndex, currentPage, statusIndex, sort])
 
-	const handleSearch = () => {
-		if (tabIndex === 0) getMySchedules()
-		else getPublicSchedules()
+	const handleOpenMySchedule = () => {
+		if (!user || user.id === 0) {
+			toast.info(
+				'You are not logged in',
+				'Please log in to view your schedules',
+			)
+			return
+		}
+		setTabIndex(1)
+	}
+
+	const handleOpenCreateModal = () => {
+		if (!user || user.id === 0) {
+			toast.info('Login required', 'Please log in to create a new schedule')
+			return
+		}
+		setIsNewScheduleModalOpen(true)
 	}
 
 	useEffect(() => {
@@ -118,16 +142,16 @@ const SchedulePage: React.FC = () => {
 			<div className="flex w-full items-start justify-center gap-4">
 				<div className="flex w-[200px] flex-col gap-3 pt-[52px]">
 					<button
-						className={`h-10 w-full rounded border px-4 text-left text-sm font-semibold ${tabIndex == 0 ? 'border-borderCol-1 bg-white' : ' border-transparent hover:bg-[#0000000e]'} transition-all`}
+						className={`h-10 w-full rounded  border px-4 text-left text-sm font-semibold ${tabIndex == 0 ? 'border-borderCol-1 bg-white' : 'border-transparent text-txtCol-2 transition-all hover:bg-[#0000000e]'}`}
 						onClick={() => setTabIndex(0)}
 					>
-						Your travel schedules
+						Explore everyone's
 					</button>
 					<button
-						className={`h-10 w-full rounded  border px-4 text-left text-sm font-semibold ${tabIndex == 1 ? 'border-borderCol-1 bg-white' : 'border-transparent text-txtCol-2 transition-all hover:bg-[#0000000e]'}`}
-						onClick={() => setTabIndex(1)}
+						className={`h-10 w-full rounded border px-4 text-left text-sm font-semibold ${tabIndex == 1 ? 'border-borderCol-1 bg-white' : ' border-transparent hover:bg-[#0000000e]'} transition-all`}
+						onClick={handleOpenMySchedule}
 					>
-						Explore everyone's
+						Your travel schedules
 					</button>
 				</div>
 				<div className="flex-1">
@@ -157,7 +181,7 @@ const SchedulePage: React.FC = () => {
 									})
 								}}
 							/>
-							{tabIndex === 0 && (
+							{tabIndex === 1 && (
 								<DropdownSelect
 									id="schedule-status"
 									className="h-9 w-[120px]"
@@ -180,9 +204,7 @@ const SchedulePage: React.FC = () => {
 							/>
 							<Button
 								className="h-9 bg-secondary-1 text-white hover:bg-[#42a186]"
-								onClick={() => {
-									setIsNewScheduleModalOpen(true)
-								}}
+								onClick={handleOpenCreateModal}
 							>
 								<PiCalendarPlusBold className="text-lg" />
 								Create new
@@ -195,15 +217,6 @@ const SchedulePage: React.FC = () => {
 								<LoadingScheduleItem key={index} />
 							))}
 						{tabIndex === 0 &&
-							mySchedules &&
-							mySchedules.map((schedule) => (
-								<MyScheduleItem
-									className="w-full"
-									key={schedule.id}
-									schedule={schedule}
-								/>
-							))}
-						{tabIndex === 1 &&
 							publicSchedules &&
 							publicSchedules.map((schedule) => (
 								<PublicScheduleItem
@@ -212,9 +225,19 @@ const SchedulePage: React.FC = () => {
 									schedule={schedule}
 								/>
 							))}
+						{tabIndex === 1 &&
+							mySchedules &&
+							mySchedules.map((schedule) => (
+								<MyScheduleItem
+									className="w-full"
+									key={schedule.id}
+									schedule={schedule}
+								/>
+							))}
+
 						{!loading &&
-						((tabIndex === 0 && !mySchedules) ||
-							(tabIndex === 1 && !publicSchedules)) ? (
+						((tabIndex === 0 && !publicSchedules) ||
+							(tabIndex === 1 && !mySchedules)) ? (
 							<div className="flex h-[480px] w-full flex-col items-center justify-center gap-5">
 								<img
 									className="h-[320px]"

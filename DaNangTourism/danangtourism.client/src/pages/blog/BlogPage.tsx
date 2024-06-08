@@ -13,6 +13,8 @@ import BlogItem, { LoadingBlogItem } from './BlogItem'
 import BlogSlider from './BlogSlider'
 import { useNavigate } from 'react-router-dom'
 import noItemImg from '../../assets/no-item.png'
+import useUser from '../../hook/useUser'
+import { useToast } from '../../hook/useToast'
 
 const sortBy = [
 	{ value: 'created_at', label: 'Created Time' },
@@ -34,6 +36,8 @@ const BlogPage: React.FC = () => {
 	const [numbOfPages, setNumbOfPages] = useState(1)
 	const itemsPerPage = 5
 
+	const { user } = useUser()
+	const toast = useToast()
 	const getBlogs = async () => {
 		setLoading(true)
 		try {
@@ -54,6 +58,14 @@ const BlogPage: React.FC = () => {
 			console.error(error)
 		}
 		setLoading(false)
+	}
+
+	const handleOpenCreateBlogModal = () => {
+		if (!user || user.id === 0) {
+			toast.info('Login required', 'Please login to write a blog')
+			return
+		}
+		navigate('/blog/new')
 	}
 
 	useEffect(() => {
@@ -93,9 +105,7 @@ const BlogPage: React.FC = () => {
 					/>
 					<Button
 						className="ml-4 h-9 bg-secondary-1 text-white hover:bg-[#42a186]"
-						onClick={() => {
-							navigate('/blog/new')
-						}}
+						onClick={handleOpenCreateBlogModal}
 					>
 						<PiPenFill className="text-lg" />
 						Write a blog

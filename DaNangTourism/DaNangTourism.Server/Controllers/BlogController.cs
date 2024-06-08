@@ -250,6 +250,31 @@ namespace DaNangTourism.Server.Controllers
       }
     }
 
+    [HttpGet("myBlogs")]
+    public IActionResult GetMyBlogs([FromQuery] BlogListAdminFilter blogListAdminFilter)
+    {
+      try
+      {
+        int uid;
+        try
+        {
+          uid = _accountService.GetUserIdFromToken();
+        }
+        catch (Exception ex)
+        {
+          return Unauthorized(new { message = ex.Message });
+        }
+
+        var blogListData = _blogService.GetBlogList(blogListAdminFilter, uid);
+        var blogReturn = new BlogReturn<BLogListData>(blogListData);
+        return Ok(blogReturn);
+      }
+      catch (Exception e)
+      {
+        return StatusCode(500, new { message = e.Message });
+      }
+    }
+
     [HttpPut("updateStatus/{id}")]
     public IActionResult UpdateStatus([FromRoute] int id, [FromQuery] BlogStatus status)
     {

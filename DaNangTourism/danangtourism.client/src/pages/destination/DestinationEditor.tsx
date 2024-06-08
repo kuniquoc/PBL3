@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { DestinationEditorProps } from '../../types/destination'
 import PageNotFound from '../PageNotFound'
 import axios from 'axios'
+import useConfirm from '../../hook/useConfirm'
 
 const initDes = {
 	id: 0,
@@ -32,6 +33,7 @@ const DestinationEditor: React.FC = () => {
 	const [des, setDes] = useState<DestinationEditorProps>(initDes)
 	const [is247, setIs247] = useState(false)
 	const navigate = useNavigate()
+	const confirm = useConfirm()
 
 	useEffect(() => {
 		const path = location.pathname.split('/')
@@ -158,6 +160,11 @@ const DestinationEditor: React.FC = () => {
 	}
 
 	const handleDelete = async () => {
+		const result = await confirm.showConfirmation(
+			'Delete destination',
+			'Are you sure you want to delete this destination? This action cannot be undone.',
+		)
+		if (!result) return
 		try {
 			const response = await axios.delete(
 				'/api/destination/delete/' + Number(id),

@@ -5,6 +5,7 @@ import { Button, DropdownSelect, ToggleButton } from '../../components'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../../hook/useToast'
 import { ScheduleGeneralProps, ScheduleStatus } from '../../types/schedule'
+import useConfirm from '../../hook/useConfirm'
 
 const AddDestinationModal: React.FC<{
 	scheduleId?: number
@@ -23,6 +24,7 @@ const AddDestinationModal: React.FC<{
 	).map((item) => item.status)
 
 	const toast = useToast()
+	const confirm = useConfirm()
 
 	const navigate = useNavigate()
 	const handleSubmit = () => {
@@ -84,6 +86,11 @@ const AddDestinationModal: React.FC<{
 	}
 
 	const handleDelete = async () => {
+		const result = await confirm.showConfirmation(
+			'Delete schedule',
+			'Are you sure you want to delete this schedule? This action cannot be undone.',
+		)
+		if (!result) return
 		try {
 			await axios.delete(`/api/schedule/delete/${scheduleId}`)
 			toast.success('Delete schedule success', 'You have deleted the schedule')

@@ -16,6 +16,7 @@ import {
 } from 'react-icons/pi'
 import { useToast } from '../../hook/useToast'
 import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 const ScheduleDay: React.FC<{
 	scheduleDay: ScheduleDayProps
@@ -76,11 +77,13 @@ const ScheduleDestination: React.FC<{
 	const [editable, setEditable] = useState(false)
 	const [des, setDes] = useState<ScheduleDestinationProps>(destination)
 	const [isHovered, setIsHovered] = useState(false)
+	const { id } = useParams()
 	const toast = useToast()
 	const handleSave = async () => {
 		setEditable(false)
 		try {
 			await axios.put(`/api/schedule/updateDestination/${des.id}`, {
+				scheduleId: Number(id),
 				date: date,
 				arrivalTime: des.arrivalTime,
 				leaveTime: des.leaveTime,
@@ -89,9 +92,14 @@ const ScheduleDestination: React.FC<{
 			})
 			toast.success('Success', 'Destination saved successfully')
 			onChanged()
-		} catch (error) {
-			toast.error('Error', 'Failed to save destination')
+		} catch (error: any) {
 			console.error(error)
+			toast.error(
+				'Failed to save destination',
+				error.response.data.message ||
+					'An error occurred, please try again later',
+			)
+			handleCancel()
 		}
 	}
 
@@ -244,6 +252,23 @@ const ScheduleDestination: React.FC<{
 					</motion.div>
 				)}
 			</AnimatePresence>
+		</div>
+	)
+}
+
+export const NoDestination: React.FC<{ className?: string }> = ({
+	className = '',
+}) => {
+	return (
+		<div className={twMerge(`flex items-start gap-4 ${className}`)}>
+			<div className="flex w-[88px] flex-col items-end">
+				<span className=" py-2 font-lora text-5xl font-bold">00</span>
+				<span className={`font-semibold`}>DayOfWeek</span>
+				<span className="text-sm">Month Year</span>
+			</div>
+			<div className="flex h-[184px] flex-1 items-center justify-center rounded-lg border border-borderCol-1 bg-white p-5 text-2xl font-semibold text-txtCol-3">
+				No destination added
+			</div>
 		</div>
 	)
 }

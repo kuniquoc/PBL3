@@ -1,13 +1,13 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PiInfo, PiPencilSimpleLineBold } from 'react-icons/pi'
 import { twMerge } from 'tailwind-merge'
-import { UserContext } from '../../context/UserContext'
 import { uploadToCloudinary } from '../../utils/Cloundinary'
 import { useToast } from '../../hook/useToast'
 import axios from 'axios'
 import { UserDetailsProps } from '../../types/user'
 import { Button } from '../../components'
 import { motion } from 'framer-motion'
+import useConfirm from '../../hook/useConfirm'
 
 const initUserDetails = {
 	id: 0,
@@ -31,7 +31,7 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 		useState<UserDetailsProps>(initUserDetails)
 	const [imgFile, setImgFile] = useState<File>()
 	const toast = useToast()
-
+	const confirm = useConfirm()
 	const getUserDetails = async () => {
 		try {
 			const response = await axios.get('/api/account/get')
@@ -107,6 +107,12 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 			)
 			return
 		}
+
+		const result = await confirm.showConfirmation(
+			'Change Password',
+			'Are you sure you want to change your password?',
+		)
+		if (!result) return
 
 		try {
 			const response = await axios.put('/api/auth/update/password', {

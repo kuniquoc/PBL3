@@ -20,7 +20,7 @@ const MyScheduleItem: React.FC<{
 				<div
 					className={`flex h-6 w-[88px] items-center justify-center gap-[6px] rounded-full text-[11px] capitalize text-white ${
 						ScheduleStatus.find(
-							(status) => status.status.toLowerCase() == schedule.status,
+							(item) => item.status.toLowerCase() == schedule.status,
 						)?.color || 'bg-[#eeeeee]'
 					}`}
 				>
@@ -46,13 +46,17 @@ const MyScheduleItem: React.FC<{
 								)
 							})
 						) : (
-							<p className="text-sm">Empty</p>
+							<p className="text-sm">No destination</p>
 						)}
 					</div>
 					<div className="flex w-full items-center gap-5 overflow-hidden text-sm">
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Start date: </h5>
-							<p className="">{schedule.startDate}</p>
+							<p className="">
+								{schedule.startDate == '0001-01-01'
+									? 'None'
+									: schedule.startDate}
+							</p>
 						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Total time: </h5>

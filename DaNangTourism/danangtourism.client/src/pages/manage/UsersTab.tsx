@@ -11,6 +11,7 @@ import {
 import axios from 'axios'
 import { toDisplayDateTime } from '../../utils/TimeFormatters'
 import { ManageUserProps } from '../../types/user'
+import useConfirm from '../../hook/useConfirm'
 
 const sortBy = [
 	{
@@ -163,7 +164,14 @@ const UserTable: React.FC<{
 	onReload: () => void
 }> = ({ users, onReload }) => {
 	const toast = useToast()
+	const confirm = useConfirm()
+
 	const handleSwitchRole = async (id: number) => {
+		const result = await confirm.showConfirmation(
+			'Switch role',
+			'Are you sure you want to switch this user role?',
+		)
+		if (!result) return
 		try {
 			const response = await axios.put(`/api/account/update/role/${id}`)
 			if (response.status === 200) {
@@ -179,6 +187,11 @@ const UserTable: React.FC<{
 	}
 
 	const handleDeleteUser = async (id: number) => {
+		const result = await confirm.showConfirmation(
+			'Delete user',
+			'Are you sure you want to delete this user? This action cannot be undone.',
+		)
+		if (!result) return
 		try {
 			const response = await axios.delete(`/api/account/delete/${id}`)
 			if (response.status === 200) {

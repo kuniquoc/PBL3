@@ -1,14 +1,13 @@
-import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../context/UserContext'
-import PageNotFound from '../PageNotFound'
+import { useEffect, useState } from 'react'
 import { TabButton } from '../../components/Buttons'
 import { PiHardDrivesBold, PiMapPinBold, PiUserBold } from 'react-icons/pi'
 import MyAccount from './MyAccount'
 import { useLocation, useNavigate } from 'react-router-dom'
+import FavoriteDes from './FavoriteDes'
+import MyBlog from './MyBlog'
 
 const AccountPage: React.FC = () => {
 	document.title = 'My Account | Da Nang Explore'
-	const { user } = useContext(UserContext)
 
 	const [tabIndex, setTabIndex] = useState(0)
 	const location = useLocation()
@@ -70,6 +69,12 @@ const AccountPage: React.FC = () => {
 				<div className="flex-1">
 					{tabIndex === 0 && (
 						<MyAccount className="rounded border border-borderCol-1 bg-white" />
+					)}
+					{tabIndex === 1 && (
+						<FavoriteDes className="rounded border border-borderCol-1 bg-white" />
+					)}
+					{tabIndex === 2 && (
+						<MyBlog className="rounded border border-borderCol-1 bg-white" />
 					)}
 				</div>
 			</div>

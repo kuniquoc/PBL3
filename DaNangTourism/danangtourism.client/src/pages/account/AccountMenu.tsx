@@ -12,6 +12,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useToast } from '../../hook/useToast'
+import useConfirm from '../../hook/useConfirm'
 
 const AccountMenu: React.FC<{
 	className?: string
@@ -20,7 +21,14 @@ const AccountMenu: React.FC<{
 	const { user, setUser } = useContext(UserContext)
 	const toast = useToast()
 	const navigate = useNavigate()
+	const confirm = useConfirm()
+
 	const handleSignOut = async () => {
+		const result = await confirm.showConfirmation(
+			'Sign Out',
+			'Are you sure you want to sign out?',
+		)
+		if (!result) return
 		try {
 			await axios.get('/api/auth/logout')
 			setUser(defaultUser.user)

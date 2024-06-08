@@ -44,7 +44,6 @@ const AddDestinationModal: React.FC<{
 	const [currentPage, setCurrentPage] = useState(1)
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-
 	const getDestinations = async () => {
 		try {
 			const response = await axios.get('/api/destination/list', {
@@ -60,8 +59,9 @@ const AddDestinationModal: React.FC<{
 			const data = response.data.data
 			setDestinations(data.items)
 			setTotal(data.total)
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error)
+			toast.error('Error', error.response.data.message)
 		}
 	}
 
@@ -75,6 +75,10 @@ const AddDestinationModal: React.FC<{
 	})
 
 	const validate = () => {
+		if (sDestination.destinationId === 0) {
+			toast.error('No destination selected', 'Please select a destination')
+			return false
+		}
 		if (
 			sDestination.date === '' ||
 			sDestination.arrivalTime === '' ||
@@ -107,13 +111,17 @@ const AddDestinationModal: React.FC<{
 				'Destination has been added to schedule',
 			)
 			onSubmitted()
-		} catch (error) {
+		} catch (error: any) {
 			console.error(error)
-			toast.error('Add destination failed', 'Please try again later')
+			toast.error('Error', error.response.data.message)
 		}
 	}
 
 	useEffect(() => {
+		setSDestination({
+			...sDestination,
+			destinationId: 0,
+		})
 		getDestinations()
 	}, [searchValue, sort, isFavorite])
 	return (
@@ -182,12 +190,12 @@ const AddDestinationModal: React.FC<{
 							<th className="w-[84px] pr-2">Avg. rating</th>
 						</tr>
 					</thead>
-					<tbody className="overflow-y-auto pt-2 [&>*:nth-child(odd)]:bg-gray-100 hover:[&_tr]:bg-[#64ccdc3f]">
-						{destinations?.map((destination) => (
+					<tbody className="overflow-y-auto pt-2 hover:[&_tr]:bg-[#64ccdc3f]">
+						{destinations?.map((destination, index) => (
 							<tr
 								key={destination.id}
 								className={twMerge(
-									`h-10 text-center text-sm ${sDestination.destinationId === destination.id && 'bg-[#2898c82a] font-semibold'}`,
+									`h-10 cursor-pointer text-center text-sm ${index % 2 === 1 ? 'bg-gray-100' : 'bg-white'} ${sDestination.destinationId === destination.id && 'bg-[#2898c82a] font-semibold'} `,
 								)}
 								onClick={() => {
 									setSDestination({
@@ -200,8 +208,9 @@ const AddDestinationModal: React.FC<{
 									<a
 										className={`line-clamp-1 text-left hover:text-primary-1 hover:underline`}
 										title={destination.name}
-										href={`/destination/${destination.id}`}
-										target="_blank"
+										onDoubleClick={() => {
+											window.open(`/destination/${destination.id}`, '_blank')
+										}}
 									>
 										{destination.name}
 									</a>

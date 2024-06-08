@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { DesListItemProps } from '../../types/destination'
 import axios from 'axios'
 import { useToast } from '../../hook/useToast'
+import useUser from '../../hook/useUser'
 
 interface DesPreviewCardProps extends DesListItemProps {
 	className?: string
@@ -32,6 +33,7 @@ const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
 	const [favor, setFavorite] = useState(favorite)
 	const [imgLoaded, setImgLoaded] = useState(false)
 	const toast = useToast()
+	const { user } = useUser()
 	const handleChangeFavorite = async (isFavorite: boolean) => {
 		try {
 			await axios.put('/api/destination/favorite', {
@@ -83,13 +85,27 @@ const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
 						{address}
 					</p>
 				</div>
-				<button className="h-[30px] text-3xl" onClick={toggleFavorite}>
-					{favor ? (
-						<PiHeartFill className=" text-tertiary-1" />
-					) : (
-						<PiHeart className=" hover:text-tertiary-2" />
-					)}
-				</button>
+				<div className="relative h-[30px] w-[30px]">
+					<button className="full w-full text-3xl" onClick={toggleFavorite}>
+						{favor ? (
+							<PiHeartFill className=" text-tertiary-1" />
+						) : (
+							<PiHeart className=" hover:text-tertiary-2" />
+						)}
+					</button>
+					{!user ||
+						(user.id === 0 && (
+							<div
+								className="absolute left-0 top-0 h-full w-full"
+								onClick={() =>
+									toast.error(
+										'Login required',
+										'Please login to favorite this destination',
+									)
+								}
+							></div>
+						))}
+				</div>
 			</div>
 			<div className="mb-1 flex w-full items-center gap-1">
 				<div className="flex flex-1 items-center gap-1 text-sm font-semibold">

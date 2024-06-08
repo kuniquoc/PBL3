@@ -1,5 +1,4 @@
 import { twMerge } from 'tailwind-merge'
-
 const ScheduleOverview: React.FC<{
 	className?: string
 	numbOfDes: number
@@ -12,7 +11,7 @@ const ScheduleOverview: React.FC<{
 				`flex flex-col items-center rounded-lg border border-borderCol-1 bg-white px-4 py-5 ${className}`,
 			)}
 		>
-			<h3 className="mb-2 text-lg font-semibold text-primary-1">Overview</h3>
+			<h3 className="mb-1 text-lg font-semibold text-primary-1">Overview</h3>
 			<div className="flex w-full items-center gap-4 border-b border-txtCol-1 py-1 text-sm">
 				<p className="w-[172px] font-semibold">Number of destinations</p>
 				<p className="flex-1">{numbOfDes} places</p>

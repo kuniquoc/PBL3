@@ -73,16 +73,16 @@ builder.Services.AddScoped<IScheduleRepository>(provider =>
 
 builder.Services.AddScoped<IScheduleDestinationRepository>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
-    }
-    return new ScheduleDestinationRepository(connectionString);
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new ScheduleDestinationRepository(connectionString);
 });
 
-builder.Services.AddScoped<IAccountRepository> (provider =>
+builder.Services.AddScoped<IAccountRepository>(provider =>
 {
   var configuration = provider.GetRequiredService<IConfiguration>();
   var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -95,13 +95,13 @@ builder.Services.AddScoped<IAccountRepository> (provider =>
 
 builder.Services.AddScoped<IBlogRepository>(provider =>
 {
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var connectionString = configuration.GetConnectionString("DefaultConnection");
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
-    }
-    return new BlogRepository(connectionString);
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var connectionString = configuration.GetConnectionString("DefaultConnection");
+  if (string.IsNullOrEmpty(connectionString))
+  {
+    throw new Exception("DefaultConnection connection string is not configured in appsettings.json.");
+  }
+  return new BlogRepository(connectionString);
 });
 
 // Register scoped services here
@@ -139,7 +139,7 @@ if (app.Environment.IsDevelopment())
 // Enable CORS
 app.UseCors(MyAllowSpecificOrigins);
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseAuthorization();
 
 // Map controllers

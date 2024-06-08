@@ -1,13 +1,18 @@
 import { useParams } from 'react-router-dom'
-import { ScheduleDetailProps } from '../../types/schedule'
+import { ScheduleDetailProps, ScheduleStatus } from '../../types/schedule'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Button, Loader } from '../../components'
 import PageNotFound from '../PageNotFound'
 import { timeAgo } from '../../utils/TimeFormatters'
 import ScheduleOverview from './ScheduleOverview'
-import ScheduleDay from './ScheduleDay'
-import { PiGearFill, PiMapPinLineFill } from 'react-icons/pi'
+import ScheduleDay, { NoDestination } from './ScheduleDay'
+import {
+	PiGearFill,
+	PiGlobeHemisphereWestFill,
+	PiLockFill,
+	PiMapPinLineFill,
+} from 'react-icons/pi'
 import AddDestinationModal from './AddDestinationModal'
 import SetupModal from './SetupModal'
 
@@ -52,7 +57,30 @@ const Schedule: React.FC = () => {
 		<div className="relative mx-auto min-h-screen xl:max-w-screen-xl">
 			<div className="w-full pb-5 pt-[64px] text-txtCol-1">
 				<div className="flex w-full flex-col items-start justify-start gap-2">
-					<h2 className="my-2 text-3xl font-bold">{schedule.title}</h2>
+					<div className="flex items-center gap-3 text-base">
+						<div
+							className={`flex h-7 w-[120px] items-center justify-center gap-2 rounded-full text-sm font-semibold capitalize text-white ${
+								ScheduleStatus.find(
+									(item) => item.status.toLowerCase() == schedule.status,
+								)?.color || 'bg-[#eeeeee]'
+							}`}
+						>
+							<span className="h-[5px] w-[5px] rounded-full bg-white"></span>
+							{schedule.status}
+						</div>
+						<div
+							className={`flex h-7 w-[106px] items-center justify-center gap-2 rounded-full text-sm font-semibold ${schedule.isPublic ? 'bg-secondary-1 text-white' : 'border-2 border-secondary-1 text-secondary-0'}`}
+						>
+							{schedule.isPublic ? (
+								<PiGlobeHemisphereWestFill />
+							) : (
+								<PiLockFill />
+							)}
+							{schedule.isPublic ? 'Public' : 'Private'}
+						</div>
+					</div>
+
+					<h2 className="mb-1 text-3xl font-bold">{schedule.title}</h2>
 					<div className="flex items-center gap-2 text-base">
 						<h4 className="font-semibold">Creator:</h4>
 						<p>by {schedule.creator}</p>
@@ -71,14 +99,18 @@ const Schedule: React.FC = () => {
 							<PiMapPinLineFill className="text-lg" />
 							Add destination
 						</Button>
-						{schedule.days.map((day, index) => (
-							<ScheduleDay
-								className="mb-2 w-full"
-								key={index}
-								scheduleDay={day}
-								onChanged={() => getSchedule(id ?? '')}
-							/>
-						))}
+						{schedule.days.length > 0 ? (
+							schedule.days.map((day, index) => (
+								<ScheduleDay
+									className="mb-2 w-full"
+									key={index}
+									scheduleDay={day}
+									onChanged={() => getSchedule(id ?? '')}
+								/>
+							))
+						) : (
+							<NoDestination className="w-full" />
+						)}
 					</div>
 					<div className="flex w-[300px] flex-col items-end gap-4">
 						<Button

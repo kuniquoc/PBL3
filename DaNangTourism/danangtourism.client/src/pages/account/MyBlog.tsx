@@ -1,18 +1,19 @@
+import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { DropdownSelect, Loader, Pagination, SearchBox } from '../../components'
-import React, { useEffect, useState } from 'react'
-import { CircleButton, SortTypeButton } from '../../components/Buttons'
-import { ManageBlogProps } from '../../types/blog'
 import { useToast } from '../../hook/useToast'
-import {
-	PiCheckBold,
-	PiEyeFill,
-	PiTrashSimpleFill,
-	PiXBold,
-} from 'react-icons/pi'
+import { MyBlogProps } from '../../types/blog'
 import axios from 'axios'
-import { toDisplayDateTime } from '../../utils/TimeFormatters'
+import {
+	SearchBox,
+	DropdownSelect,
+	SortTypeButton,
+	Loader,
+	Pagination,
+	CircleButton,
+} from '../../components'
+import { PiEyeFill, PiTrashSimpleFill, PiPenFill } from 'react-icons/pi'
 import { NumberFormat } from '../../utils/Format'
+import { toDisplayDateTime } from '../../utils/TimeFormatters'
 import useConfirm from '../../hook/useConfirm'
 
 const sortBy = [
@@ -48,7 +49,7 @@ const blogStatus = [
 	},
 ]
 
-const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
+const MyBlog: React.FC<{ className?: string }> = ({ className }) => {
 	const [searchValue, setSearchValue] = useState('')
 	const [sort, setSort] = useState({
 		by: 0,
@@ -59,14 +60,14 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 	const limit = 12
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-	const [blogs, setBlogs] = useState<ManageBlogProps[]>()
+	const [blogs, setBlogs] = useState<MyBlogProps[]>()
 	const [loading, setLoading] = useState(true)
 
 	const handleGetBlogs = async () => {
 		setBlogs(undefined)
 		setLoading(true)
 		try {
-			const response = await axios.get(`api/blog/managelist`, {
+			const response = await axios.get(`api/blog/myBlogs`, {
 				params: {
 					page: currentPage,
 					limit: limit,
@@ -91,12 +92,7 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 	}, [currentPage, sort, status, searchValue])
 
 	return (
-		<div
-			className={twMerge(
-				'w-full rounded border border-borderCol-1 bg-white px-6 py-4',
-				className,
-			)}
-		>
+		<div className={twMerge('w-full px-8 py-5', className)}>
 			<div className="mb-3 flex w-full items-center justify-between">
 				<div className="item-center relative flex gap-4">
 					<SearchBox
@@ -175,48 +171,15 @@ const BlogTab: React.FC<{ className?: string }> = ({ className }) => {
 }
 
 const BlogsTable: React.FC<{
-	blogs: ManageBlogProps[]
+	blogs: MyBlogProps[]
 	onUpdated: () => void
 }> = ({ blogs, onUpdated }) => {
 	const toast = useToast()
 	const confirm = useConfirm()
-
-	const handleApprove = async (id: number) => {
-		const result = await confirm.showConfirmation(
-			'Approve blog',
-			'Are you sure you want to approve this blog?',
-		)
-		if (!result) return
-		try {
-			await axios.put(`api/blog/updateStatus/${id}?status=2`)
-			toast.success('Success', 'Blog approved')
-			onUpdated()
-		} catch (error) {
-			toast.error('Error', 'Failed to approve blog')
-			console.log(error)
-		}
-	}
-
-	const handleReject = async (id: number) => {
-		const result = await confirm.showConfirmation(
-			'Reject blog',
-			'Are you sure you want to reject this blog?',
-		)
-		if (!result) return
-		try {
-			await axios.put(`api/blog/updateStatus/${id}?status=3`)
-			toast.success('Success', 'Blog rejected')
-			onUpdated()
-		} catch (error) {
-			toast.error('Error', 'Failed to reject blog')
-			console.log(error)
-		}
-	}
-
 	const handleDelete = async (id: number) => {
 		const result = await confirm.showConfirmation(
 			'Delete blog',
-			'Are you sure you want to delete this blog? This action cannot be undone.',
+			'Are you sure you want to delete this blog?',
 		)
 		if (!result) return
 		try {
@@ -235,11 +198,10 @@ const BlogsTable: React.FC<{
 					<th className="w-[100px] pl-2">Id</th>
 					<th>Title</th>
 					<th className="w-16">Type</th>
-					<th className="w-[120px]">Author</th>
 					<th className="w-20">View</th>
 					<th className="w-36">Created At</th>
 					<th className="w-24">Status</th>
-					<th className="w-32 pr-2">Actions</th>
+					<th className=" w-24 pr-2">Actions</th>
 				</tr>
 			</thead>
 			<tbody className="[&>*:nth-child(odd)]:bg-gray-100 hover:[&_tr]:bg-[#64ccdc3f]">
@@ -250,7 +212,6 @@ const BlogsTable: React.FC<{
 							{blog.title}
 						</td>
 						<td className=" capitalize">{blog.type}</td>
-						<td className="line-clamp-1">{blog.author}</td>
 						<td>{NumberFormat(blog.views)}</td>
 						<td>{toDisplayDateTime(blog.createdAt)}</td>
 						<td
@@ -274,32 +235,19 @@ const BlogsTable: React.FC<{
 							>
 								<PiEyeFill />
 							</CircleButton>
-							{blog.status !== 'published' && (
-								<CircleButton
-									className="border-primary-2 bg-[#64B8DC3f] text-primary-2"
-									title="Approve blog"
-									onClick={() => handleApprove(blog.id)}
-								>
-									<PiCheckBold />
-								</CircleButton>
-							)}
-							{blog.status == 'rejected' ? (
-								<CircleButton
-									className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
-									title="Delete blog"
-									onClick={() => handleDelete(blog.id)}
-								>
-									<PiTrashSimpleFill />
-								</CircleButton>
-							) : (
-								<CircleButton
-									className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
-									title="Reject blog"
-									onClick={() => handleReject(blog.id)}
-								>
-									<PiXBold />
-								</CircleButton>
-							)}
+							<CircleButton
+								className="border-primary-2 bg-[#64B8DC3f] text-primary-2"
+								onClick={() => window.open(`/blog/edit/${blog.id}`, '_blank')}
+							>
+								<PiPenFill />
+							</CircleButton>
+							<CircleButton
+								className=" border-tertiary-2 bg-[#ee685e3f] text-tertiary-2"
+								title="Delete blog"
+								onClick={() => handleDelete(blog.id)}
+							>
+								<PiTrashSimpleFill />
+							</CircleButton>
 						</td>
 					</tr>
 				))}
@@ -308,4 +256,4 @@ const BlogsTable: React.FC<{
 	)
 }
 
-export default BlogTab
+export default MyBlog

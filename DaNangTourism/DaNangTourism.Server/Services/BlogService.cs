@@ -20,7 +20,7 @@ namespace DaNangTourism.Server.Services
     bool CheckBlogBelongToUser(int blogId, int uid);
     void UpdateBlog(BlogAdd blogAdd, int id);
     void DeleteBlog(int id);
-    BLogListData GetBlogList(BlogListAdminFilter blogLAF);
+    BLogListData GetBlogList(BlogListAdminFilter blogLAF, int uid = 0);
     void UpdateStatus(int blogId, BlogStatus status);
   }
   public class BlogService : IBlogService
@@ -140,7 +140,7 @@ namespace DaNangTourism.Server.Services
 
 
     // lấy blog list dành cho admin
-    public BLogListData GetBlogList(BlogListAdminFilter blogLAF)
+    public BLogListData GetBlogList(BlogListAdminFilter blogLAF, int uid = 0)
     {
       BLogListData bLogListData = new BLogListData();
 
@@ -185,6 +185,19 @@ namespace DaNangTourism.Server.Services
           sql.Append(" WHERE status = @status");
         }
         parameters.Add(new MySqlParameter("@status", blogLAF.status.ToString()));
+      }
+
+      if (uid != 0)
+      {
+        if (sql.ToString().Contains("where"))
+        {
+          sql.Append(" AND user_id = @uid");
+        }
+        else
+        {
+          sql.Append(" WHERE user_id = @uid");
+        }
+        parameters.Add(new MySqlParameter("@uid", uid));
       }
 
       // xử lý order by

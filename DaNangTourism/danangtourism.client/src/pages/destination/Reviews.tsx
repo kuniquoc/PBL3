@@ -7,6 +7,7 @@ import { twMerge } from 'tailwind-merge'
 import { NumberFormat } from '../../utils/Format'
 import { timeAgo } from '../../utils/TimeFormatters'
 import { useToast } from '../../hook/useToast'
+import useUser from '../../hook/useUser'
 
 const SortOptions = [
 	{
@@ -239,13 +240,20 @@ const ReviewForm: React.FC<{
 	const [review, setReview] = useState('')
 	const [rating, setRating] = useState(0)
 	const toast = useToast()
+	const { user } = useUser()
+
 	const submitReview = async (desId: number) => {
+		if (!user || user.id === 0) {
+			toast.error('Login required', 'Please log in to post a review')
+			return
+		}
+
 		if (!review || review.length < 10) {
-			toast.error('Cant post review', 'Review must be at least 10 characters')
+			toast.error('Review too short', 'Please write a longer review')
 			return
 		}
 		if (!rating) {
-			toast.error('Cant post review', 'Please rate this destination')
+			toast.error('Rating required', 'Please rate the destination')
 			return
 		}
 

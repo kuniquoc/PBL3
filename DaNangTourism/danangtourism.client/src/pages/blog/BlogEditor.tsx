@@ -7,6 +7,7 @@ import { uploadToCloudinary } from '../../utils/Cloundinary'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import PageNotFound from '../PageNotFound'
 import axios from 'axios'
+import useConfirm from '../../hook/useConfirm'
 const EmptyBlog = {
 	title: '',
 	typeIndex: 0,
@@ -22,9 +23,11 @@ const BlogEditor: React.FC = () => {
 	const [editMode, setEditMode] = useState(false)
 	const [blog, setBlog] = useState(EmptyBlog)
 	const [loading, setLoading] = useState(true)
+	const [currentImg, setCurrentImg] = useState<File>()
 	const [imgFile, setImgFile] = useState<File>()
 	const [invalid, setInvalid] = useState(false)
 	const toast = useToast()
+	const confirm = useConfirm()
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -59,6 +62,7 @@ const BlogEditor: React.FC = () => {
 			type: 'image/png',
 		})
 		setImgFile(file)
+		setCurrentImg(file)
 	}
 
 	const validate = () => {
@@ -115,7 +119,7 @@ const BlogEditor: React.FC = () => {
 				'Request posting blog success',
 				'Your blog posting request has been sent successfully, please wait for admin to approve.',
 			)
-			navigate(`/blog/${response.data.id}`)
+			navigate(`/blog/${response.data.data.id}`)
 		} catch (error) {
 			console.log(error)
 			toast.error(
@@ -132,6 +136,7 @@ const BlogEditor: React.FC = () => {
 				'Update blog success',
 				'Your blog has been updated successfully',
 			)
+			navigate(`/blog/${id}`)
 		} catch (error) {
 			console.log(error)
 			toast.error(
@@ -142,6 +147,11 @@ const BlogEditor: React.FC = () => {
 	}
 
 	const deleteBlog = async () => {
+		const result = await confirm.showConfirmation(
+			'Delete blog',
+			'Are you sure you want to delete this blog? This action cannot be undone.',
+		)
+		if (!result) return
 		try {
 			await axios.delete(`/api/blog/delete/${id}`)
 			toast.success(
@@ -159,7 +169,7 @@ const BlogEditor: React.FC = () => {
 
 	const handleSubmit = async () => {
 		if (!validate()) return
-		await handleUploadImage()
+		if (currentImg !== imgFile) await handleUploadImage()
 		if (!editMode) {
 			await createBlog()
 		} else {
@@ -169,9 +179,9 @@ const BlogEditor: React.FC = () => {
 
 	const handleNegative = () => {
 		if (editMode) {
-			setBlog(EmptyBlog)
-		} else {
 			deleteBlog()
+		} else {
+			setBlog(EmptyBlog)
 		}
 	}
 
@@ -282,7 +292,7 @@ const BlogEditor: React.FC = () => {
 							className="w-[120px] border-[2px] border-tertiary-2 font-semibold text-tertiary-2 hover:bg-[#ff201017]"
 							onClick={handleNegative}
 						>
-							{editMode ? 'Reset' : 'Delete'}
+							{editMode ? 'Delete' : 'Reset'}
 						</Button>
 						<Button
 							onClick={handleSubmit}

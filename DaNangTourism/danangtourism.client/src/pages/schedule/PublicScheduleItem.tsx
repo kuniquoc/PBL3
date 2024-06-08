@@ -2,12 +2,30 @@ import { twMerge } from 'tailwind-merge'
 import { PublicScheduleItemProps } from '../../types/schedule'
 import { Button } from '../../components'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useToast } from '../../hook/useToast'
+import useUser from '../../hook/useUser'
 
 const PublicScheduleItem: React.FC<{
 	schedule: PublicScheduleItemProps
 	className?: string
 }> = ({ schedule, className }) => {
 	const navigate = useNavigate()
+	const toast = useToast()
+	const { user } = useUser()
+	const handleCloneSchedule = async () => {
+		if (!user || user.id === 0) {
+			toast.info('Login required', 'Please login to clone this schedule')
+			return
+		}
+		try {
+			const response = await axios.post(`/api/schedule/clone/${schedule.id}`)
+			navigate(`/schedule/${response.data.data.id}`)
+		} catch (error) {
+			console.error(error)
+			toast
+		}
+	}
 	return (
 		<div
 			className={twMerge(
@@ -28,22 +46,22 @@ const PublicScheduleItem: React.FC<{
 				<div className="flex flex-1  flex-col gap-1">
 					<div className="flex w-full items-center gap-2 overflow-hidden">
 						<h5 className="text-sm font-semibold">Destinations: </h5>
-						{schedule.destinations.map((destination, index) => {
-							return (
-								<span
-									className="rounded-full border border-borderCol-1 px-2 py-0.5 text-xs transition-all hover:bg-[#0000000e]"
-									key={index}
-								>
-									{destination}
-								</span>
-							)
-						})}
+						{schedule.destinations.length > 0 ? (
+							schedule.destinations.map((destination, index) => {
+								return (
+									<span
+										className="rounded-full border border-borderCol-1 px-2 py-0.5 text-xs transition-all hover:bg-[#0000000e]"
+										key={index}
+									>
+										{destination}
+									</span>
+								)
+							})
+						) : (
+							<p className="text-sm">No destination</p>
+						)}
 					</div>
 					<div className="flex w-full items-center gap-5 overflow-hidden text-sm">
-						<div className="inline-flex gap-2">
-							<h5 className="font-semibold">Start date: </h5>
-							<p className="">{schedule.startDate}</p>
-						</div>
 						<div className="inline-flex gap-2">
 							<h5 className="font-semibold">Total time: </h5>
 							<p className="">{schedule.totalDays} days</p>
@@ -59,10 +77,10 @@ const PublicScheduleItem: React.FC<{
 					</div>
 				</div>
 				<Button
-					className="h-8 w-[112px] rounded-full bg-primary-3 text-white hover:bg-primary-2"
-					onClick={() => navigate(`/schedule/${schedule.id}`)}
+					className="h-8 w-[132px] rounded-full bg-primary-3 text-white hover:bg-primary-2"
+					onClick={handleCloneSchedule}
 				>
-					View detail
+					Clone schedule
 				</Button>
 			</div>
 		</div>

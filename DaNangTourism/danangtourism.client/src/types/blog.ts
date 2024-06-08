@@ -54,3 +54,12 @@ export interface ManageBlogProps {
 	status: string
 	views: number
 }
+
+export interface MyBlogProps {
+	id: number
+	title: string
+	type: string
+	views: number
+	createdAt: string
+	status: string
+}
