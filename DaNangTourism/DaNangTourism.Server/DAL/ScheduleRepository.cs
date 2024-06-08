@@ -140,14 +140,13 @@ namespace DaNangTourism.Server.DAL
     /// <returns></returns>
     public int CreateSchedule(int userId, string creator, InputSchedule schedule)
     {
-      string sql = "INSERT INTO Schedules (UserId, Title, Description, StartDate, Creator, IsPublic) " +
-          "VALUES (@userId, @title, @description, @startDate, @creator, @isPublic); SELECT LAST_INSERT_ID();";
+      string sql = "INSERT INTO Schedules (UserId, Title, Description, Creator, IsPublic) " +
+          "VALUES (@userId, @title, @description, @creator, @isPublic); SELECT LAST_INSERT_ID();";
       MySqlParameter[] parameters =
       {
                 new ("@userId", userId),
                 new ("@title", schedule.Title),
                 new ("@description", schedule.Description),
-                new ("@startDate", DateOnly.FromDateTime(DateTime.Now)),
                 new ("@creator", creator),
                 new ("@isPublic", schedule.IsPublic)
             };

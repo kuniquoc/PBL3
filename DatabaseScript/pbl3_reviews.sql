@@ -43,7 +43,6 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-INSERT INTO `reviews` VALUES (1,21,1,5,'đẹp zờ lờ','2024-05-31 00:32:54'),(2,21,1,3,'cũng bình thường','2024-05-31 00:42:07'),(3,21,1,2,'string','2024-05-31 00:46:52'),(4,21,1,4,'string','2024-05-31 00:50:59');
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -125,4 +124,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 19:15:17
+-- Dump completed on 2024-06-08  8:29:32

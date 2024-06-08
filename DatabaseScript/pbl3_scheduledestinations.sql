@@ -38,7 +38,7 @@ CREATE TABLE `scheduledestinations` (
   KEY `fk_scheDes_des_idx` (`DestinationId`),
   CONSTRAINT `fk_scheDes_des` FOREIGN KEY (`DestinationId`) REFERENCES `destinations` (`DestinationId`) ON DELETE CASCADE,
   CONSTRAINT `fk_scheDes_sche` FOREIGN KEY (`ScheduleId`) REFERENCES `schedules` (`ScheduleId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `scheduledestinations` (
 
 LOCK TABLES `scheduledestinations` WRITE;
 /*!40000 ALTER TABLE `scheduledestinations` DISABLE KEYS */;
-INSERT INTO `scheduledestinations` VALUES (3,3,2,'2021-12-01','Dragon Bridge','Nguyen Van Linh Street','09:00:00','11:00:00',50,'Don\'t forget to take a photo at the Golden Bridge.'),(5,3,1,'2021-12-12','Asia Park','Nguyen Van Linh Street','00:00:00','01:00:00',20.5,'alo alo');
+INSERT INTO `scheduledestinations` VALUES (15,9,1,'2023-10-21','Asia Park','Nguyen Van Linh Street','05:00:00','07:00:00',30,'string'),(16,9,2,'2023-10-23','Dragon Bridge','Nguyen Van Linh Street','05:00:00','07:00:00',20,'string');
 /*!40000 ALTER TABLE `scheduledestinations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -63,15 +63,14 @@ DELIMITER ;;
 		UPDATE Schedules
 		SET TotalBudget = TotalBudget + NEW.Budget,
         StartDate = 
-        (SELECT Date FROM ScheduleDestinations 
-        WHERE ScheduleId = NEW.ScheduleId 
-        ORDER BY DATE ASC 
-        LIMIT 1),
-        TotalDays = DATEDIFF(StartDate, 
-        (SELECT Date FROM ScheduleDestinations 
-        WHERE ScheduleId = NEW.ScheduleId 
-        ORDER BY DATE DESC 
-        LIMIT 1))
+        (SELECT MIN(Date) AS MinDate
+		FROM ScheduleDestinations
+		WHERE ScheduleId = NEW.ScheduleId),
+        TotalDays =
+        DATEDIFF( (SELECT MAX(Date) AS MaxDate
+		FROM ScheduleDestinations
+		WHERE ScheduleId = NEW.ScheduleId), 
+        StartDate) + 1
 		WHERE ScheduleId = NEW.ScheduleId;
 END */;;
 DELIMITER ;
@@ -91,19 +90,22 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `schedules_AFTER_UPDATE_scheduleDes` AFTER UPDATE ON `scheduledestinations` FOR EACH ROW BEGIN
 	IF OLD.Budget != NEW.Budget THEN 
 		UPDATE Schedules
-		SET TotalBudget = TotalBudget + NEW.Budget - OLD.Budget,
-        StartDate = 
-        (SELECT Date FROM ScheduleDestinations 
-        WHERE ScheduleId = NEW.ScheduleId 
-        ORDER BY DATE ASC 
-        LIMIT 1),
-        TotalDays = DATEDIFF(StartDate, 
-        (SELECT Date FROM ScheduleDestinations 
-        WHERE ScheduleId = NEW.ScheduleId 
-        ORDER BY DATE DESC 
-        LIMIT 1))
+		SET TotalBudget = TotalBudget + NEW.Budget - OLD.Budget
 		WHERE ScheduleId = NEW.ScheduleId;
     END IF;
+    IF OLD.Date != NEW.Date THEN
+		UPDATE Schedules
+		SET 
+        StartDate = 
+        (SELECT MIN(Date) AS MinDate
+		FROM ScheduleDestinations
+		WHERE ScheduleId = NEW.ScheduleId),
+        TotalDays = DATEDIFF(
+        (SELECT MAX(Date) AS MaxDate
+		FROM ScheduleDestinations
+		WHERE ScheduleId = NEW.ScheduleId), StartDate) + 1
+		WHERE ScheduleId = NEW.ScheduleId;
+	END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -123,15 +125,14 @@ DELIMITER ;;
 		UPDATE Schedules
 		SET TotalBudget = TotalBudget - OLD.Budget,
         StartDate = 
-        (SELECT Date FROM ScheduleDestinations 
-        WHERE ScheduleId = OLD.ScheduleId 
-        ORDER BY DATE ASC 
-        LIMIT 1),
-        TotalDays = DATEDIFF(StartDate, 
-        (SELECT Date FROM ScheduleDestinations 
-        WHERE ScheduleId = OLD.ScheduleId 
-        ORDER BY DATE DESC 
-        LIMIT 1))
+        (SELECT MIN(Date) AS MinDate
+		FROM ScheduleDestinations
+		WHERE ScheduleId = OLD.ScheduleId),
+        TotalDays = IFNULL (
+        DATEDIFF( (SELECT MAX(Date) AS MaxDate
+		FROM ScheduleDestinations
+		WHERE ScheduleId = OLD.ScheduleId),
+        StartDate) + 1, 0)
 		WHERE ScheduleId = OLD.ScheduleId;
 END */;;
 DELIMITER ;
@@ -149,4 +150,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 19:15:17
+-- Dump completed on 2024-06-08  8:29:31

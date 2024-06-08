@@ -24,15 +24,5 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         [JsonPropertyName("note")]
         public string? Note { get; set; }
         public AddScheduleDestinationModel() { }
-        public AddScheduleDestinationModel(MySqlDataReader reader)
-        {
-            ScheduleId = reader.GetInt32(reader.GetOrdinal("ScheduleId"));
-            DestinationId = reader.GetInt32(reader.GetOrdinal("DestinationId"));
-            Date = reader.GetDateOnly(reader.GetOrdinal("Date"));
-            ArrivalTime = reader.GetTimeOnly(reader.GetOrdinal("ArrivalTime"));
-            LeaveTime = reader.GetTimeOnly(reader.GetOrdinal("LeaveTime"));
-            Budget = reader.GetDouble(reader.GetOrdinal("Budget"));
-            Note = reader.GetString(reader.GetOrdinal("Note"));
-        }
     }
 }

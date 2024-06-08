@@ -20,7 +20,7 @@ namespace DaNangTourism.Server.Models.ScheduleModels
         public string? Description { get; set; }
 
         [JsonPropertyName("startDate")]
-        public DateOnly StartDate { get; set; }
+        public DateOnly? StartDate { get; set; }
 
         [JsonPropertyName("totalDays")]
         public int TotalDays { get; set; }
@@ -45,7 +45,7 @@ namespace DaNangTourism.Server.Models.ScheduleModels
             Status = Enum.Parse<ScheduleStatus> (reader.GetString(reader.GetOrdinal("Status")));
             Title = reader.GetString(reader.GetOrdinal("Title"));
             Description = reader.GetString(reader.GetOrdinal("Description"));
-            StartDate = reader.GetDateOnly(reader.GetOrdinal("StartDate"));
+            StartDate = reader.IsDBNull(reader.GetOrdinal("StartDate")) ? null: reader.GetDateOnly(reader.GetOrdinal("StartDate"));
             TotalDays = reader.GetInt32(reader.GetOrdinal("TotalDays"));
             TotalBudget = reader.GetDouble(reader.GetOrdinal("TotalBudget"));
             UpdatedAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt"));

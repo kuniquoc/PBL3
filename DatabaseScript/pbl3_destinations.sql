@@ -37,7 +37,7 @@ CREATE TABLE `destinations` (
   `Rating` float DEFAULT '0',
   `Created_At` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`DestinationId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `destinations` (
 
 LOCK TABLES `destinations` WRITE;
 /*!40000 ALTER TABLE `destinations` DISABLE KEYS */;
-INSERT INTO `destinations` VALUES (1,'Asia Park','Công viên châu Á','Nguyen Van Linh Street','a;b;c',0,'17:00:00','20:00:00','Park;','Beatiful','abc.xyz',3.5,'2024-05-15 15:00:00'),(2,'Dragon Bridge','Cầu Rồng ','Nguyen Van Linh Street','a;b;c',2.5,'17:00:00','21:00:00','Bridge;','Awesome','abc.def',0,'2024-05-15 14:00:00');
+INSERT INTO `destinations` VALUES (1,'Asia Park','Công viên châu Á','Nguyen Van Linh Street','a;b;c',0,'17:00:00','20:00:00','Park;','Beatiful','abc.xyz',0,'2024-05-15 15:00:00'),(2,'Dragon Bridge','Cầu Rồng ','Nguyen Van Linh Street','a;b;c',2.5,'17:00:00','21:00:00','Bridge;','Awesome','abc.def',0,'2024-05-15 14:00:00'),(8,'string','string','string','string',0,'00:00:00','00:00:00','string','string','string',0,'2024-06-05 21:37:28');
 /*!40000 ALTER TABLE `destinations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -59,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-31 19:15:18
+-- Dump completed on 2024-06-08  8:29:31
