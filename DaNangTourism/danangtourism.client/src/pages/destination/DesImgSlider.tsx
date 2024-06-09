@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { PiArrowCircleLeft, PiArrowCircleRight } from 'react-icons/pi'
 import { motion, AnimatePresence } from 'framer-motion'
 
-type DesImgSliderProps = {
+interface DesImgSliderProps {
 	imgUrls: string[]
 	className?: string
 	height?: string

@@ -11,7 +11,7 @@ import {
 	Pagination,
 	SearchBox,
 } from '../../components'
-import { ManageDesProps } from '../../interfaces/destination'
+import { IDesManage } from '../../interfaces/destination'
 import { useToast, useConfirm } from '../../hook'
 import { toDisplayDateTime } from '../../utils/TimeFormatters'
 
@@ -48,7 +48,7 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 	const limit = 12
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-	const [destinations, setDestinations] = useState<ManageDesProps[]>()
+	const [destinations, setDestinations] = useState<IDesManage[]>()
 	const [loading, setLoading] = useState(true)
 
 	const handleGetDestinations = async () => {
@@ -90,7 +90,7 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 			<div className="mb-3 flex w-full items-center justify-between">
 				<div className="item-center relative flex gap-4">
 					<SearchBox
-						className="h-9 px-4"
+						className="h-9 px-2"
 						onChangeValue={(event) => setSearchValue(event.target.value)}
 						onClickSearch={handleGetDestinations}
 					/>
@@ -167,7 +167,7 @@ const DestinationsTab: React.FC<{ className?: string }> = ({ className }) => {
 }
 
 const DesTable: React.FC<{
-	destinations: ManageDesProps[]
+	destinations: IDesManage[]
 	onDeleted: () => void
 }> = ({ destinations, onDeleted }) => {
 	const toast = useToast()

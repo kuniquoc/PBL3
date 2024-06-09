@@ -14,7 +14,7 @@ import {
 	Pagination,
 	SearchBox,
 } from '../../components'
-import { DesListItemProps } from '../../interfaces/destination'
+import { IDesCard } from '../../interfaces/destination'
 import { useToast } from '../../hook'
 import noItemImg from '../../assets/no-item.png'
 
@@ -63,7 +63,7 @@ const initFilter = {
 const DestinationPage: React.FC = () => {
 	const cardPerPage = 12
 	const [numbOfPages, setNumbOfPages] = useState(1)
-	const [destinations, setDestinations] = useState<DesListItemProps[]>()
+	const [destinations, setDestinations] = useState<IDesCard[]>()
 	const [searchValue, setSearchValue] = useState('')
 	const [sort, setSort] = useState({
 		by: 0,

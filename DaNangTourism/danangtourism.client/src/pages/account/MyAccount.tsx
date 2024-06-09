@@ -7,7 +7,7 @@ import { PiInfo, PiPencilSimpleLineBold } from 'react-icons/pi'
 import { uploadToCloudinary } from '../../utils/Cloudinary'
 import { IUserDetail } from '../../interfaces/user'
 import { Button } from '../../components'
-import { useToast, useConfirm } from '../../hook'
+import { useToast, useConfirm, useUser } from '../../hook'
 
 const initUserDetails = {
 	id: 0,
@@ -44,6 +44,8 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 		getUserDetails()
 	}, [])
 
+	const { user, setUser } = useUser()
+
 	const [editInfo, setEditInfo] = useState(false)
 	const [changePwd, setChangePwd] = useState(false)
 	const [passwords, setPasswords] = useState(initPwd)
@@ -62,6 +64,9 @@ const MyAccount: React.FC<{ className?: string }> = ({ className }) => {
 				avatar: avatarUrl,
 				birthday: new Date(userDetails.dateOfBirth).toISOString(),
 			})
+
+			setUser({ ...user, name: userDetails.name, avatar: avatarUrl })
+
 			if (response.status === 200) {
 				toast.success('Success', 'Information updated successfully')
 				setEditInfo(false)

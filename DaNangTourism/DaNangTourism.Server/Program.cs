@@ -111,6 +111,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 // Register IHttpContextAccessor services here

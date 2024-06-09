@@ -23,6 +23,7 @@ import ScrollToTop from './utils/ScrollToTop'
 import { AnimatePresence } from 'framer-motion'
 import { Loader } from './components'
 import useUser from './hook/useUser'
+import ForgotPasswordForm from './pages/account/ForgotPasswordForm'
 function App() {
 	const [accountModal, setAccountModal] = useState(0)
 	const [loading, setLoading] = useState(true)
@@ -89,10 +90,17 @@ function App() {
 					<LoginForm
 						onClose={() => setAccountModal(0)}
 						onSwitch={() => setAccountModal(2)}
+						onForgot={() => setAccountModal(3)}
 					/>
 				)}
 				{accountModal === 2 && (
 					<RegisterForm
+						onClose={() => setAccountModal(0)}
+						onSwitch={() => setAccountModal(1)}
+					/>
+				)}
+				{accountModal === 3 && (
+					<ForgotPasswordForm
 						onClose={() => setAccountModal(0)}
 						onSwitch={() => setAccountModal(1)}
 					/>

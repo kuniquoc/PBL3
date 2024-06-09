@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { useToast, useConfirm } from '../../hook'
-import { SimpleDesProps } from '../../interfaces/destination'
+import { IDesLine } from '../../interfaces/destination'
 import axios from 'axios'
 import {
 	CircleButton,
@@ -35,7 +35,7 @@ const FavoriteDes: React.FC<{ className?: string }> = ({ className }) => {
 	const limit = 12
 	const [total, setTotal] = useState(0)
 	const toast = useToast()
-	const [destinations, setDestinations] = useState<SimpleDesProps[]>()
+	const [destinations, setDestinations] = useState<IDesLine[]>()
 	const [loading, setLoading] = useState(true)
 
 	const handleGetDestinations = async () => {
@@ -141,7 +141,7 @@ const FavoriteDes: React.FC<{ className?: string }> = ({ className }) => {
 }
 
 const DesTable: React.FC<{
-	destinations: SimpleDesProps[]
+	destinations: IDesLine[]
 	onDeleted: () => void
 }> = ({ destinations, onDeleted }) => {
 	const toast = useToast()
