@@ -7,15 +7,15 @@ import {
 	PiHeartFill,
 	PiStarFill,
 } from 'react-icons/pi'
-import { DesListItemProps } from '../../interfaces/destination'
+import { IDesCard } from '../../interfaces/destination'
 import { useToast, useUser } from '../../hook'
 
-interface DesPreviewCardProps extends DesListItemProps {
+interface DesCardProps extends IDesCard {
 	className?: string
 	onVisit?: () => void
 }
 
-const DesPreviewCard: React.FC<DesPreviewCardProps> = ({
+const DesPreviewCard: React.FC<DesCardProps> = ({
 	className = '',
 	id,
 	name,

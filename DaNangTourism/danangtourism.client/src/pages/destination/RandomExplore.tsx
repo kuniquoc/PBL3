@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Stars } from '../../components'
-import { SortDesProps } from '../../interfaces/destination'
+import { IDesHome } from '../../interfaces/destination'
 import { useToast } from '../../hook'
 
 const RandomExplore: React.FC = () => {
-	const [randomDess, setRandomDess] = useState<SortDesProps[]>([])
+	const [randomDess, setRandomDess] = useState<IDesHome[]>([])
 	const toast = useToast()
 	const getRandomDestination = async () => {
 		try {
@@ -35,7 +35,7 @@ const RandomExplore: React.FC = () => {
 	)
 }
 
-const RandomCard: React.FC<SortDesProps> = ({
+const RandomCard: React.FC<IDesHome> = ({
 	id,
 	name,
 	address,

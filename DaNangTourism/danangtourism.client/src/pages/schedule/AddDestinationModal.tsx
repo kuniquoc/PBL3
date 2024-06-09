@@ -9,7 +9,7 @@ import {
 	SortTypeButton,
 	ToggleButton,
 } from '../../components'
-import { SimpleDesProps } from '../../interfaces/destination'
+import { IDesLine } from '../../interfaces/destination'
 import { useToast } from '../../hook'
 
 const sortBy = [
@@ -39,7 +39,7 @@ const AddDestinationModal: React.FC<{
 		type: 'asc',
 	})
 	const [isFavorite, setIsFavorite] = useState<boolean>(false)
-	const [destinations, setDestinations] = useState<SimpleDesProps[]>()
+	const [destinations, setDestinations] = useState<IDesLine[]>()
 	const limit = 9
 	const [currentPage, setCurrentPage] = useState(1)
 	const [total, setTotal] = useState(0)

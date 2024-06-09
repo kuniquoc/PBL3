@@ -1,5 +1,6 @@
 ﻿using DaNangTourism.Server.DAL;
 using DaNangTourism.Server.Models;
+using DaNangTourism.Server.Models.SecurityModels;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -24,6 +25,8 @@ namespace DaNangTourism.Server.Services
     void DeleteAccount(int id);
     Account? GetAccountByEmail(string email);
     void AddAccount(Account account);
+    string CreateConfirmCode(string email, int expiredAfter = 5);
+    bool CheckConfirmCode(string email, string code);
 
   }
   public class AccountService : IAccountService
@@ -184,6 +187,27 @@ namespace DaNangTourism.Server.Services
     public int GetTotalAccounts(string? search, string role = "user")
     {
       return _accountRepository.GetTotalAccounts(search, role);
+    }
+
+    public string CreateConfirmCode(string email, int expiredAfter = 5)
+    {
+      return _accountRepository.CreateConfirmCode(email, expiredAfter);
+    }
+
+    public bool CheckConfirmCode(string email, string code)
+    {
+      ConfirmCode? confirmCode = _accountRepository.GetConfirmCode(email) ?? throw new UnauthorizedAccessException("Confirmation code has expired");
+      if (confirmCode.Code != code)
+      {
+        throw new UnauthorizedAccessException("incorrect confirmation code");
+      }
+      if (DateTime.Now > confirmCode.ExpiredAt)
+      {
+        throw new UnauthorizedAccessException("Confirmation code has expired");
+      }
+
+      _accountRepository.DeleteConfirmCode(email);
+      return true;
     }
   }
 }

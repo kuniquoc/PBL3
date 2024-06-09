@@ -5,22 +5,11 @@ import { twMerge } from 'tailwind-merge'
 import { useNavigate } from 'react-router-dom'
 import { PiCaretRightBold } from 'react-icons/pi'
 import { Button, SliderNav, Stars } from '../../components'
+import { IDesHome } from '../../interfaces/destination'
 
-type HomeDestinationsProps = {
-	className?: string
-}
-
-type HomeDestinationType = {
-	id: number
-	name: string
-	address: string
-	rating: number
-	image: string
-}
-
-const HomeDestinations: React.FC<HomeDestinationsProps> = ({ className }) => {
+const HomeDestinations: React.FC<{ className?: string }> = ({ className }) => {
 	const navigate = useNavigate()
-	const [destinations, setDestinations] = useState<HomeDestinationType[]>([])
+	const [destinations, setDestinations] = useState<IDesHome[]>([])
 	const [sliderIndex, setSliderIndex] = useState(1)
 	const [isHovered, setIsHovered] = useState(false)
 	const getHomeDestinations = async () => {

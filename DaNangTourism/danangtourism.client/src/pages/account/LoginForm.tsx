@@ -10,7 +10,8 @@ const LoginForm: React.FC<{
 	className?: string
 	onClose: () => void
 	onSwitch: () => void
-}> = ({ className = '', onClose, onSwitch }) => {
+	onForgot: () => void
+}> = ({ className = '', onClose, onSwitch, onForgot }) => {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
@@ -57,7 +58,6 @@ const LoginForm: React.FC<{
 		try {
 			const res = await axios.post('/api/auth/login', formData)
 			if (res.status === 200) {
-				toast.success('Success', 'Login successfully')
 				setUser({
 					...res.data.data,
 					isRemember: formData.rememberMe,
@@ -161,8 +161,11 @@ const LoginForm: React.FC<{
 							/>
 							<label htmlFor="login-remember">Remember me</label>
 						</div>
-						<button className="text-primary-1 hover:underline">
-							Forgot your password
+						<button
+							className="text-primary-1 hover:underline"
+							onClick={onForgot}
+						>
+							Forgot your password?
 						</button>
 					</div>
 					<div className="mt-2 flex w-full items-center">

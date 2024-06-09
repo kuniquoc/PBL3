@@ -1,4 +1,5 @@
-﻿using DaNangTourism.Server.Models;
+using DaNangTourism.Server.Models;
+using DaNangTourism.Server.Models.SecurityModels;
 using DaNangTourism.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
@@ -10,10 +11,12 @@ namespace DaNangTourism.Server.Controllers
   public class AuthController : Controller
   {
     private readonly IAccountService _accountService;
+    private readonly IEmailService _emailService;
 
-    public AuthController(IAccountService accountService)
+    public AuthController(IAccountService accountService, IEmailService emailService)
     {
       _accountService = accountService;
+      _emailService = emailService;
     }
 
     #region HTTP Methods
@@ -57,13 +60,24 @@ namespace DaNangTourism.Server.Controllers
     {
       try
       {
-        // Kiểm tra xem email đã tồn tại hay chưa
         if (_accountService.GetAccountByEmail(account.Email) != null)
         {
           return Conflict(new { message = "Email already exists" });
         }
 
-        // Tạo hash và salt cho mật khẩu
+        try
+        {
+          bool correctCode = _accountService.CheckConfirmCode(account.Email, account.Code);
+          if (!correctCode)
+          {
+            return BadRequest(new { message = "Incorrect confirmation code" });
+          }
+        }
+        catch (UnauthorizedAccessException uae)
+        {
+          return BadRequest(new { message = uae.Message });
+        }
+
         CreatePasswordHash(account.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
         // Tạo tài khoản mới
@@ -215,8 +229,77 @@ namespace DaNangTourism.Server.Controllers
       }
     }
 
-    #endregion
+    [HttpPost("sendCode")]
+    public ActionResult SendConfirmCode([FromBody] InputCreateCode createCode)
+    {
+      try
+      {
+        string code = _accountService.CreateConfirmCode(createCode.Email, 5);
+        _emailService.SendEmailAsync(createCode.Email, "Your account confirmation code", "Your confirmation code is: <b>" + code + "</b>. This code will expire in 5 minutes.");
+        // Trả về thông điệp thành công
+        var response = new
+        {
+          status = 200,
+          message = "Your confirmation code has been sent to your email"
+        };
 
+        return Ok(response);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
+      }
+    }
+
+    [HttpPost("resetPassword")]
+    public ActionResult ResetPassword([FromBody] AccountResetPasswordModel account)
+    {
+      try
+      {
+        var accountDB = _accountService.GetAccountByEmail(account.Email);
+        if (accountDB == null)
+        {
+          return NotFound(new { message = "Email not found" });
+        }
+
+        try
+        {
+          bool correctCode = _accountService.CheckConfirmCode(account.Email, account.Code);
+          if (!correctCode)
+          {
+            return BadRequest(new { message = "Incorrect confirmation code" });
+          }
+        }
+        catch (UnauthorizedAccessException uae)
+        {
+          return BadRequest(new { message = uae.Message });
+        }
+
+        string newPassword = GenerateRandomPassword();
+        CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
+        accountDB.PasswordHash = passwordHash;
+        accountDB.PasswordSalt = passwordSalt;
+        _accountService.UpdateAccount(accountDB);
+
+        _emailService.SendEmailAsync(account.Email, "You have reset your password", "Your new password is: <b>" + newPassword + "</b>. Please change it after login.");
+
+        var response = new
+        {
+          message = "Reset password successful"
+        };
+
+        return Ok(response);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+        return StatusCode(500, new { message = "Something went wrong, please try again later." });
+      }
+    }
+
+    #endregion
     #region Private Methods 
 
     // Tạo password hash và salt
@@ -233,6 +316,15 @@ namespace DaNangTourism.Server.Controllers
       using var hmac = new HMACSHA512(passwordSalt);
       var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
       return computedHash.SequenceEqual(passwordHash);
+    }
+
+    // Tạo mật khẩu ngẫu nhiên
+    private static string GenerateRandomPassword()
+    {
+      const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var random = new Random();
+      return new string(Enumerable.Repeat(chars, 12)
+        .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
     #endregion
