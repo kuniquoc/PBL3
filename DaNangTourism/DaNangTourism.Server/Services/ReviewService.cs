@@ -37,8 +37,8 @@ namespace DaNangTourism.Server.Services
             DestinationReviews destinationReviews = new DestinationReviews();
 
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT ReviewId AS Id, Users.full_name AS Author, Users.avatar_url AS Avatar, Rating, Comment, Reviews.Created_At AS Created_At" +
-                " FROM Reviews INNER JOIN Users ON Users.user_id = Reviews.UserId WHERE DestinationId = @destinationId");
+            sql.Append("SELECT review_id AS Id, Users.full_name AS Author, Users.avatar_url AS Avatar, rating AS Rating, comment AS Comment, Reviews.created_at AS Created_At" +
+                " FROM Reviews INNER JOIN Users ON Users.user_id = Reviews.user_id WHERE destination_id = @destinationId");
 
             List<MySqlParameter> parameters = new List<MySqlParameter>();
             parameters.Add(new MySqlParameter("@destinationId", destinationId));

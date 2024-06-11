@@ -23,32 +23,21 @@ DROP TABLE IF EXISTS `destinations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `destinations` (
-  `DestinationId` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) NOT NULL,
-  `LocalName` varchar(100) DEFAULT NULL,
-  `Address` varchar(100) NOT NULL,
-  `Images` text NOT NULL,
-  `Cost` double DEFAULT '0',
-  `OpenTime` time NOT NULL,
-  `CloseTime` time NOT NULL,
-  `Tags` varchar(100) DEFAULT NULL,
-  `Introduction` text NOT NULL,
-  `GoogleMapUrl` varchar(255) DEFAULT NULL,
-  `Rating` float DEFAULT '0',
-  `Created_At` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`DestinationId`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `destination_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `local_name` varchar(100) DEFAULT NULL,
+  `address` varchar(100) NOT NULL,
+  `images` text NOT NULL,
+  `cost` double DEFAULT '0',
+  `open_time` time NOT NULL,
+  `close_time` time NOT NULL,
+  `tags` varchar(100) DEFAULT NULL,
+  `introduction` text NOT NULL,
+  `google_map_url` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`destination_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `destinations`
---
-
-LOCK TABLES `destinations` WRITE;
-/*!40000 ALTER TABLE `destinations` DISABLE KEYS */;
-INSERT INTO `destinations` VALUES (1,'Asia Park','Công viên châu Á','Nguyen Van Linh Street','a;b;c',0,'17:00:00','20:00:00','Park;','Beatiful','abc.xyz',0,'2024-05-15 15:00:00'),(2,'Dragon Bridge','Cầu Rồng ','Nguyen Van Linh Street','a;b;c',2.5,'17:00:00','21:00:00','Bridge;','Awesome','abc.def',0,'2024-05-15 14:00:00'),(8,'string','string','string','string',0,'00:00:00','00:00:00','string','string','string',0,'2024-06-05 21:37:28');
-/*!40000 ALTER TABLE `destinations` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -59,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-08  8:29:31
+-- Dump completed on 2024-06-11 11:50:03

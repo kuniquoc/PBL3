@@ -52,7 +52,7 @@ namespace DaNangTourism.Server.Services
 
       StringBuilder sql = new StringBuilder();
       sql.Append("SELECT blog_id, title, image, type, blogs.created_at as created_at, views, introduction, blogs.user_id AS id, full_name AS name, avatar_url AS avatar ");
-      sql.Append("FROM blogs INNER JOIN users ON blogs.user_id = users.user_id");
+      sql.Append("FROM blogs LEFT JOIN users ON blogs.user_id = users.user_id");
       List<MySqlParameter> parameters = new List<MySqlParameter>();
       sql.Append(" WHERE status = 'published'");
       if (!blogPF.search.IsNullOrEmpty())

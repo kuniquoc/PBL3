@@ -18,11 +18,6 @@
 
       return output;
     }
-
-    public static string UrlDecode(string input)
-    {
-      return System.Net.WebUtility.UrlDecode(input);
-    }
     // có thể thêm các hàm để khử html code, sql injection, ...
   }
 }

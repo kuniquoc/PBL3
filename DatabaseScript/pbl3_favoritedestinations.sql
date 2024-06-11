@@ -23,23 +23,13 @@ DROP TABLE IF EXISTS `favoritedestinations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `favoritedestinations` (
-  `UserId` int NOT NULL,
-  `DestinationId` int NOT NULL,
-  PRIMARY KEY (`UserId`,`DestinationId`),
-  KEY `FK_favDes_destination` (`DestinationId`),
-  CONSTRAINT `FK_favDes_destination` FOREIGN KEY (`DestinationId`) REFERENCES `destinations` (`DestinationId`) ON DELETE CASCADE
+  `user_id` int NOT NULL,
+  `destination_id` int NOT NULL,
+  PRIMARY KEY (`user_id`,`destination_id`),
+  KEY `FK_favDes_destination` (`destination_id`),
+  CONSTRAINT `FK_favDes_destination` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`destination_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `favoritedestinations`
---
-
-LOCK TABLES `favoritedestinations` WRITE;
-/*!40000 ALTER TABLE `favoritedestinations` DISABLE KEYS */;
-INSERT INTO `favoritedestinations` VALUES (21,1),(22,1),(22,2);
-/*!40000 ALTER TABLE `favoritedestinations` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +40,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-08  8:29:31
+-- Dump completed on 2024-06-11 11:50:03

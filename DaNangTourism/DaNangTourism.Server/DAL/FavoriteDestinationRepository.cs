@@ -25,7 +25,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int AddFavDes(int userId, int destinationId)
         {
-            string sql = "INSERT INTO FavoriteDestinations(UserId, DestinationId) values (@userId, @destinationId)";
+            string sql = "INSERT INTO FavoriteDestinations(user_id, destination_id) values (@userId, @destinationId)";
             MySqlParameter[] parameters = 
             {
                 new ("@userId", userId),
@@ -49,7 +49,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int DeleteFavDes(int userId, int destinationId)
         {
-            string sql = "DELETE FROM FavoriteDestinations WHERE UserId = @userId AND DestinationId = @destinationId";
+            string sql = "DELETE FROM FavoriteDestinations WHERE user_id = @userId AND destination_id = @destinationId";
             MySqlParameter[] parameters = 
             {
                 new ("@userId", userId),
@@ -72,7 +72,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int GetFavDesCountByDesId(int destinationId)
         {
-            string sql = "SELECT COUNT(*) FROM FavoriteDestinations WHERE DestinationId = @destinationId";
+            string sql = "SELECT COUNT(*) FROM FavoriteDestinations WHERE destination_id = @destinationId";
             var parameter = new MySqlParameter("@destinationId", destinationId);
             using (var connection = new MySqlConnection(_connectionString))
             {

@@ -66,6 +66,7 @@ namespace DaNangTourism.Server.Controllers
     [HttpPut("update")]
     public ActionResult UpdateAccount([FromBody] AccountUpdateModel account)
     {
+            Console.WriteLine(account.Name + " " + account.Avatar + " " + account.Birthday);
       try
       {
         // Get account by id

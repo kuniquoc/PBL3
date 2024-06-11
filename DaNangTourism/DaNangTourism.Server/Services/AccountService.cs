@@ -57,7 +57,7 @@ namespace DaNangTourism.Server.Services
 
       var token = new JwtSecurityToken(
           claims: claims,
-          expires: rememberMe ? DateTime.UtcNow.AddDays(1) : DateTime.UtcNow.AddHours(1),
+          expires: rememberMe ? DateTime.UtcNow.AddYears(1) : DateTime.UtcNow.AddDays(1),
           signingCredentials: creds
       );
 
@@ -75,7 +75,7 @@ namespace DaNangTourism.Server.Services
       {
         HttpOnly = true,
         SameSite = SameSiteMode.Strict,
-        Expires = rememberMe ? DateTime.UtcNow.AddDays(1) : null,
+        Expires = rememberMe ? DateTime.UtcNow.AddYears(1) : null,
       };
       response.Cookies.Append("jwtToken", token, cookieOptions);
     }
@@ -199,7 +199,7 @@ namespace DaNangTourism.Server.Services
       ConfirmCode? confirmCode = _accountRepository.GetConfirmCode(email) ?? throw new UnauthorizedAccessException("Confirmation code has expired");
       if (confirmCode.Code != code)
       {
-        throw new UnauthorizedAccessException("incorrect confirmation code");
+        throw new UnauthorizedAccessException("Incorrect confirmation code");
       }
       if (DateTime.Now > confirmCode.ExpiredAt)
       {

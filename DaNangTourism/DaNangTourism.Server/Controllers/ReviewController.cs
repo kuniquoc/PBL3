@@ -22,8 +22,7 @@ namespace DaNangTourism.Server.Controllers
     [HttpGet("list/{destinationId}")]
     public IActionResult GetReviewsByDestinationId([FromRoute] int destinationId, [FromQuery] ReviewFilter reviewFilter)
     {
-      reviewFilter.SortBy = DataSanitization.RemoveSpecialCharacters(reviewFilter.SortBy);
-      reviewFilter.SortType = DataSanitization.RemoveSpecialCharacters(reviewFilter.SortType);
+      reviewFilter.Sanitization();
       try
       {
         var reviews = _reviewService.GetReviewsByDestinationId(destinationId, reviewFilter);

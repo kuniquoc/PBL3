@@ -16,27 +16,18 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `scheduledestinations`
+-- Table structure for table `confirmcode`
 --
 
-DROP TABLE IF EXISTS `scheduledestinations`;
+DROP TABLE IF EXISTS `confirmcode`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `scheduledestinations` (
-  `schedule_destination_id` int NOT NULL AUTO_INCREMENT,
-  `schedule_id` int NOT NULL,
-  `destination_id` int NOT NULL,
-  `date` date NOT NULL,
-  `arrival_time` time DEFAULT NULL,
-  `leave_time` time DEFAULT NULL,
-  `budget` double NOT NULL,
-  `note` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  PRIMARY KEY (`schedule_destination_id`),
-  KEY `fk_scheDes_sche_idx` (`schedule_id`),
-  KEY `fk_scheDes_des_idx` (`destination_id`),
-  CONSTRAINT `fk_scheDes_des` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`destination_id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_scheDes_sche` FOREIGN KEY (`schedule_id`) REFERENCES `schedules` (`schedule_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `confirmcode` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expired_at` datetime NOT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

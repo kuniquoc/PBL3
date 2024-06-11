@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DaNangTourism.Server.Helper;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 
 namespace DaNangTourism.Server.Models.ReviewModels;
@@ -16,6 +17,8 @@ public class ReviewFilter
 
     public void Sanitization()
     {
+        SortBy = DataSanitization.RemoveSpecialCharacters(SortBy);
+        SortType = DataSanitization.RemoveSpecialCharacters(SortType);
         if (Page < 1)
         {
             Page = 1;
@@ -24,13 +27,14 @@ public class ReviewFilter
         {
             Limit = 3;
         }
-        if (SortBy != "created_at" && SortBy != "rating")
+        if (!SortBy.Equals("created_at") && !SortBy.Equals("rating"))
         {
             SortBy = "created_at";
         }
-        if (SortType != "asc" && SortType != "desc")
+        if (!SortType.Equals("asc") && !SortType.Equals("desc"))
         {
             SortType = "desc";
         }
+        
     }
 }

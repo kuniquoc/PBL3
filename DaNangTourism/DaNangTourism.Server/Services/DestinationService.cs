@@ -3,6 +3,7 @@ using MySqlConnector;
 using System.Text;
 using DaNangTourism.Server.Models.DestinationModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 namespace DaNangTourism.Server.Services
 {
     public interface IDestinationService
@@ -52,21 +53,22 @@ namespace DaNangTourism.Server.Services
 
             // xử lý query để có điều kiện lọc
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT Destinations.DestinationId AS DestinationId, Name, Address, Images, Rating, Cost, OpenTime, CloseTime, Tags");
+            sql.Append("SELECT Destinations.destination_id AS DestinationId, name AS Name, address AS Address, images AS Images, IFNULL(AVG(Rating), 0) AS Rating, cost AS Cost, open_time AS OpenTime," +
+                "close_time AS CloseTime, tags AS Tags");
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
             // xử lý favorite Des: userId = 0 tức là chưa đăng nhập
 
-            sql.Append(", IF(UserId = @userId, TRUE, FALSE) as Favorite");
+            sql.Append(", IF(FavDes.user_id = @userId, TRUE, FALSE) as Favorite");
             parameters.Add(new MySqlParameter("@userId", userId));
-            sql.Append(" FROM Destinations LEFT JOIN (SELECT * FROM FavoriteDestinations WHERE UserId = @userId) AS FavDes ON FavDes.DestinationId = Destinations.DestinationId");
-
+            sql.Append(" FROM Destinations LEFT JOIN Reviews ON Destinations.destination_id = Reviews.destination_id");
+            sql.Append(" LEFT JOIN (SELECT * FROM FavoriteDestinations WHERE user_id = @userId) AS FavDes ON FavDes.destination_id = Destinations.destination_id");
 
             StringBuilder filter = new StringBuilder();
             // xử lý các bộ lọc dùng where
             if (!string.IsNullOrEmpty(destinationFilter.Search))
             {
-                filter.Append(" WHERE Name LIKE @search");
+                filter.Append(" WHERE name LIKE @search");
                 parameters.Add(new MySqlParameter("@search", "%" + destinationFilter.Search + "%"));
             }
 
@@ -74,11 +76,11 @@ namespace DaNangTourism.Server.Services
             {
                 if (filter.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Address LIKE @location");
+                    filter.Append(" AND address LIKE @location");
                 }
                 else
                 {
-                    filter.Append(" WHERE Address LIKE @location");
+                    filter.Append(" WHERE address LIKE @location");
                 }
                 parameters.Add(new MySqlParameter("@location", "%" + destinationFilter.Location + "%"));
             }
@@ -87,11 +89,11 @@ namespace DaNangTourism.Server.Services
             {
                 if (filter.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Cost >= @costFrom");
+                    filter.Append(" AND cost >= @costFrom");
                 }
                 else
                 {
-                    filter.Append(" WHERE Cost >= @costFrom");
+                    filter.Append(" WHERE cost >= @costFrom");
                 }
                 parameters.Add(new MySqlParameter("@costFrom", destinationFilter.CostFrom));
             }
@@ -100,11 +102,11 @@ namespace DaNangTourism.Server.Services
             {
                 if (filter.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Cost <= @costTo");
+                    filter.Append(" AND cost <= @costTo");
                 }
                 else
                 {
-                    filter.Append(" WHERE Cost <= @costTo");
+                    filter.Append(" WHERE cost <= @costTo");
                 }
                 parameters.Add(new MySqlParameter("@costTo", destinationFilter.CostTo));
             }
@@ -113,11 +115,11 @@ namespace DaNangTourism.Server.Services
             {
                 if (filter.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Rating >= @ratingFrom");
+                    filter.Append(" AND AVG(Rating) >= @ratingFrom");
                 }
                 else
                 {
-                    filter.Append(" WHERE Rating >= @ratingFrom");
+                    filter.Append(" WHERE AVG(Rating) >= @ratingFrom");
                 }
                 parameters.Add(new MySqlParameter("@ratingFrom", destinationFilter.RatingFrom));
             }
@@ -126,11 +128,11 @@ namespace DaNangTourism.Server.Services
             {
                 if (filter.ToString().Contains("WHERE"))
                 {
-                    filter.Append(" AND Rating <= @ratingTo");
+                    filter.Append(" AND AVG(Rating) <= @ratingTo");
                 }
                 else
                 {
-                    filter.Append(" WHERE Rating <= @ratingTo");
+                    filter.Append(" WHERE AVG(Rating) <= @ratingTo");
                 }
                 parameters.Add(new MySqlParameter("@ratingTo", destinationFilter.RatingTo));
             }
@@ -147,16 +149,20 @@ namespace DaNangTourism.Server.Services
                 }
                 if (destinationFilter.IsFavorite == false)
                 {
-                    filter.Append("UserId IS NULL");
+                    filter.Append("FavDes.user_id IS NULL");
                 }
                 else
                 {
-                    filter.Append("UserId IS NOT NULL");
+                    filter.Append("FavDes.user_id IS NOT NULL");
                 }
             }
 
+            // thêm group by để sử dụng AVG(Rating)
+            filter.Append(" GROUP BY Destinations.destination_id, name, address, images, cost, open_time, close_time, tags");
+
             // xử lý order by
-            filter.Append(" ORDER BY " + destinationFilter.SortBy + " " + destinationFilter.SortType);
+            string sortBy = (destinationFilter.SortBy == "rating") ? "AVG(Rating)" : "Destinations." + destinationFilter.SortBy;
+            filter.Append(" ORDER BY " + sortBy + " " + destinationFilter.SortType);
 
             sql.Append(filter);
 
@@ -180,7 +186,7 @@ namespace DaNangTourism.Server.Services
             // Lấy dữ liệu từ cơ sở dữ liệu
             destinations.Items = _destinationRepository.GetListDestination(sql.ToString(), parameters).ToList();
 
-            
+
 
             return destinations;
         }
@@ -252,10 +258,9 @@ namespace DaNangTourism.Server.Services
 
             // Khởi tạo StringBuilder để xây dựng câu truy vấn SQL
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT d.DestinationId AS DestinationId, d.Name AS Name, d.Address AS Address, d.Rating AS Rating, ");
-            sql.Append("(SELECT COUNT(*) FROM Reviews r WHERE r.DestinationId = d.DestinationId) AS Review, ");
-            sql.Append("(SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.DestinationId = d.DestinationId) AS Favorite, ");
-            sql.Append("d.Created_At AS Created_At FROM Destinations d");
+            sql.Append("SELECT d.destination_id AS DestinationId, d.name AS Name, d.address AS Address, IFNULL(AVG(Rating), 0) AS Rating, COUNT(*) AS Review,");
+            sql.Append(" (SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.destination_id = d.destination_id) AS Favorite, d.created_at AS Created_At");
+            sql.Append(" FROM Destinations d LEFT JOIN Reviews r ON r.destination_id = d.destination_id");
 
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
@@ -263,25 +268,18 @@ namespace DaNangTourism.Server.Services
             // Xử lý lọc dùng WHERE
             if (!string.IsNullOrEmpty(adminDestinationFilter.Search))
             {
-                sql.Append(" WHERE Name LIKE @name");
+                sql.Append(" WHERE d.name LIKE @name");
                 parameters.Add(new MySqlParameter("@name", "%" + adminDestinationFilter.Search + "%"));
             }
 
-            // Xử lý bộ lọc dùng ORDER BY
-            sql.Append(" ORDER BY ");
-            if (!string.IsNullOrEmpty(adminDestinationFilter.SortBy))
-            {
-                sql.Append(adminDestinationFilter.SortBy);
-            }
-            else
-            {
-                sql.Append("created_at");
-            }
+            // Thêm GROUP BY để sử dụng AVG(Rating), COUNT(*)
+            sql.Append(" GROUP BY d.destination_id, d.name, d.address, d.created_at");
 
-            if (!string.IsNullOrEmpty(adminDestinationFilter.SortType))
-            {
-                sql.Append(" ").Append(adminDestinationFilter.SortType);
-            }
+            // Xử lý bộ lọc dùng ORDER BY
+            string sortBy = (adminDestinationFilter.SortBy == "rating") ? "AVG(Rating)" : "d." + adminDestinationFilter.SortBy;
+            sql.Append(" ORDER BY " + sortBy);
+
+            sql.Append(" " + adminDestinationFilter.SortType);
 
             // Lấy tổng kết quả có được
             StringBuilder countSql = new StringBuilder();

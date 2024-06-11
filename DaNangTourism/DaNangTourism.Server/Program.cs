@@ -104,6 +104,18 @@ builder.Services.AddScoped<IBlogRepository>(provider =>
   return new BlogRepository(connectionString);
 });
 
+// Register gmail password
+builder.Services.AddScoped<IEmailService>(provider =>
+{
+  var configuration = provider.GetRequiredService<IConfiguration>();
+  var fromPassword = configuration["GmailPassword"];
+  if (string.IsNullOrEmpty(fromPassword))
+  {
+    throw new Exception("GmailPassword is not configured in appsettings.json.");
+  }
+  return new EmailService(fromPassword);
+});
+
 // Register scoped services here
 
 builder.Services.AddScoped<IDestinationService, DestinationService>();
@@ -111,7 +123,6 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 // Register IHttpContextAccessor services here
@@ -121,8 +132,6 @@ builder.Services.AddHttpContextAccessor();
 // Register IConfiguration here
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-
-
 
 var app = builder.Build();
 

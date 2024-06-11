@@ -18,8 +18,6 @@ namespace DaNangTourism.Server.DAL
         InputDestinationModel GetDestinationToUpdate(int id);
         InputDestinationModel UpdateDestination(int id, InputDestinationModel destination);
         int DeleteDestination(int id);
-        string GetName(int DestinationId);
-        string GetAddress(int DestinationId);
     }
     public class DestinationRepository : IDestinationRepository
     {
@@ -37,7 +35,10 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public IEnumerable<HomeDestination> GetNewestDestinations(int limit = 10)
         {
-            string sql = "SELECT DestinationId, Name, Address, Images, Rating FROM Destinations ORDER BY Created_At DESC LIMIT @limit";
+            string sql = "SELECT Destinations.destination_id AS DestinationId, name, address, images, IFNULL(AVG(Rating), 0) AS Rating" +
+                " FROM Destinations LEFT JOIN Reviews ON Reviews.destination_id = Destinations.destination_id" +
+                " GROUP BY Destinations.destination_id, name, address, images" +
+                " ORDER BY Destinations.Created_At DESC LIMIT @limit";
             MySqlParameter parameter = new MySqlParameter("@limit", limit);
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -93,22 +94,26 @@ namespace DaNangTourism.Server.DAL
             StringBuilder sql = new StringBuilder();
             List<MySqlParameter> parameters = new List<MySqlParameter>();
 
-            sql.Append("SELECT Destinations.DestinationId, Name, LocalName, Address, Images, Cost, OpenTime, CloseTime, Tags, Introduction, GoogleMapUrl, Rating");
+            sql.Append("SELECT Destinations.destination_id AS DestinationId, name AS Name, local_name AS LocalName, address AS Address, images AS Images, cost AS Cost," +
+                " open_time AS OpenTime, close_time AS CloseTime, tags AS Tags, introduction AS Introduction, google_map_url AS GoogleMapUrl, IFNULL(AVG(Rating), 0) AS Rating");
 
             if (userId > 0)
             {
-                sql.Append(", IF(UserId = @userId, TRUE, FALSE) as Favorite");
+                sql.Append(", IF(FavDes.user_id = @userId, TRUE, FALSE) as Favorite");
                 parameters.Add(new MySqlParameter("@userId", userId));
-                sql.Append(" FROM Destinations LEFT JOIN (SELECT * FROM FavoriteDestinations WHERE UserId = @userId) AS FavDes ON FavDes.DestinationId = Destinations.DestinationId");
+                sql.Append(" FROM Destinations LEFT JOIN Reviews ON Reviews.destination_id = Destinations.destination_id");
+                sql.Append(" LEFT JOIN (SELECT * FROM FavoriteDestinations WHERE user_id = @userId) AS FavDes ON FavDes.destination_id = Destinations.destination_id");
             }
             else
             {
                 sql.Append(", FALSE as Favorite");
-                sql.Append(" FROM Destinations");
+                sql.Append(" FROM Destinations LEFT JOIN Reviews ON Reviews.destination_id = Destinations.destination_id");
             }
 
 
-            sql.Append(" WHERE Destinations.DestinationId = @id");
+            sql.Append(" WHERE Destinations.destination_id = @id");
+
+            sql.Append(" GROUP BY Destinations.destination_id, name, localName, address, images, cost, open_time, close_time, tags, introduction, google_map_url");
 
 
             parameters.Add(new MySqlParameter("@id", id));
@@ -139,7 +144,10 @@ namespace DaNangTourism.Server.DAL
         public IEnumerable<HomeDestination> GetRandomDestinations(int limit)
         {
 
-            string sql = "SELECT DestinationId, Name, Address, Images, Rating FROM Destinations ORDER BY RAND() LIMIT @limit";
+            string sql = "SELECT Destinations.destination_id AS DestinationId, name AS Name, address AS Address, images AS Images, IFNULL(AVG(Rating), 0) AS Rating" +
+                " FROM Destinations LEFT JOIN Reviews ON Destinations.destination_id = Reviews.destination_id" +
+                " GROUP BY Destinations.destination_id, name, address, images" +
+                " ORDER BY RAND() LIMIT @limit";
             MySqlParameter parameter = new MySqlParameter("@limit", limit);
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -211,7 +219,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int AddDestination(InputDestinationModel destination)
         {
-            string sql = "INSERT INTO Destinations(Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction)" +
+            string sql = "INSERT INTO Destinations(name, local_name, address, google_map_url, cost, open_time, close_time, images, tags, introduction)" +
                 "VALUES (@name, @localName, @address, @googleMapUrl, @cost, @openTime, @closeTime, @images, @tags, @introduction); SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters =
             [
@@ -239,7 +247,8 @@ namespace DaNangTourism.Server.DAL
 
         public InputDestinationModel GetDestinationToUpdate(int id)
         {
-            string sql = "SELECT Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction FROM Destinations WHERE DestinationId = @id";
+            string sql = "SELECT name AS Name, local_name as LocalName, address AS Address, google_map_url AS GoogleMapUrl, cost AS Cost, open_time AS OpenTime, close_time AS CloseTime," +
+                " images AS Images, tags AS Tags, introduction AS Introduction FROM Destinations WHERE destination_id = @id";
             MySqlParameter parameter = new MySqlParameter("@id", id);
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -266,10 +275,11 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public InputDestinationModel UpdateDestination(int id, InputDestinationModel destination)
         {
-            string sql = "UPDATE Destinations SET Name = @name, LocalName = @localName, Address = @address, GoogleMapUrl = @googleMapUrl, Cost = @cost, Opentime = @openTime, " +
-                   "CloseTime = @closeTime, Images = @images, Tags = @tags, Introduction = @introduction WHERE DestinationId = @destinationId; " +
-                   "SELECT Name, LocalName, Address, GoogleMapUrl, Cost, OpenTime, CloseTime, Images, Tags, Introduction FROM Destinations " +
-                   "WHERE DestinationId = @destinationId";
+            string sql = "UPDATE Destinations SET name = @name, local_name = @localName, address = @address, google_map_url = @googleMapUrl, cost = @cost, open_time = @openTime, " +
+                   "close_time = @closeTime, images = @images, tags = @tags, introduction = @introduction WHERE destination_id = @destinationId; " +
+                   "SELECT name AS Name, local_name AS LocalName, address AS Address, google_map_url AS GoogleMapUrl, cost AS Cost, open_time AS OpenTime," +
+                   " close_time AS CloseTime, images AS Images, tags AS Tags, introduction AS Introduction FROM Destinations " +
+                   "WHERE destination_id = @destinationId";
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@name", destination.Name),
@@ -310,7 +320,7 @@ namespace DaNangTourism.Server.DAL
         /// <returns></returns>
         public int DeleteDestination(int id)
         {
-            string sql = "DELETE FROM Destinations WHERE DestinationId = @id";
+            string sql = "DELETE FROM Destinations WHERE destination_id = @id";
             MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@id", id) };
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -323,60 +333,5 @@ namespace DaNangTourism.Server.DAL
             }
         }
 
-        /// <summary>
-        /// Get Destination Name by Destination Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public string GetName(int destinationId)
-        {
-            string sql = "SELECT Name FROM Destinations WHERE DestinationId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", destinationId);
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.Add(parameter);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return reader.GetString(0);
-                        }
-                        throw new Exception("Destination doesn't exist");
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get address by destinationId
-        /// </summary>
-        /// <param name="destinationId"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public string GetAddress(int destinationId)
-        {
-            string sql = "SELECT Address FROM Destinations WHERE DestinationId = @id";
-            MySqlParameter parameter = new MySqlParameter("@id", destinationId);
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (var command = new MySqlCommand(sql, connection))
-                {
-                    command.Parameters.Add(parameter);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return reader.GetString(0);
-                        }
-                        throw new Exception("Destination doesn't exist");
-                    }
-                }
-            }
-        }
     }
 }

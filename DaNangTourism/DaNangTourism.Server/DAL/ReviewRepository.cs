@@ -27,7 +27,7 @@ namespace DaNangTourism.Server.DAL
     public Dictionary<int, int> GetReviewsCountByDesIdGroupedByRating(int destinationId)
     {
       // SQL query to count reviews grouped by rating
-      string sql = "SELECT Rating, COUNT(*) AS Count FROM Reviews WHERE DestinationId = @destinationId GROUP BY Rating";
+      string sql = "SELECT rating AS Rating, COUNT(*) AS Count FROM Reviews WHERE destination_id = @destinationId GROUP BY Rating";
       var parameter = new MySqlParameter("@destinationId", destinationId);
 
       // Create a dictionary to store the results
@@ -117,7 +117,7 @@ namespace DaNangTourism.Server.DAL
     /// </returns>
     public int AddReview(int userId, InputReviewModel review)
     {
-      string sql = "Insert into Reviews(UserId, DestinationId, Rating, Comment) values (@userId, @destinationId, @rating, @comment);" +
+      string sql = "Insert into Reviews(user_id, destination_id, rating, comment) values (@userId, @destinationId, @rating, @comment);" +
       "SELECT LAST_INSERT_ID();";
       MySqlParameter[] parameters =
       {
@@ -144,7 +144,7 @@ namespace DaNangTourism.Server.DAL
     /// <returns></returns>
     public int DeleteReview(int id)
     {
-      string sql = "DELETE FROM Reviews WHERE ReviewId = @id";
+      string sql = "DELETE FROM Reviews WHERE review_id = @id";
       var parameter = new MySqlParameter("@id", id);
       using (var connection = new MySqlConnection(_connectionString))
       {
