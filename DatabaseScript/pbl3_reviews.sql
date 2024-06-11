@@ -1,49 +1,165 @@
--- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: pbl3
--- ------------------------------------------------------
--- Server version	8.0.37
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th6 11, 2024 lúc 08:30 PM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `reviews`
+-- Cơ sở dữ liệu: `pbl3`
 --
 
-DROP TABLE IF EXISTS `reviews`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `reviews`
+--
+
 CREATE TABLE `reviews` (
-  `review_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `destination_id` int NOT NULL,
-  `rating` int NOT NULL,
-  `comment` text,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`review_id`),
-  KEY `FK_review_user_idx` (`user_id`),
-  KEY `FK_review_destination` (`destination_id`),
-  CONSTRAINT `FK_review_destination` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`destination_id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_review_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+  `review_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `destination_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `comment` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Đang đổ dữ liệu cho bảng `reviews`
+--
+
+INSERT INTO `reviews` (`review_id`, `user_id`, `destination_id`, `rating`, `comment`, `created_at`) VALUES
+(30000001, 90000015, 10000001, 5, 'I recently visited Ba Na Hills with my family and we had a great time. The views from the top are amazing and there are so many things to do. We rode the cable car, visited the Golden Bridge, explored the French Village, and even went to the winery. There is something for everyone at Ba Na Hills. I highly recommend it to anyone visiting Da Nang.', '2024-06-12 00:47:11'),
+(30000002, 90000012, 10000001, 4, 'Ba Na Hills is a truly magical place. It\'s like stepping into a different world. The scenery is breathtaking, the rides are thrilling, and the food is delicious. We had a great time exploring the different areas of the park, and we even took a walk through the Debay Garden. I highly recommend Ba Na Hills to anyone visiting Vietnam.', '2024-06-12 00:47:18'),
+(30000003, 90000002, 10000001, 4, 'We spent a day at Ba Na Hills with our two young children and they had a blast. There are so many rides and activities for kids of all ages. We also enjoyed the beautiful scenery and the cool mountain air. I would definitely recommend Ba Na Hills to any families visiting Da Nang.', '2024-06-12 00:47:24'),
+(30000005, 90000010, 10000001, 5, 'Ba Na Hills is a must-do for anyone visiting Da Nang. The views from the top of the mountain are incredible, and there are so many things to see and do. We rode the cable car, visited the Golden Bridge, and explored the French Village. We also had a chance to try some of the local food, which was delicious. I highly recommend Ba Na Hills to anyone looking for a fun and exciting day out.', '2024-06-12 00:47:34'),
+(30000006, 90000003, 10000001, 5, 'Ba Na Hills is a great place to escape the heat of Da Nang. The temperatures are much cooler up in the mountains, and there is always a breeze. We enjoyed walking around the gardens, exploring the different villages, and riding the rides. We also had a chance to try some of the local food, which was delicious. I highly recommend Ba Na Hills to anyone looking for a cool and refreshing break from the city.', '2024-06-12 00:47:42'),
+(30000007, 90000005, 10000001, 4, 'Ba Na Hills is a true fairytale escape, nestled amidst the misty mountains of Da Nang, Vietnam. From the moment you step onto the cable car, you\'re transported into a world of wonder and enchantment. The Golden Bridge, with its giant stone hands emerging from the clouds, is an ethereal sight, and the French Village, with its cobblestone streets and quaint shops, is a charming reminder of a bygone era.\n\nBut Ba Na Hills is more than just stunning scenery and whimsical attractions; it\'s also a place where you can connect with nature and experience the tranquility of the mountains. Take a leisurely stroll through the Debay Garden, breathe in the fresh mountain air, and let the worries of the world melt away.', '2024-06-12 00:48:10'),
+(30000008, 90000017, 10000001, 5, 'Ba Na Hills is not just a feast for the eyes; it\'s also a delight for the palate. From the bustling food stalls in the French Village to the elegant restaurants perched atop the mountain, there\'s something to tantalize every taste bud.', '2024-06-12 00:48:18'),
+(30000009, 90000001, 10000001, 4, 'We spent a day at Ba Na Hills with our two young children and they had a blast. There are so many rides and activities for kids of all ages. We also enjoyed the beautiful scenery and the cool mountain air. I would definitely recommend Ba Na Hills to any families visiting Da Nang.', '2024-06-12 00:49:07'),
+(30000010, 90000011, 10000015, 5, 'Cu Lao Cham is a hidden gem located just off the coast of Hoi An, Vietnam. This small island is home to stunning beaches, lush forests, and a rich history. We spent a day exploring the island and were amazed by its beauty and tranquility. We went swimming, snorkeling, and hiking, and even had a chance to visit a local fishing village. I highly recommend Cu Lao Cham to anyone looking for a peaceful and relaxing getaway.\n\n', '2024-06-12 00:50:49'),
+(30000011, 90000016, 10000015, 5, 'Cu Lao Cham is a paradise for snorkelers and divers. The waters around the island are home to an incredible variety of marine life, including colorful fish, coral reefs, and even sea turtles. We went on a snorkeling tour and were amazed by what we saw. The visibility was incredible and we were able to see all sorts of amazing creatures up close. I highly recommend Cu Lao Cham to anyone who loves snorkeling or diving.', '2024-06-12 00:50:55'),
+(30000012, 90000006, 10000015, 4, 'Cu Lao Cham is a UNESCO World Biosphere Reserve, and for good reason. The island is home to a variety of ecosystems, including forests, beaches, and coral reefs. The island is also home to a number of endangered species, including the black-faced spoonbill and the red-shanked douc langur. I was impressed by the efforts that are being made to protect the island\'s natural environment.', '2024-06-12 00:51:00'),
+(30000013, 90000008, 10000015, 5, 'Cu Lao Cham is a great place to enjoy a delicious seafood feast. The island is home to a number of restaurants that serve fresh seafood caught by local fishermen. We tried a variety of dishes, including grilled squid, steamed clams, and fish soup. Everything was delicious! I highly recommend Cu Lao Cham to anyone who loves seafood.\n\n', '2024-06-12 00:51:06'),
+(30000014, 90000013, 10000015, 3, 'Cu Lao Cham is a perfect day trip from Hoi An. The ferry ride from Hoi An to the island takes about 30 minutes. Once you\'re on the island, there are a number of things you can do, including swimming, snorkeling, diving, hiking, and exploring the local villages. I highly recommend Cu Lao Cham to anyone who is visiting Hoi An and looking for a fun and relaxing day trip.', '2024-06-12 00:51:14'),
+(30000015, 90000003, 10000014, 4, 'Tucked away in the Marble Mountains, the Museum of Memories of Non Nuoc Stone Sculpture is a hidden gem for anyone interested in Vietnamese history and craftsmanship. The collection of handcrafted stone sculptures offers a fascinating glimpse into the centuries-old tradition of Non Nuoc stone carving. The museum\'s rustic architecture adds to the charm and provides a sense of stepping back in time.\n\n', '2024-06-12 00:52:04'),
+(30000016, 90000009, 10000014, 5, 'This museum is a must-see for any art lover visiting Da Nang. The intricate details and artistry of the stone sculptures are truly captivating. Learning about the tools and techniques used by the sculptors adds a whole new layer of appreciation for their work. It\'s amazing to see how these skilled artisans have transformed a simple stone into a piece of art.', '2024-06-12 00:52:10'),
+(30000017, 90000014, 10000014, 5, 'The Museum of Memories of Non Nuoc Stone Sculpture is surprisingly engaging for families. The interactive exhibits, including demonstrations of the carving process, keep children interested. It\'s a great way to introduce them to a unique art form and Vietnamese cultural heritage.', '2024-06-12 00:52:15'),
+(30000018, 90000007, 10000014, 5, 'This museum offers a captivating journey through the history of Non Nuoc stone carving. It showcases the evolution of styles and techniques used by sculptors throughout the centuries. You\'ll see everything from traditional religious figures to modern abstract pieces, all showcasing the versatility of this art form.', '2024-06-12 00:52:23'),
+(30000019, 90000004, 10000014, 5, 'The Museum of Memories of Non Nuoc Stone Sculpture offers more than just a collection of beautiful objects. It delves into the lives and stories of the skilled artisans who created these masterpieces. You\'ll gain a deeper understanding of the cultural significance of stone carving in the region.', '2024-06-12 00:52:27'),
+(30000020, 90000018, 10000013, 4, 'The Hai Van Pass is a must-do for anyone visiting Vietnam. The drive along the coast is simply stunning, with winding roads that hug the mountains and offer panoramic views of the South China Sea. Be sure to take your time and enjoy the scenery, as there are plenty of places to pull over and take photos.', '2024-06-12 00:53:08'),
+(30000021, 90000006, 10000013, 5, 'If you\'re looking for an adrenaline rush, then riding a motorcycle through the Hai Van Pass is the way to go. The roads are challenging, with plenty of twists and turns, but the rewards are well worth it. Just be sure to ride safely and watch out for other vehicles.', '2024-06-12 00:53:17'),
+(30000022, 90000019, 10000013, 5, 'The Hai Van Pass has a long and storied history, dating back to the Cham era. It was once an important trade route between China and Vietnam, and it has also been the site of many battles over the centuries. Today, the pass is a popular tourist destination, but it\'s also a reminder of Vietnam\'s rich history.', '2024-06-12 00:53:23'),
+(30000023, 90000015, 10000013, 5, 'If you\'re looking for a more active way to experience the Hai Van Pass, then there are plenty of hiking trails to choose from. The trails offer stunning views of the surrounding countryside, and they\'re a great way to escape the crowds and get some fresh air.', '2024-06-12 00:53:29'),
+(30000024, 90000012, 10000013, 4, 'The Hai Van Pass is a photographer\'s paradise. The scenery is simply stunning, and there are endless opportunities to capture amazing photos. Be sure to bring your camera and plenty of memory cards, as you\'ll want to take home all the memories of this incredible place.', '2024-06-12 00:53:38'),
+(30000025, 90000006, 10000012, 5, 'Mikazuki 365 was a fantastic experience for our whole family. The kids loved the outdoor water slides and lazy river, while we adults enjoyed soaking in the onsen (Japanese hot springs). The best part? We could enjoy both all year round, rain or shine, thanks to the indoor water park. It\'s a great way to spend a day in Da Nang, especially with a mix of ages.', '2024-06-12 00:54:08'),
+(30000026, 90000002, 10000012, 5, 'I came to Mikazuki 365 for some relaxation, and it definitely delivered. The onsen pools were incredible, with different mineral baths to choose from. It was the perfect way to unwind after a long day of exploring Da Nang. But the park also surprised me with its fun water slides and wave pool. It\'s a great option for anyone who wants to combine relaxation with a bit of excitement.', '2024-06-12 00:54:14'),
+(30000027, 90000010, 10000012, 5, 'Mikazuki 365 offers a unique experience – a Japanese-style water park right in Da Nang. The park\'s design is beautiful, with traditional Japanese elements that transport you to another world.  While I missed having more Japanese staff, the water slides and onsen were fantastic. It\'s a great place to experience a bit of Japanese culture while on vacation in Vietnam.', '2024-06-12 00:54:31'),
+(30000028, 90000005, 10000012, 5, 'We were pleasantly surprised by the affordability of Mikazuki 365. The ticket prices were reasonable, and there were plenty of food options inside the park that weren\'t too expensive. Plus, the park offers something for everyone, from thrilling water slides for the adventurous to relaxing onsen pools for those seeking tranquility. It\'s a great value for a fun day out in Da Nang.', '2024-06-12 00:54:33'),
+(30000029, 90000017, 10000012, 4, 'Mikazuki 365 has the potential to be amazing. The water slides were a lot of fun, and the lazy river was a great way to relax. However, the park could benefit from some improvements. Some areas felt a little crowded, and a few of the attractions seemed in need of maintenance. Overall, it\'s a good water park option in Da Nang, but it could be even better with some tweaks.', '2024-06-12 00:54:39'),
+(30000030, 90000006, 10000011, 5, 'Hoa Phu Thanh Waterfall is a hidden gem waiting to be discovered! It\'s a short drive from Da Nang, but feels worlds away. The highlight is definitely the waterfall slide - a natural watercourse you can zoom down. It\'s exhilarating and refreshing, perfect for a hot Vietnamese day.  There\'s also ziplining and other activities to keep you entertained. Just be aware, it can get crowded, so plan accordingly.', '2024-06-12 00:56:11'),
+(30000031, 90000018, 10000011, 4, 'Hoa Phu Thanh Waterfall is like a natural playground for adults and kids alike. The cascading waterfalls create stunning pools perfect for swimming and wading. The surrounding jungle is lush and green, offering a beautiful escape from the city. Plus, the local restaurants serve delicious fresh food.  Just be sure to wear sturdy shoes as the paths can be slippery.', '2024-06-12 00:56:20'),
+(30000032, 90000019, 10000011, 4, 'If you\'re looking for an eco-friendly adventure, Hoa Phu Thanh Waterfall is a great option. The park is well-maintained and focuses on preserving the natural beauty of the area. You can explore the waterfalls on foot, take a bamboo raft down the river, or even try your hand at some traditional fishing techniques.  Be sure to pack your swimsuit and a towel for a refreshing dip after your explorations.', '2024-06-12 00:56:26'),
+(30000033, 90000004, 10000011, 4, 'Hoa Phu Thanh Waterfall is undeniably beautiful, but be prepared for the potential for mosquitos.  Bring insect repellent and wear long sleeves and pants if you\'re prone to bites.  However, the beauty of the waterfalls and the thrill of the water slide make it worth the minor inconvenience.  Just be sure to pack some bug spray and enjoy the adventure!', '2024-06-12 00:56:31'),
+(30000034, 90000009, 10000011, 3, 'Hoa Phu Thanh Waterfall is a great choice for those looking for something a little different than the usual tourist attractions in Da Nang. It\'s less crowded and offers a more authentic Vietnamese experience. Be prepared for a bit of an adventure to get there, but the payoff is definitely worth it. Just be sure to do your research beforehand and know what to expect in terms of transportation and amenities.', '2024-06-12 00:56:38'),
+(30000035, 90000005, 10000010, 5, 'Tien Sa Harbor is a hidden gem in Da Nang, Vietnam. It\'s a beautiful harbor with stunning views of the Son Tra Peninsula and the city skyline. The harbor is home to a variety of boats and ships, and there are several restaurants and cafes with outdoor seating where you can enjoy the views.', '2024-06-12 00:57:05'),
+(30000036, 90000013, 10000010, 4, 'Tien Sa Harbour is a great place to watch the sunset. The views of the city and the Son Tra Peninsula are simply breathtaking. I recently had the opportunity to watch the sunset from Tien Sa Harbour and it was one of the most beautiful sunsets I\'ve ever seen.\n\nThe colors were amazing and the sky was ablaze with light. It was a truly magical experience. If you\'re looking for a romantic place to watch the sunset, Tien Sa Harbour is the perfect spot.', '2024-06-12 00:57:18'),
+(30000037, 90000006, 10000010, 4, 'Tien Sa Harbour is a great place to go fishing. There are a number of piers and jetties where you can cast your line. I recently went fishing at Tien Sa Harbour and I had a lot of luck. I caught a variety of fish, including some that were quite large.\n\nIf you\'re looking for a fun and relaxing way to spend a day, I highly recommend going fishing at Tien Sa Harbour. You might just be surprised at how much you enjoy it.', '2024-06-12 00:57:24'),
+(30000038, 90000011, 10000010, 5, 'Tien Sa Harbour is a great place to take a boat trip. There are a number of companies that offer boat tours of the harbor and the surrounding area. I recently took a boat trip of Tien Sa Harbour and it was a great way to see the sights.\n\nWe saw a number of different landmarks, including the Marble Mountains and the Linh Ung Pagoda. We also had the opportunity to swim and snorkel in the crystal-clear waters of the harbor.', '2024-06-12 00:57:30'),
+(30000039, 90000017, 10000010, 5, 'Tien Sa Harbour is a great place to relax and enjoy the fresh air. There are a number of parks and gardens where you can sit and relax. I recently spent a few hours relaxing in one of the parks at Tien Sa Harbour and it was a great way to escape the hustle and bustle of the city.', '2024-06-12 00:57:38'),
+(30000040, 90000010, 10000009, 5, 'This bridge is more than just a way to cross the river! The fire and water show on Saturday and Sunday nights is amazing.  We stood on the bridge to get the full effect (got a little toasty!), but you can also see it from the riverside for free.  Definitely a highlight of our trip to Da Nang!', '2024-06-12 00:58:12'),
+(30000041, 90000018, 10000009, 5, 'The Dragon Bridge is beautiful during the day, but it truly comes alive at night.  The colorful lights illuminate the entire bridge, making it a stunning sight.  We took a boat ride on the river at night for an even more magical experience.', '2024-06-12 00:58:22'),
+(30000042, 90000009, 10000009, 5, 'This bridge is impressive not just for its design, but also for its functionality.  It\'s a major traffic artery in Da Nang, but it manages to be both beautiful and practical.  We walked across the bridge during the day and enjoyed the views of the city and the Han River.', '2024-06-12 00:58:23'),
+(30000043, 90000008, 10000009, 5, 'The Dragon Bridge is a unique and creative piece of architecture.  The details of the dragon are incredible, and the way it stretches across the river is truly impressive.  We spent a good amount of time just admiring the bridge and taking photos.', '2024-06-12 00:58:29'),
+(30000044, 90000016, 10000009, 5, 'We walked across the Dragon Bridge with our young children and they loved it!  They were so excited to see the dragon up close and pretend they were riding on its back.  It\'s a great way to add a bit of fun and excitement to your sightseeing in Da Nang.', '2024-06-12 00:58:36'),
+(30000045, 90000015, 10000008, 4, 'Nestled in the heart of Da Nang, the Cham Museum of Sculpture is a treasure trove for anyone interested in Vietnamese history.  While smaller than some museums, the collection boasts a captivating display of Cham sculptures, offering a glimpse into this ancient civilization.  Although detailed information might be limited at times, the artistry and craftsmanship of the statues are truly awe-inspiring.  A perfect spot for a quiet afternoon learning about a fascinating lost kingdom.', '2024-06-12 00:59:22'),
+(30000046, 90000013, 10000008, 5, 'If you\'re planning a trip to My Son, the Cham ruins, then visiting the Cham Museum beforehand is a must.  The museum provides excellent context for understanding the significance of these architectural wonders.  Walking through the halls, you\'ll encounter intricate sandstone and terracotta pieces depicting deities, mythical creatures, and everyday life.  A visit here will deepen your appreciation for the artistry and legacy of the Champa people.', '2024-06-12 00:59:27'),
+(30000047, 90000003, 10000008, 5, 'The Cham Museum is more than just a collection of statues; it\'s a portal to the past.  The intricate details on the sculptures transport you back centuries, offering a glimpse into the religious beliefs and social structures of the Champa civilization.  While additional information in English would be helpful, the sheer beauty of the artwork speaks volumes.  A recommended stop for anyone interested in Southeast Asian history.', '2024-06-12 00:59:34'),
+(30000048, 90000007, 10000008, 5, 'Looking for a break from the hustle and bustle of Da Nang?  The Cham Museum provides a peaceful haven amidst the city\'s energy.  Surrounded by the museum\'s serene gardens, you can wander through the galleries at your own pace, appreciating the artistry and symbolism of the Cham sculptures.  A great way to spend an afternoon learning about local history and soaking in some cultural ambiance.', '2024-06-12 00:59:41'),
+(30000049, 90000017, 10000008, 3, 'The Cham Museum offers a unique opportunity to see a significant collection of Cham sculptures.  The artistry is undeniable, with intricate details and powerful imagery.  However, some exhibits could benefit from additional information in English to provide deeper context for visitors unfamiliar with the Champa culture.  Overall, a worthwhile stop for art and history enthusiasts, but be prepared for potentially limited descriptions.', '2024-06-12 00:59:47'),
+(30000050, 90000014, 10000007, 5, 'Art in Paradise Danang is a fantastic place to unleash your creativity and capture hilarious photos. My friends and I spent hours exploring the different themed rooms, each bursting with vibrant 3D illusions. It was a blast interacting with the paintings and posing for silly pictures. While it may not be a traditional art museum, it\'s definitely a guaranteed fun time for everyone.', '2024-06-12 01:00:22'),
+(30000051, 90000018, 10000007, 5, 'This 3D museum is a photographer\'s dream! With over 130 amazing 3D artworks, you\'ll find yourself snapping photos at every turn. The optical illusions are incredible, making it easy to create unique and entertaining pictures.  Whether you\'re traveling solo, with friends, or with family, Art in Paradise offers endless entertainment.', '2024-06-12 01:00:35'),
+(30000052, 90000006, 10000007, 5, 'While the photo opportunities are definitely the highlight, Art in Paradise offers more than just that. The creative themes of the rooms transport you to different worlds, from underwater adventures to outer space exploration. It\'s a great way to spark your imagination and have some laughs along the way.', '2024-06-12 01:00:40'),
+(30000053, 90000011, 10000007, 5, 'Unlike a typical museum where you can\'t touch the art, Art in Paradise encourages interaction!  Become part of the paintings by following the guides on the best poses for each artwork. It\'s a truly interactive experience that\'s perfect for kids and adults alike.', '2024-06-12 01:00:45'),
+(30000054, 90000003, 10000007, 5, 'Looking for a cool and fun activity to escape the Da Nang heat? Look no further than Art in Paradise!  The air-conditioned museum provides a welcome break from the scorching sun.  While you explore the various rooms, you can stay cool and entertained.', '2024-06-12 01:00:56'),
+(30000055, 90000002, 10000007, 4, 'For the price of admission, Art in Paradise offers a unique and enjoyable experience.  It\'s a great way to spend a few hours, especially if you\'re traveling on a budget.  With so many creative photo opportunities, you\'ll leave with memories that will last a lifetime.', '2024-06-12 01:00:57'),
+(30000056, 90000015, 10000006, 5, 'Ngu Hanh Son (Marble Mountains) is a must-visit for anyone in Da Nang. The climb to the top of Thuy Son, the tallest mountain, is challenging but rewarding. The panoramic views of the city and coastline are simply stunning. Exploring the caves and pagodas scattered throughout the complex offers a glimpse into Vietnamese history and culture. This place is perfect for a mix of physical activity, spiritual connection, and breathtaking scenery.', '2024-06-12 01:01:28'),
+(30000057, 90000006, 10000006, 5, 'Ngu Hanh Son is a great place to test your legs! The climb to the top involves numerous stairs, some quite steep.  Wear sturdy shoes with good grip for the often-slippery marble steps. However, the reward is worth it.  The caves, like Huyen Khong with its dramatic light filtering through the collapsed ceiling, are fascinating to explore.  For the truly adventurous, consider rock climbing on the mountain faces (with proper guidance, of course).', '2024-06-12 01:01:34'),
+(30000058, 90000012, 10000006, 5, 'Ngu Hanh Son offers a unique blend of historical and natural wonders. The pagodas nestled within the caves showcase beautiful Buddhist statues and intricate carvings.  Learning about the Cham people who once used these caves as sanctuaries adds another layer of interest.  Meanwhile, the lush vegetation and fresh air provide a welcome respite from the city.', '2024-06-12 01:01:38'),
+(30000059, 90000004, 10000006, 4, 'Ngu Hanh Son is a fun outing for the whole family.  Kids will enjoy the challenge of climbing the stairs and exploring the caves.  There are also handicraft shops selling souvenirs and local snacks to keep everyone entertained.  Learning about Vietnamese history and mythology through the pagodas and statues can be a fun and educational experience for kids.', '2024-06-12 01:01:43'),
+(30000060, 90000019, 10000006, 5, 'Ngu Hanh Son is a photographer\'s dream.  The natural beauty of the mountains, combined with the intricate details of the pagodas and caves, provides endless opportunities to capture stunning images.  The play of light and shadow within the caves creates a magical atmosphere.  Don\'t forget to capture the panoramic cityscapes from the mountain peaks', '2024-06-12 01:01:50'),
+(30000061, 90000001, 10000006, 5, 'Ngu Hanh Son is a perfect day trip for those looking for a break from the hustle and bustle of Da Nang.  The journey from the city center is short, and the entrance fee is affordable.  This unique complex allows you to immerse yourself in history, culture, and nature within a few hours.', '2024-06-12 01:01:55'),
+(30000062, 90000011, 10000005, 5, 'Asia Park was a fantastic day out for our family. The amusement park section has a good variety of rides for all ages, from thrilling rollercoasters like the Queen Cobra to fun family rides and a carousel for the little ones. We loved the cultural park too, with glimpses of different Asian countries through architecture and gardens. The night lights are amazing, making the whole park sparkle.', '2024-06-12 01:02:27'),
+(30000063, 90000009, 10000005, 3, 'Asia Park is a decent amusement park, but it\'s not huge. We went on a weekday afternoon and the lines weren\'t too bad. The rides are enjoyable, and the park has a nice atmosphere. However, compared to some other theme parks we\'ve been to, it felt a bit limited. Still, a good option for an afternoon of thrills, especially for families with younger kids.', '2024-06-12 01:02:33'),
+(30000064, 90000005, 10000005, 4, 'If you\'re looking for adrenaline pumping rides, Asia Park delivers! The Queen Cobra coaster is a real standout, with twists, drops, and inversions that will get your heart racing. There are also some other exciting rides like the swinging ship and the flume ride. While the park doesn\'t have a massive selection, the rides it does have are top-notch.', '2024-06-12 01:02:40'),
+(30000065, 90000006, 10000005, 4, 'Asia Park offers a unique blend of amusement park fun and a glimpse into Asian cultures. We enjoyed exploring the different themed areas, each showcasing a different country\'s architecture and gardens. It was a nice way to learn a little bit while having fun on the rides. The park is clean and well-maintained, making for a pleasant visit.', '2024-06-12 01:02:45'),
+(30000066, 90000018, 10000005, 5, 'While Asia Park is a fun place to visit, especially for families, I felt the entrance fee was a bit high compared to the size and number of rides. The park seemed a little empty on the day we went, which might have been because of the price. Overall, it\'s a good option, but keep the cost in mind before you go.', '2024-06-12 01:02:51'),
+(30000067, 90000017, 10000005, 5, 'Asia Park has the potential to be a great amusement park, but it feels like it\'s not quite there yet. Some areas seem unfinished, and the cultural park section could be more developed. However, the rides that are there are fun, and the views of the Han River are lovely. Hopefully, with some improvements, Asia Park can reach its full potential.', '2024-06-12 01:02:57'),
+(30000068, 90000002, 10000004, 5, 'Son Tra Peninsula is a paradise for nature lovers, offering a stunning blend of beaches, mountains, and lush forests. Hike to the top of Son Tra Mountain for breathtaking views of the city and coastline, or explore the trails that wind through the peninsula\'s verdant valleys. Keep an eye out for the peninsula\'s resident red-shanked douc monkeys, which are known for their playful antics.', '2024-06-12 01:03:32'),
+(30000069, 90000006, 10000004, 5, 'With its pristine beaches and crystal-clear waters, Son Tra Peninsula is a haven for beach bums. My Khe Beach is the most popular spot, offering plenty of opportunities for sunbathing, swimming, and water sports. For a more secluded experience, head to Paradise Beach or Non Nuoc Beach.', '2024-06-12 01:03:37'),
+(30000070, 90000013, 10000004, 5, 'Son Tra Peninsula is home to a number of interesting cultural attractions, including the Linh Ung Pagoda, one of the largest Buddhist pagodas in Vietnam. The pagoda offers stunning views of the city and is a popular spot for both locals and tourists. Other cultural attractions include the Giant Banyan Tree, which is said to be over 700 years old, and the Son Tra Museum, which exhibits artifacts from the peninsula\'s history.\n\n', '2024-06-12 01:03:42'),
+(30000071, 90000008, 10000004, 4, 'Son Tra Peninsula is a great place for adventure seekers. The peninsula offers a variety of activities, including hiking, biking, and ziplining. For a truly exhilarating experience, try the Ban Bungee Jump, which offers stunning views of the peninsula from 200 meters above the ground.', '2024-06-12 01:03:47'),
+(30000072, 90000014, 10000004, 4, 'If you\'re looking for a tranquil retreat, Son Tra Peninsula is the perfect place. The peninsula\'s lush forests and peaceful beaches offer a welcome respite from the hustle and bustle of city life. Take a walk along the beach, meditate in one of the peninsula\'s many pagodas, or simply relax and enjoy the serenity of the surroundings.', '2024-06-12 01:03:56'),
+(30000073, 90000001, 10000004, 5, 'Son Tra Peninsula is a wildlife paradise, home to a variety of animals, including red-shanked douc monkeys, civets, and bats. The peninsula is also a nesting ground for loggerhead sea turtles. If you\'re lucky, you may even spot a dolphin or two frolicking in the waters off the coast.', '2024-06-12 01:04:02'),
+(30000074, 90000006, 10000003, 5, 'Hoi An Ancient Town is a place that steals your heart. Wandering the narrow streets lined with colorful lanterns feels like stepping back in time. The architecture, a beautiful blend of Vietnamese, Chinese, and Japanese influences, is captivating. From the ornate facades of ancient houses to the peaceful temples, every corner offers a new discovery.  Don\'t miss the chance to get a custom-made suit or dress at one of the many talented tailors here!', '2024-06-12 01:04:30'),
+(30000075, 90000016, 10000003, 4, 'Foodies rejoice! Hoi An Ancient Town is a haven for delicious and affordable Vietnamese cuisine. From steaming bowls of white rose dumplings to fragrant cao lau noodles, your taste buds will be in for a treat. Don\'t forget to try the iconic \"Banh Mi\" sandwiches, filled with fresh ingredients and bursting with flavor. Craving some retail therapy? The town is lined with shops selling everything from silk lanterns and handmade crafts to local art and souvenirs. You\'re sure to find unique treasures to take home.', '2024-06-12 01:04:36'),
+(30000076, 90000009, 10000003, 4, 'As the sun sets, Hoi An Ancient Town transforms into a magical wonderland. Thousands of colorful lanterns illuminate the streets, creating a breathtaking atmosphere. Take a leisurely boat ride on the Thu Bon River, gliding past the ancient town bathed in the soft glow of lanterns. It\'s a truly romantic and unforgettable experience.', '2024-06-12 01:04:41'),
+(30000077, 90000002, 10000003, 4, 'Hoi An Ancient Town is not just a beautiful place; it\'s also a place steeped in history and culture. Explore the Japanese Covered Bridge, a symbol of the town\'s rich trading past. Visit the historic temples and pagodas, each with its own unique story to tell. Immerse yourself in the local culture by attending a traditional dance performance or participating in a cooking class.', '2024-06-12 01:04:45'),
+(30000078, 90000018, 10000003, 5, 'Hoi An Ancient Town offers a welcome escape from the hustle and bustle of city life. Stroll along the Thu Bon Riverfront, soaking in the peaceful atmosphere. Relax on the beach, just a short distance away, and enjoy the refreshing sea breeze. In the evening, indulge in a pampering spa treatment or a delicious meal at a riverside restaurant.', '2024-06-12 01:04:49'),
+(30000079, 90000018, 10000003, 5, 'Hoi An Ancient Town is a photographer\'s paradise. The colorful architecture, the vibrant lanterns, the locals going about their daily lives - every corner presents a unique opportunity to capture a stunning image. Whether you\'re a professional photographer or simply enjoy taking beautiful pictures, you\'ll find endless inspiration here.', '2024-06-12 01:04:54'),
+(30000080, 90000015, 10000002, 5, 'Than Tai Hot Springs Park was a fantastic surprise! The kids loved the variety of pools, slides, and even a lazy river. We spent a good portion of the day enjoying the water activities. The highlight for me, however, were the natural hot springs. Soaking in the warm mineral water was incredibly relaxing. Plus, the park was clean and well-maintained, with friendly staff and even free buggy rides to get around the large area. We will definitely be back!', '2024-06-12 01:05:43'),
+(30000081, 90000006, 10000002, 5, 'If you\'re looking for a peaceful hot spring experience, Than Tai Hot Springs Park might be a gamble. My visit on a weekday was blissfully quiet, allowing me to fully unwind in the various hot spring pools. The onsen and sauna were excellent additions, and the entire place felt very clean. However, I can see how it might get crowded on weekends, potentially impacting the tranquil atmosphere.', '2024-06-12 01:05:48'),
+(30000082, 90000012, 10000002, 4, 'Than Tai Hot Springs Park surprised me with its variety. Yes, the natural hot springs were wonderful, but the park offered so much more. We enjoyed thrilling water slides, a relaxing lazy river, and even a dinosaur-themed area for the kids. There\'s also a spa on-site, perfect for an extra pampering session. The park caters to all kinds of visitors and offers a full day of fun and relaxation.', '2024-06-12 01:05:52'),
+(30000083, 90000012, 10000002, 4, 'I was a bit disappointed with Than Tai Hot Springs Park. While the concept of natural hot springs sounded appealing, the actual pools felt more like man-made concrete structures. Additionally, the \"natural setting\" was somewhat overshadowed by the water park elements. If you\'re looking for a truly rustic hot spring experience, this might not be the best fit.', '2024-06-12 01:05:57'),
+(30000084, 90000007, 10000002, 5, 'Than Tai Hot Springs Park offers a great value for the price. The entrance fee is reasonable, and there are plenty of food options inside the park to suit all budgets. The variety of pools, slides, and activities kept us entertained for the entire day. We especially enjoyed the electric buggy rides that helped us navigate the expansive park with ease.\n\n', '2024-06-12 01:06:02'),
+(30000085, 90000013, 10000002, 5, 'Than Tai Hot Springs Park is the perfect combination of adventure and relaxation. We spent the morning conquering the water slides and exploring the lazy river. Then, in the afternoon, we soaked in the soothing hot springs and enjoyed the peacefulness of the onsen. The park offers something for everyone, making it a great choice for a family outing or a solo escape.', '2024-06-12 01:06:08');
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`review_id`),
+  ADD KEY `FK_review_user_idx` (`user_id`),
+  ADD KEY `FK_review_destination` (`destination_id`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30000086;
+
+--
+-- Các ràng buộc cho các bảng đã đổ
+--
+
+--
+-- Các ràng buộc cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `FK_review_destination` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`destination_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_review_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-06-11 11:50:03
