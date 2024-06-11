@@ -64,5 +64,4 @@ packages/
 .fake
 DaNangTourism/DaNangTourism.Server/obj
 DaNangTourism/DaNangTourism.Server/bin
-danangtourism.client/bin
-danangtourism.client/obj
+/DaNangTourism/danangtourism.client/obj
