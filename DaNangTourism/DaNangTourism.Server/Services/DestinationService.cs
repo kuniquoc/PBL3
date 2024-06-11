@@ -258,7 +258,8 @@ namespace DaNangTourism.Server.Services
 
             // Khởi tạo StringBuilder để xây dựng câu truy vấn SQL
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT d.destination_id AS DestinationId, d.name AS Name, d.address AS Address, IFNULL(AVG(Rating), 0) AS Rating, COUNT(*) AS Review,");
+            sql.Append("SELECT d.destination_id AS DestinationId, d.name AS Name, d.address AS Address, IFNULL(AVG(Rating), 0) AS Rating,");
+            sql.Append(" (SELECT COUNT(*) FROM Reviews WHERE Reviews.destination_id = d.destination_id) AS Review,");
             sql.Append(" (SELECT COUNT(*) FROM FavoriteDestinations f WHERE f.destination_id = d.destination_id) AS Favorite, d.created_at AS Created_At");
             sql.Append(" FROM Destinations d LEFT JOIN Reviews r ON r.destination_id = d.destination_id");
 
