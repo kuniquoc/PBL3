@@ -1,5 +1,7 @@
 import { IAuthor } from './user'
 
+export const BlogTypes = ['all', 'places', 'tips']
+
 export interface IBlogBase {
 	id: number
 	title: string
@@ -38,4 +40,12 @@ export interface IBlogManage extends IBlogBase {
 export interface IMyBlog extends IBlogBase {
 	views: number
 	status: string
+}
+
+export interface IBlogEditor {
+	title: string
+	typeIndex: number
+	introduction: string
+	image: string
+	content: string
 }

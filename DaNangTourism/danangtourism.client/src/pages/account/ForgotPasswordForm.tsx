@@ -32,7 +32,10 @@ const ForgotPasswordForm: React.FC<{
 	const handleSendCode = async () => {
 		if (sendTimeout > 0 || !validateEmail()) return
 		try {
-			const res = await axios.post('/api/auth/sendCode', { email })
+			const res = await axios.post('/api/auth/sendCode', {
+				email,
+				isRegister: false,
+			})
 			if (res.status === 200) {
 				toast.success(
 					'Code sent',

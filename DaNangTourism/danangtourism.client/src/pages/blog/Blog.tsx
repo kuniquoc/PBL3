@@ -81,7 +81,7 @@ const Blog: React.FC = () => {
 								}}
 							>
 								<PiPenFill className="text-xl" />
-								Edit destination
+								Edit blog
 							</Button>
 						)}
 						<Button

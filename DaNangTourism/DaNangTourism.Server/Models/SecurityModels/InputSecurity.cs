@@ -20,5 +20,6 @@ namespace DaNangTourism.Server.Models.SecurityModels
   public class InputCreateCode
   {
     public required string Email { get; set; }
+    public bool IsRegister { get; set; } = true;
   }
 }

@@ -234,6 +234,16 @@ namespace DaNangTourism.Server.Controllers
     {
       try
       {
+        bool isEmailExist = _accountService.GetAccountByEmail(createCode.Email) != null;
+        if (createCode.IsRegister && isEmailExist)
+        {
+          return Conflict(new { message = "Email already exists" });
+        }
+        else if (!createCode.IsRegister && !isEmailExist)
+        {
+          return NotFound(new { message = "Email not found" });
+        }
+
         string code = _accountService.CreateConfirmCode(createCode.Email, 5);
         _emailService.SendEmailAsync(createCode.Email, "Your account confirmation code", "Your confirmation code is: <b>" + code + "</b>. This code will expire in 5 minutes.");
         // Trả về thông điệp thành công

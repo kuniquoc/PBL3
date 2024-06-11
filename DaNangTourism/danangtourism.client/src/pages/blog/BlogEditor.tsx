@@ -7,6 +7,7 @@ import { useToast, useConfirm } from '../../hook'
 import { uploadToCloudinary } from '../../utils/Cloudinary'
 import { Button, DropdownSelect, Loader, TextEditor } from '../../components'
 import PageNotFound from '../PageNotFound'
+import { IBlogEditor, BlogTypes } from '../../interfaces/blog'
 
 const EmptyBlog = {
 	title: '',
@@ -15,13 +16,12 @@ const EmptyBlog = {
 	image: '',
 	content: '',
 }
-const BlogTypeOptions = ['All', 'Places', 'Tips']
 
 const BlogEditor: React.FC = () => {
 	const location = useLocation()
 	const { id } = useParams()
 	const [editMode, setEditMode] = useState(false)
-	const [blog, setBlog] = useState(EmptyBlog)
+	const [blog, setBlog] = useState<IBlogEditor>(EmptyBlog)
 	const [loading, setLoading] = useState(true)
 	const [currentImg, setCurrentImg] = useState<File>()
 	const [imgFile, setImgFile] = useState<File>()
@@ -46,7 +46,14 @@ const BlogEditor: React.FC = () => {
 		setLoading(true)
 		try {
 			const response = await axios.get(`/api/blog/GetToUpdate/${id}`)
-			setBlog(response.data.data)
+			const data = response.data.data
+			setBlog({
+				title: data.title,
+				typeIndex: BlogTypes.findIndex((type) => type === data.type),
+				introduction: data.introduction,
+				image: data.image,
+				content: data.content,
+			})
 			await getImageBlob(response.data.data.image)
 			setLoading(false)
 		} catch (error) {
@@ -96,25 +103,28 @@ const BlogEditor: React.FC = () => {
 			toast.error('Empty image', 'Please select an image to upload')
 			return
 		}
+		if (currentImg === imgFile) return blog.image
 		toast.info('Uploading image', 'Please wait while we upload your image')
 		const url = await uploadToCloudinary(imgFile)
-		if (url) {
-			setBlog({ ...blog, image: url })
-			toast.success(
-				'Upload image success',
-				'Your image has been uploaded successfully',
-			)
-		} else {
+		if (!url) {
 			toast.error(
 				'Upload image failed',
 				'There was an error while uploading your image',
 			)
 		}
+		return url
 	}
 
 	const createBlog = async () => {
+		const imgUrl = await handleUploadImage()
 		try {
-			const response = await axios.post('/api/blog/create', blog)
+			const response = await axios.post('/api/blog/create', {
+				title: blog.title,
+				type: BlogTypes[blog.typeIndex],
+				introduction: blog.introduction,
+				image: imgUrl,
+				content: blog.content,
+			})
 			toast.success(
 				'Request posting blog success',
 				'Your blog posting request has been sent successfully, please wait for admin to approve.',
@@ -130,8 +140,15 @@ const BlogEditor: React.FC = () => {
 	}
 
 	const updateBlog = async () => {
+		const imgUrl = await handleUploadImage()
 		try {
-			await axios.put(`/api/blog/update/${id}`, blog)
+			await axios.put(`/api/blog/update/${id}`, {
+				title: blog.title,
+				type: BlogTypes[blog.typeIndex],
+				introduction: blog.introduction,
+				image: imgUrl,
+				content: blog.content,
+			})
 			toast.success(
 				'Update blog success',
 				'Your blog has been updated successfully',
@@ -169,7 +186,6 @@ const BlogEditor: React.FC = () => {
 
 	const handleSubmit = async () => {
 		if (!validate()) return
-		if (currentImg !== imgFile) await handleUploadImage()
 		if (!editMode) {
 			await createBlog()
 		} else {
@@ -220,7 +236,7 @@ const BlogEditor: React.FC = () => {
 						<DropdownSelect
 							id="blog-type"
 							className="h-9 w-[140px] border-borderCol-1 text-sm"
-							options={BlogTypeOptions}
+							options={BlogTypes}
 							value={blog.typeIndex}
 							onChange={(event) => {
 								setBlog({ ...blog, typeIndex: Number(event.target.value) })

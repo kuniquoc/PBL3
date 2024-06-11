@@ -45,9 +45,9 @@ const BlogPage: React.FC = () => {
 				params: {
 					page: currentPage,
 					limit: itemsPerPage,
-					search: searchValue,
 					sortBy: sortBy[sort.by].value,
 					sortType: sort.type,
+					...(searchValue && { search: searchValue }),
 				},
 			})
 			const data = response.data.data

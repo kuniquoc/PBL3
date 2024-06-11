@@ -115,6 +115,7 @@ const RegisterForm: React.FC<{
 		try {
 			const response = await axios.post('/api/auth/sendCode', {
 				email: formData.email,
+				isRegister: true,
 			})
 			if (response.status === 200) {
 				toast.success('Confirmation code sent', 'Please check your email')

@@ -41,15 +41,9 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = (props) => {
 			initial="hidden"
 			animate="visible"
 			exit="hidden"
+			transition={{ duration: 0.2 }}
 		>
-			<motion.div
-				className="flex w-[560px] items-center p-5"
-				variants={variantsY}
-				initial="top"
-				animate="visible"
-				exit="bottom"
-				custom={50}
-			>
+			<motion.div className="flex w-[560px] items-center p-5">
 				<div className="flex w-[520px] flex-col items-center overflow-hidden rounded-xl bg-white">
 					<div className="w-full bg-gray-100 px-14 py-4 text-center text-xl font-semibold">
 						{props.title}

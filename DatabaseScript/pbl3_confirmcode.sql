@@ -27,7 +27,7 @@ CREATE TABLE `confirmcode` (
   `code` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
   `expired_at` datetime NOT NULL,
   PRIMARY KEY (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -28,7 +28,7 @@ CREATE TABLE `favoritedestinations` (
   PRIMARY KEY (`user_id`,`destination_id`),
   KEY `FK_favDes_destination` (`destination_id`),
   CONSTRAINT `FK_favDes_destination` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`destination_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
