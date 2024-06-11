@@ -62,8 +62,7 @@ packages/
 # End of File
 
 .fake
-DaNangTourism/DaNangTourism.Server/obj/DaNangTourism.Server.csproj.nuget.dgspec.json
-DaNangTourism/DaNangTourism.Server/obj/DaNangTourism.Server.csproj.nuget.g.props
-DaNangTourism/DaNangTourism.Server/obj/project.assets.json
-DaNangTourism/DaNangTourism.Server/obj/Debug/net8.0/DaNangTourism.Server.AssemblyInfo.cs
-DaNangTourism/DaNangTourism.Server/obj/Debug/net8.0/DaNangTourism.Server.GeneratedMSBuildEditorConfig.editorconfig
+DaNangTourism/DaNangTourism.Server/obj
+DaNangTourism/DaNangTourism.Server/bin
+danangtourism.client/bin
+danangtourism.client/obj
