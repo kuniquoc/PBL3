@@ -53,7 +53,7 @@ namespace DaNangTourism.Server.Models.DestinationModels
             if (!SortBy.Equals("created_at") && !SortBy.Equals("name") && !SortBy.Equals("cost") && !SortBy.Equals("rating")) SortBy = "created_at";
             if (!SortType.Equals("asc") && !SortType.Equals("desc")) SortType = "asc";
             Search = DataSanitization.RemoveSpecialCharacters(Search);
-            Location = DataSanitization.RemoveSpecialCharacters(Location);
+            Location = DataSanitization.UrlDecode(Location);
         }
     }
 }

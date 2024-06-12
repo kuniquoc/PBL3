@@ -84,7 +84,6 @@ namespace DaNangTourism.Server.Services
                 }
                 parameters.Add(new MySqlParameter("@location", "%" + destinationFilter.Location + "%"));
             }
-
             if (destinationFilter.CostFrom != -1)
             {
                 if (filter.ToString().Contains("WHERE"))
@@ -165,7 +164,7 @@ namespace DaNangTourism.Server.Services
             filter.Append(" ORDER BY " + sortBy + " " + destinationFilter.SortType);
 
             sql.Append(filter);
-
+            Console.WriteLine(sql);
             // Lấy tổng kết quả có được
             StringBuilder countSql = new StringBuilder();
             countSql.Append("SELECT COUNT(*) FROM (" + sql + ") AS subquery");

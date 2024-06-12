@@ -219,7 +219,7 @@ const DestinationPage: React.FC = () => {
 						</AnimatePresence>
 					</div>
 				</div>
-				<div className="flex flex-wrap justify-around gap-y-6">
+				<div className="flex flex-wrap gap-x-[26.5px] gap-y-6">
 					{destinations ? (
 						destinations.map((des, index) => (
 							<DesPreviewCard
