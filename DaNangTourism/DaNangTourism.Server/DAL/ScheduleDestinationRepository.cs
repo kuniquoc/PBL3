@@ -128,7 +128,7 @@ namespace DaNangTourism.Server.DAL
         {
             string sql = "INSERT INTO ScheduleDestinations (schedule_id, destination_id, date, arrival_time, leave_time, budget, note) " +
                 "VALUES (@scheduleId, @destinationId, @date, @arrivalTime, @leaveTime, @budget, @note); " +
-                "UPDATE Schedules SET updated_at = @updatedAt;" +
+                "UPDATE Schedules SET updated_at = @updatedAt WHERE schedule_id = @scheduleId;" +
                 "SELECT LAST_INSERT_ID();";
             MySqlParameter[] parameters =
             {
@@ -191,7 +191,7 @@ namespace DaNangTourism.Server.DAL
         public void DeleteScheduleDestination(int scheduleDestinationId)
         {
             string sql = "DELETE FROM ScheduleDestinations WHERE schedule_destination_id = @scheduleDestinationId;" +
-                "UPDATE Schedules SET updated_at = @updatedAt;";
+                "UPDATE Schedules SET updated_at = @updatedAt WHERE schedule_id = @scheduleId;;";
             MySqlParameter[] parameters =
             {
                 new ("@scheduleDestinationId", scheduleDestinationId),
@@ -218,7 +218,7 @@ namespace DaNangTourism.Server.DAL
 
             string sql = "UPDATE ScheduleDestinations SET date = @date, arrival_time = @arrivalTime, leave_time = @leaveTime, budget = @budget, note = @note " +
             "WHERE schedule_destination_id = @scheduleDestinationId; " +
-            "UPDATE Schedules SET updated_at = @updatedAt;";
+            "UPDATE Schedules SET updated_at = @updatedAt WHERE schedule_id = @scheduleId;;";
             MySqlParameter[] parameters =
             {
                 new ("@date", scheduleDestination.Date),
