@@ -128,8 +128,7 @@ namespace DaNangTourism.Server.DAL
     {
       string sql = "INSERT INTO ScheduleDestinations (schedule_id, destination_id, date, arrival_time, leave_time, budget, note) " +
           "VALUES (@scheduleId, @destinationId, @date, @arrivalTime, @leaveTime, @budget, @note); " +
-          "UPDATE Schedules SET updated_at = @updatedAt WHERE schedule_id = " +
-          "(SELECT schedule_id FROM ScheduleDestinations WHERE schedule_destination_id = @scheduleDestinationId);" +
+          "UPDATE Schedules SET updated_at = @updatedAt WHERE schedule_id = @scheduleId;" +
           "SELECT LAST_INSERT_ID();";
       MySqlParameter[] parameters =
       {
