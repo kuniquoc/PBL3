@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 12, 2024 lúc 12:08 PM
+-- Thời gian đã tạo: Th6 12, 2024 lúc 12:57 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -136,7 +136,56 @@ INSERT INTO `favoritedestinations` (`user_id`, `destination_id`) VALUES
 (90000001, 10000010),
 (90000001, 10000011),
 (90000001, 10000015),
-(90000001, 10000016);
+(90000001, 10000016),
+(90000004, 10000005),
+(90000004, 10000008),
+(90000004, 10000011),
+(90000004, 10000015),
+(90000007, 10000002),
+(90000007, 10000005),
+(90000007, 10000006),
+(90000007, 10000008),
+(90000007, 10000015),
+(90000008, 10000001),
+(90000008, 10000002),
+(90000008, 10000003),
+(90000008, 10000006),
+(90000008, 10000007),
+(90000008, 10000016),
+(90000009, 10000002),
+(90000009, 10000003),
+(90000009, 10000005),
+(90000009, 10000006),
+(90000009, 10000007),
+(90000009, 10000008),
+(90000010, 10000006),
+(90000010, 10000008),
+(90000010, 10000009),
+(90000010, 10000011),
+(90000010, 10000013),
+(90000010, 10000014),
+(90000010, 10000015),
+(90000010, 10000016),
+(90000011, 10000002),
+(90000011, 10000007),
+(90000011, 10000009),
+(90000011, 10000010),
+(90000011, 10000012),
+(90000011, 10000015),
+(90000012, 10000004),
+(90000012, 10000005),
+(90000012, 10000008),
+(90000012, 10000010),
+(90000012, 10000015),
+(90000013, 10000005),
+(90000013, 10000006),
+(90000013, 10000011),
+(90000013, 10000013),
+(90000013, 10000015),
+(90000014, 10000004),
+(90000014, 10000005),
+(90000014, 10000007),
+(90000014, 10000015);
 
 -- --------------------------------------------------------
 
@@ -268,6 +317,18 @@ CREATE TABLE `scheduledestinations` (
   `note` varchar(100) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `scheduledestinations`
+--
+
+INSERT INTO `scheduledestinations` (`schedule_destination_id`, `schedule_id`, `destination_id`, `date`, `arrival_time`, `leave_time`, `budget`, `note`) VALUES
+(60000003, 50000001, 10000016, '2024-06-20', '17:00:00', '19:00:00', 0, 'swim'),
+(60000004, 50000001, 10000009, '2024-06-20', '21:00:00', '22:00:00', 10, 'Drink and chill'),
+(60000005, 50000002, 10000001, '2024-07-01', '08:00:00', '15:00:00', 100, 'Cable car'),
+(60000006, 50000002, 10000013, '2024-07-02', '09:00:00', '11:00:00', 0, 'Enjoy the scenery while moving'),
+(60000007, 50000002, 10000006, '2024-07-03', '00:00:00', '15:00:00', 0, ''),
+(60000008, 50000003, 10000001, '2024-06-13', '07:30:00', '20:30:00', 25, '');
+
 -- --------------------------------------------------------
 
 --
@@ -289,7 +350,9 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`schedule_id`, `user_id`, `status`, `title`, `description`, `updated_at`, `is_public`) VALUES
-(50000001, 90000001, 'planning', 'Beach and Relaxation', 'Spend your day at My Khe Beach, one of the most beautiful beaches in Vietnam. Enjoy sunbathing, swim', '2024-06-12 17:02:46', 1);
+(50000001, 90000001, 'ongoing', 'Beach and Relaxation', 'Spend your day at My Khe Beach, one of the most beautiful beaches in Vietnam. Enjoy sunbathing, swim', '2024-06-12 17:43:21', 1),
+(50000002, 90000001, 'planning', 'Go backpacking', 'Go around the mountains and forests', '2024-06-12 17:33:16', 1),
+(50000003, 90000001, 'completed', 'Destinations You need to come', 'Travel to DaNang, you need to come all of this place', '2024-06-12 17:43:04', 1);
 
 -- --------------------------------------------------------
 
@@ -419,13 +482,13 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT cho bảng `scheduledestinations`
 --
 ALTER TABLE `scheduledestinations`
-  MODIFY `schedule_destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60000002;
+  MODIFY `schedule_destination_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60000009;
 
 --
 -- AUTO_INCREMENT cho bảng `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50000002;
+  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50000004;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
