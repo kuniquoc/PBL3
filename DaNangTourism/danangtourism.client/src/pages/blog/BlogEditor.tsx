@@ -214,7 +214,7 @@ const BlogEditor: React.FC = () => {
 			<div className="w-full pb-5 pt-[72px]">
 				<div className="flex w-full flex-col gap-5 rounded-lg border border-borderCol-1 bg-white p-10 pb-5 shadow-custom">
 					<div className="w-full text-center text-xl font-bold tracking-wider">
-						Write new blog
+						{editMode ? 'Edit blog' : 'Write new blog'}
 					</div>
 					<div className="flex w-full items-center gap-4">
 						<div className="w-[100px] font-semibold">Title</div>

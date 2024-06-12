@@ -13,7 +13,7 @@ import {
 	PiTrashSimpleFill,
 	PiXBold,
 } from 'react-icons/pi'
-import { useToast } from '../../hook'
+import { useConfirm, useToast } from '../../hook'
 
 const ScheduleDay: React.FC<{
 	scheduleDay: IScheduleDay
@@ -76,6 +76,7 @@ const ScheduleDestination: React.FC<{
 	const [isHovered, setIsHovered] = useState(false)
 	const { id } = useParams()
 	const toast = useToast()
+	const confirm = useConfirm()
 	const handleSave = async () => {
 		setEditable(false)
 		try {
@@ -106,6 +107,11 @@ const ScheduleDestination: React.FC<{
 	}
 
 	const handleRemove = async () => {
+		const confirmed = await confirm.showConfirmation(
+			'Delete destination',
+			'Are you sure you want to delete this destination?',
+		)
+		if (!confirmed) return
 		try {
 			await axios.delete(`/api/schedule/removeDestination/${des.id}`)
 			toast.success('Success', 'Destination removed successfully')
