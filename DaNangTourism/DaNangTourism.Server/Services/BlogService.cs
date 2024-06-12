@@ -222,9 +222,9 @@ namespace DaNangTourism.Server.Services
       bLogListData.page = blogLAF.page;
       sql.Append(" offset @offset");
       parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * blogLAF.limit));
-
-      // xử lý item 
-      bLogListData.items = _blogRepository.GetBlogList(sql.ToString(), parameters);
+            Console.WriteLine(sql.ToString());
+            // xử lý item 
+            bLogListData.items = _blogRepository.GetBlogList(sql.ToString(), parameters);
 
       return bLogListData;
 
