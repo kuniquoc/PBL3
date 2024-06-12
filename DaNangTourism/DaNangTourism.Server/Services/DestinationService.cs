@@ -110,31 +110,6 @@ namespace DaNangTourism.Server.Services
                 parameters.Add(new MySqlParameter("@costTo", destinationFilter.CostTo));
             }
 
-            if (destinationFilter.RatingFrom != -1)
-            {
-                if (filter.ToString().Contains("WHERE"))
-                {
-                    filter.Append(" AND AVG(Rating) >= @ratingFrom");
-                }
-                else
-                {
-                    filter.Append(" WHERE AVG(Rating) >= @ratingFrom");
-                }
-                parameters.Add(new MySqlParameter("@ratingFrom", destinationFilter.RatingFrom));
-            }
-
-            if (destinationFilter.RatingTo != -1)
-            {
-                if (filter.ToString().Contains("WHERE"))
-                {
-                    filter.Append(" AND AVG(Rating) <= @ratingTo");
-                }
-                else
-                {
-                    filter.Append(" WHERE AVG(Rating) <= @ratingTo");
-                }
-                parameters.Add(new MySqlParameter("@ratingTo", destinationFilter.RatingTo));
-            }
 
             if (destinationFilter.IsFavorite != null)
             {
@@ -158,6 +133,34 @@ namespace DaNangTourism.Server.Services
 
             // thêm group by để sử dụng AVG(Rating)
             filter.Append(" GROUP BY Destinations.destination_id, name, address, images, cost, open_time, close_time, tags");
+
+
+            // Sử dụng HAVING để lọc theo rating
+            if (destinationFilter.RatingFrom != -1)
+            {
+                if (filter.ToString().Contains("HAVING"))
+                {
+                    filter.Append(" AND AVG(Rating) >= @ratingFrom");
+                }
+                else
+                {
+                    filter.Append(" HAVING AVG(Rating) >= @ratingFrom");
+                }
+                parameters.Add(new MySqlParameter("@ratingFrom", destinationFilter.RatingFrom));
+            }
+
+            if (destinationFilter.RatingTo != -1)
+            {
+                if (filter.ToString().Contains("HAVING"))
+                {
+                    filter.Append(" AND AVG(Rating) <= @ratingTo");
+                }
+                else
+                {
+                    filter.Append(" HAVING AVG(Rating) <= @ratingTo");
+                }
+                parameters.Add(new MySqlParameter("@ratingTo", destinationFilter.RatingTo));
+            }
 
             // xử lý order by
             string sortBy = (destinationFilter.SortBy == "rating") ? "AVG(Rating)" : "Destinations." + destinationFilter.SortBy;
@@ -276,10 +279,12 @@ namespace DaNangTourism.Server.Services
             sql.Append(" GROUP BY d.destination_id, d.name, d.address, d.created_at");
 
             // Xử lý bộ lọc dùng ORDER BY
-            string sortBy = (adminDestinationFilter.SortBy == "rating") ? "AVG(Rating)" : "d." + adminDestinationFilter.SortBy;
+            string sortBy = (adminDestinationFilter.SortBy.Equals("rating")) ? "AVG(Rating)" : (adminDestinationFilter.SortBy.Equals("name")) ? "d." + adminDestinationFilter.SortBy : adminDestinationFilter.SortBy;
             sql.Append(" ORDER BY " + sortBy);
 
             sql.Append(" " + adminDestinationFilter.SortType);
+
+            Console.WriteLine(sql);
 
             // Lấy tổng kết quả có được
             StringBuilder countSql = new StringBuilder();
