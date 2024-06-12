@@ -16,10 +16,10 @@ const AddDestinationModal: React.FC<{
 		title: '',
 		description: '',
 		isPublic: false,
-		status: 'Planning',
+		status: 'planning',
 	})
 	const StatusArray = ScheduleStatus.filter(
-		(item) => item.status !== 'All',
+		(item) => item.status !== 'all',
 	).map((item) => item.status)
 
 	const toast = useToast()
@@ -70,12 +70,7 @@ const AddDestinationModal: React.FC<{
 	const updateSchedule = async () => {
 		if (!validate()) return
 		try {
-			await axios.put(`/api/schedule/update/${scheduleId}`, {
-				title: scheduleGeneral.title,
-				description: scheduleGeneral.description,
-				isPublic: scheduleGeneral.isPublic,
-				status: StatusArray.indexOf(scheduleGeneral.status) + 1,
-			})
+			await axios.put(`/api/schedule/update/${scheduleId}`, scheduleGeneral)
 			toast.success('Update schedule success', 'You have updated the schedule')
 			onCancel(true)
 		} catch (error) {
@@ -101,14 +96,7 @@ const AddDestinationModal: React.FC<{
 	}
 
 	useEffect(() => {
-		if (general)
-			setScheduleGeneral({
-				title: general.title,
-				description: general.description,
-				isPublic: general.isPublic,
-				status:
-					general.status.charAt(0).toUpperCase() + general.status.slice(1),
-			})
+		if (general) setScheduleGeneral(general)
 	}, [general])
 
 	return (
@@ -163,7 +151,9 @@ const AddDestinationModal: React.FC<{
 					></ToggleButton>
 					{scheduleId !== 0 && (
 						<div className="inline-flex flex-1 items-center gap-4 pl-10">
-							<label className="w-[72px] font-semibold">Status</label>
+							<label className="w-[72px] font-semibold capitalize">
+								Status
+							</label>
 							<DropdownSelect
 								id="schedule-status"
 								className="h-9 flex-1"

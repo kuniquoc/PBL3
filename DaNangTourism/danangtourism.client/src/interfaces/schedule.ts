@@ -1,22 +1,22 @@
 export const ScheduleStatus = [
 	{
-		status: 'All',
+		status: 'all',
 		color: undefined,
 	},
 	{
-		status: 'Planning',
+		status: 'planning',
 		color: 'bg-[#F1C142]',
 	},
 	{
-		status: 'Ongoing',
+		status: 'ongoing',
 		color: 'bg-primary-2',
 	},
 	{
-		status: 'Completed',
+		status: 'completed',
 		color: 'bg-[#8187DC]',
 	},
 	{
-		status: 'Canceled',
+		status: 'canceled',
 		color: 'bg-tertiary-1',
 	},
 ]

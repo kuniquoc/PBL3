@@ -123,7 +123,7 @@ const AddDestinationModal: React.FC<{
 			destinationId: 0,
 		})
 		getDestinations()
-	}, [searchValue, sort, isFavorite])
+	}, [searchValue, sort, isFavorite, currentPage])
 	return (
 		<div
 			className={twMerge(

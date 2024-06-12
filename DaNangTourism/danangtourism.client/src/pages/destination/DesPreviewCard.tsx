@@ -97,7 +97,7 @@ const DesPreviewCard: React.FC<DesCardProps> = ({
 							<div
 								className="absolute left-0 top-0 h-full w-full"
 								onClick={() =>
-									toast.error(
+									toast.info(
 										'Login required',
 										'Please login to favorite this destination',
 									)
