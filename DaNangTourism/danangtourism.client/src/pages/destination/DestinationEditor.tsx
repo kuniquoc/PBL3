@@ -239,6 +239,7 @@ const DestinationEditor: React.FC = () => {
 								<input
 									className="hide-arr dollar h-9 w-[72px] border-borderCol-1 px-3 text-sm invalid:focus:border-tertiary-1"
 									id="des-cost"
+									step={0.01}
 									type="number"
 									placeholder="0"
 									value={des.cost}
