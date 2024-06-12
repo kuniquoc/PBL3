@@ -9,6 +9,7 @@ import { IHomeBlog } from '../../interfaces/blog'
 import { timeAgo } from '../../utils/TimeFormatters'
 
 const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
+	const navigate = useNavigate()
 	const [blogs, setBlogs] = useState<IHomeBlog[]>([])
 
 	const getBlogs = async () => {
@@ -29,7 +30,10 @@ const HomeBlogs: React.FC<{ className?: string }> = ({ className }) => {
 				<h3 className="text-xl font-semibold leading-normal tracking-wide">
 					Newest blogs
 				</h3>
-				<div className="flex cursor-pointer items-center justify-start gap-2 hover:text-primary-1 hover:underline">
+				<div
+					className="flex cursor-pointer items-center justify-start gap-2 hover:text-primary-1 hover:underline"
+					onClick={() => navigate('/blog')}
+				>
 					<h4 className="text-base font-normal leading-none">View more</h4>
 					<PiCaretRightBold />
 				</div>

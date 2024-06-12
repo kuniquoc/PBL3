@@ -37,7 +37,10 @@ const HomeDestinations: React.FC<{ className?: string }> = ({ className }) => {
 				<h3 className="text-xl font-semibold leading-normal tracking-wide">
 					Hot destinations
 				</h3>
-				<div className="flex cursor-pointer items-center justify-start gap-2 hover:text-primary-1 hover:underline">
+				<div
+					className="flex cursor-pointer items-center justify-start gap-2 hover:text-primary-1 hover:underline"
+					onClick={() => navigate('/destination')}
+				>
 					<h4 className="text-base font-normal leading-none">View more</h4>
 					<PiCaretRightBold />
 				</div>
