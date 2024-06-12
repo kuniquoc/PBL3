@@ -147,57 +147,29 @@ namespace DaNangTourism.Server.Services
 
       StringBuilder sql = new StringBuilder();
       sql.Append("SELECT blog_id, title, type, created_at, views, status, " +
-          "(SELECT full_name FROM users WHERE users.user_id = blogs.user_id) AS author FROM blogs");
+          "(SELECT full_name FROM users WHERE users.user_id = blogs.user_id) AS author FROM blogs WHERE 1=1");
       List<MySqlParameter> parameters = new List<MySqlParameter>();
 
       // xử lý where
       if (!blogLAF.search.IsNullOrEmpty())
       {
-        if (sql.ToString().Contains("where"))
-        {
-          sql.Append(" AND title LIKE @title");
-        }
-        else
-        {
-          sql.Append(" WHERE title LIKE @title");
-        }
+        sql.Append(" AND title LIKE @title");
         parameters.Add(new MySqlParameter("@title", "%" + blogLAF.search + "%"));
       }
       if (blogLAF.type != BlogType.all)
       {
-        if (sql.ToString().Contains("where"))
-        {
-          sql.Append(" AND type = @type");
-        }
-        else
-        {
-          sql.Append(" WHERE type = @type");
-        }
+        sql.Append(" AND type = @type");
         parameters.Add(new MySqlParameter("@type", blogLAF.type.ToString()));
       }
       if (blogLAF.status != BlogStatus.all)
       {
-        if (sql.ToString().Contains("where"))
-        {
-          sql.Append(" AND status = @status");
-        }
-        else
-        {
-          sql.Append(" WHERE status = @status");
-        }
+        sql.Append(" AND status = @status");
         parameters.Add(new MySqlParameter("@status", blogLAF.status.ToString()));
       }
 
       if (uid != 0)
       {
-        if (sql.ToString().Contains("where"))
-        {
-          sql.Append(" AND user_id = @uid");
-        }
-        else
-        {
-          sql.Append(" WHERE user_id = @uid");
-        }
+        sql.Append(" AND user_id = @uid");
         parameters.Add(new MySqlParameter("@uid", uid));
       }
 
@@ -207,6 +179,7 @@ namespace DaNangTourism.Server.Services
 
       sql.Append(" " + blogLAF.sortType);
 
+      Console.WriteLine(sql);
       // xử lý blogListData
       // xử lý total
       StringBuilder countSql = new StringBuilder();
@@ -222,9 +195,9 @@ namespace DaNangTourism.Server.Services
       bLogListData.page = blogLAF.page;
       sql.Append(" offset @offset");
       parameters.Add(new MySqlParameter("@offset", (blogLAF.page - 1) * blogLAF.limit));
-            Console.WriteLine(sql.ToString());
-            // xử lý item 
-            bLogListData.items = _blogRepository.GetBlogList(sql.ToString(), parameters);
+
+      // xử lý item 
+      bLogListData.items = _blogRepository.GetBlogList(sql.ToString(), parameters);
 
       return bLogListData;
 

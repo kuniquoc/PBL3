@@ -20,7 +20,7 @@ import SetupModal from './SetupModal'
 import noItemImg from '../../assets/no-item.png'
 import { useToast, useUser } from '../../hook'
 
-const SortBys = [
+const SortOptions = [
 	{
 		label: 'Updated at',
 		value: 'updatedAt',
@@ -46,6 +46,7 @@ const SchedulePage: React.FC = () => {
 		by: 0,
 		type: 'desc',
 	})
+	const [SortBys, setSortBys] = useState(SortOptions)
 	const [searchValue, setSearchValue] = useState('')
 	const [loading, setLoading] = useState(true)
 	const [isNewScheduleModalOpen, setIsNewScheduleModalOpen] = useState(false)
@@ -110,6 +111,12 @@ const SchedulePage: React.FC = () => {
 	useEffect(() => {
 		handleSearch()
 	}, [tabIndex, currentPage, statusIndex, sort])
+
+	useEffect(() => {
+		if (tabIndex === 0)
+			setSortBys(SortOptions.filter((item) => item.value !== 'startDate'))
+		else setSortBys(SortOptions)
+	}, [tabIndex])
 
 	const handleOpenMySchedule = () => {
 		if (!user || user.id === 0) {
