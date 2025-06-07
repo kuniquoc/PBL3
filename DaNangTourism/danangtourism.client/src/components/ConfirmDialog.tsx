@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { variantsDefault, variantsY } from '../styles/variants'
+import { variantsDefault} from '../styles/variants'
 import { twMerge } from 'tailwind-merge'
 import { Button } from './Buttons'
 import { useEffect } from 'react'
